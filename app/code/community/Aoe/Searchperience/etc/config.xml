@@ -1,0 +1,42 @@
+<?xml version="1.0" ?>
+<config>
+    <modules>
+        <Aoe_Searchperience>
+            <version>0.1.0</version>>
+        </Aoe_Searchperience>
+    </modules>
+
+    <global>
+        <blocks>
+            <aoe_searchperience>
+                <class>Aoe_Searchperience_Block</class>
+            </aoe_searchperience>
+        </blocks>
+
+        <helpers>
+            <aoe_searchperience>
+                <class>Aoe_Searchperience_Helper</class>
+            </aoe_searchperience>
+        </helpers>
+    </global>
+
+    <frontend>
+        <layout>
+            <updates>
+                <aoe_searchperience>
+                    <file>aoe_searchperience.xml</file>
+                </aoe_searchperience>
+            </updates>
+        </layout>
+    </frontend>
+
+    <adminhtml>
+        <layout>
+            <updates>
+                <searchperienece>
+                    <file>searchperience/searchperience.xml</file>
+                </searchperienece>
+            </updates>
+        </layout>
+    </adminhtml>
+</config>

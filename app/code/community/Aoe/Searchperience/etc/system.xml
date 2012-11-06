@@ -1,0 +1,50 @@
+<?xml version="1.0" ?>
+<config>
+    <sections>
+        <searchperience translate="label">
+            <label><![CDATA[<img class="sp_logo" src="/skin/adminhtml/default/default/images/searchperience/searchperience-logo.png" alt="Searchperience" />]]></label>
+            <tab>general</tab>
+            <sort_order>1</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <searchperience_info>
+                    <frontend_model>aoe_searchperience/adminhtml_system_config_fieldset_info</frontend_model>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                </searchperience_info>
+                <searchperience>
+                    <label>General</label>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <api>
+                            <label>Server</label>
+                            <comment>address of Searchperience API</comment>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>10</sort_order>
+                        </api>
+                        <token>
+                            <label>Authentication token</label>
+                            <comment>currently not used</comment>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>20</sort_order>
+                        </token>
+                    </fields>
+                </searchperience>
+            </groups>
+        </searchperience>
+    </sections>
+</config>
