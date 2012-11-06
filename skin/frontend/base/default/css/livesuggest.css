@@ -1,0 +1,52 @@
+#aoe_solr_livesuggest {
+	z-index:1200;
+	border: 1px solid #e4e5e6;
+	background: #fff;
+}
+
+.ls_results {
+	margin: 0 0 0 -2px;
+	z-index: 1200;
+}
+
+.ls_results ul {
+	width: 49%;
+	float: left
+}
+
+.ls_results li.ac_head, .ls_results li.dr_head {
+	font-size: 13px;
+	font-weight: bold;
+	padding: 10px 10px 5px;
+}
+
+.ls_results li.ac_head:hover, .ls_results li.dr_head:hover {
+	background: none;
+}
+
+.ls_results li {
+	padding: 3px 13px 5px 13px;
+	color: #9a9a9a;
+}
+
+.ls_results strong {
+	color: #010110;
+}
+
+.ls_results li:first-child {
+	border-top: 0;
+}
+
+.ls_results li:hover {
+	background: #FAA136;
+	cursor: pointer;
+	color: #000;
+}
+
+.ls_results .directresultlist li.suggestionitem {
+	border-bottom: 1px dotted #C9D4E3;
+	min-height: 100px;
+	overflow: hidden;
+}
+.ls_results .directresultlist li img {float: left}
+/* .ls_results .directresultlist .dr_right {float: right} */

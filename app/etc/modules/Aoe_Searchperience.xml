@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<config>
+    <modules>
+        <aoe_searchperience>
+            <active>false</active>
+            <codePool>local</codePool>
+            <depends>
+				<Mage_CatalogSearch/>
+            </depends>
+        </aoe_searchperience>
+    </modules>
+</config>

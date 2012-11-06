@@ -1,0 +1,15 @@
+<?php
+?>
+
+
+<form id="search_mini_form" action="#" method="post">
+	<div class="form-search">
+
+		<label for="search"><?php echo $this->__('Search site:') ?></label>
+		<input id="search" type="text" class="solr-suggest-field input-text" name="tx_aoesolr_pi1[querystring]"
+			   value="<?php echo $this->helper('catalogsearch')->getEscapedQueryText() ?>" class="input-text" />&nbsp;<button type="submit"title="<?php echo $this->__('CERCA') ?>" class="button">
+			<span><span><?php echo $this->__('CERCA') ?></span></span></button><a href="#"><?php echo $this->__('Advanced Search'); ?></a>
+		<div id="search_autocomplete" class="search-autocomplete"></div>
+
+	</div>
+</form>
