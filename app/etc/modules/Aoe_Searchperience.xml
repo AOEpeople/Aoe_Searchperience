@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <config>
     <modules>
-        <aoe_searchperience>
+        <Aoe_Searchperience>
             <active>true</active>
             <codePool>community</codePool>
             <depends>
 				<Mage_CatalogSearch/>
             </depends>
-        </aoe_searchperience>
+        </Aoe_Searchperience>
     </modules>
 </config>

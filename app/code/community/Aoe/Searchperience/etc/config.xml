@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Aoe_Searchperience>
-            <version>0.1.0</version>>
+            <version>0.1.0</version>
         </Aoe_Searchperience>
     </modules>
 
@@ -18,6 +18,30 @@
                 <class>Aoe_Searchperience_Helper</class>
             </aoe_searchperience>
         </helpers>
+		<models>
+			<aoe_searchperience>
+				<class>Aoe_Sarchperience_Model</class>
+				<resourceModel>aoe_searchperience_resource</resourceModel>
+			</aoe_searchperience>
+			<aoe_searchperience_resource>
+				<class>Aoe_Searchperience_Model_Resource</class>
+				<entities>
+					<queue_item>
+						<table>aoesearchperience_queue_item</table>
+					</queue_item>
+				</entities>
+			</aoe_searchperience_resource>
+		</models>
+		<resources>
+			<aoe_searchperience_setup>
+				<setup>
+					<module>Aoe_Searchperience</module>
+				</setup>
+				<connection>
+					<use>core_setup</use>
+				</connection>
+			</aoe_searchperience_setup>
+		</resources>
     </global>
 
     <frontend>
