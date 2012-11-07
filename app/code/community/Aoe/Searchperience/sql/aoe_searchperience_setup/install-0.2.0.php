@@ -14,6 +14,7 @@ $table = $installer->getConnection()
 
 	->newTable($installer->getTable('aoe_searchperience/queue_item'))
 	->addColumn('queue_item_id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
+		'auto_increment' => true,
 		'unsigned'  => true,
 		'nullable'  => false,
 		'primary'   => true,

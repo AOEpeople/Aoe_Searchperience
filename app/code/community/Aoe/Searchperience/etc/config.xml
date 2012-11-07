@@ -2,10 +2,20 @@
 <config>
     <modules>
         <Aoe_Searchperience>
-            <version>0.1.0</version>
+            <version>0.2.0</version>
         </Aoe_Searchperience>
     </modules>
-
+	<admin>
+		<routers>
+			<aoe_searchperience>
+				<use>admin</use>
+				<args>
+					<module>Aoe_Searchperience</module>
+					<frontName>searchperience</frontName>
+				</args>
+			</aoe_searchperience>
+		</routers>
+	</admin>
     <global>
         <blocks>
             <aoe_searchperience>
