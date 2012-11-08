@@ -59,4 +59,9 @@ class Aoe_Searchperience_Model_ProductObserver
     {
 
     }
+
+	protected function addProductToQueue() {
+		$queue = Mage::getModel('aoe_queue/queue', array(Aoe_Searchperience_Model_QueueProcessor::QUEUE_NAME)); /* @var $queue Aoe_Queue_Model_Queue */
+		$queue->addTask(Aoe_Searchperience_Model_QueueProcessor::PRODUCT_CALLBACK_EXPR, array('someParam'));
+	}
 }

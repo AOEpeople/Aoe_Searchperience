@@ -5,7 +5,8 @@
             <active>true</active>
             <codePool>community</codePool>
             <depends>
-				<Mage_CatalogSearch/>
+                <Mage_CatalogSearch/>
+                <Aoe_Queue/>
             </depends>
         </Aoe_Searchperience>
     </modules>
