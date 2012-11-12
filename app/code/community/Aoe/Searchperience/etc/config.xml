@@ -27,20 +27,26 @@
                 <class>Aoe_Searchperience_Helper</class>
             </aoe_searchperience>
         </helpers>
-		<models>
-			<aoe_searchperience>
-				<class>Aoe_Searchperience_Model</class>
-				<resourceModel>aoe_searchperience_resource</resourceModel>
-			</aoe_searchperience>
-			<aoe_searchperience_resource>
-				<class>Aoe_Searchperience_Model_Resource</class>
-				<entities>
-					<queue_item>
-						<table>aoesearchperience_queue_item</table>
-					</queue_item>
-				</entities>
-			</aoe_searchperience_resource>
-		</models>
+        <models>
+            <aoe_searchperience>
+                <class>Aoe_Searchperience_Model</class>
+                <resourceModel>aoe_searchperience_resource</resourceModel>
+            </aoe_searchperience>
+            <aoe_searchperience_resource>
+                <class>Aoe_Searchperience_Model_Resource</class>
+                <entities>
+                    <queue_item>
+                        <table>aoesearchperience_queue_item</table>
+                    </queue_item>
+                </entities>
+            </aoe_searchperience_resource>
+            <enterprise_search>
+                <rewrite>
+                    <adminhtml_system_config_source_engine>Aoe_Searchperience_Model_Adminhtml_System_Config_Source_Engine</adminhtml_system_config_source_engine>
+                    <adminhtml_system_config_backend_engine>Aoe_Searchperience_Model_Adminhtml_System_Config_Backend_Engine</adminhtml_system_config_backend_engine>
+                </rewrite>
+            </enterprise_search>
+        </models>
 		<resources>
 			<aoe_searchperience_setup>
 				<setup>

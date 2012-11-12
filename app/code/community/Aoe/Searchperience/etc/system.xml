@@ -2,7 +2,8 @@
 <config>
     <sections>
         <searchperience translate="label" module="aoe_searchperience">
-            <label><![CDATA[<img class="sp_logo" src="/skin/adminhtml/default/default/images/searchperience/searchperience-logo.png" alt="Searchperience" />]]></label>
+            <label>
+                <![CDATA[<img class="sp_logo" src="/skin/adminhtml/default/default/images/searchperience/searchperience-logo.png" alt="Searchperience" />]]></label>
             <tab>general</tab>
             <sort_order>1</sort_order>
             <show_in_default>1</show_in_default>
@@ -46,5 +47,24 @@
                 </searchperience>
             </groups>
         </searchperience>
+
+        <!--<catalog>-->
+            <!--<groups>-->
+                <!--<search>-->
+                    <!--<fields>-->
+                        <!--<alternate_engine translate="label">-->
+                            <!--<label>Alternative Search Engine</label>-->
+                            <!--<frontend_type>select</frontend_type>-->
+                            <!--<backend_model>aoe_searchperience/adminhtml_system_config_backend_engine</backend_model>-->
+                            <!--<source_model>aoe_searchperience/adminhtml_system_config_source_engine</source_model>-->
+                            <!--<sort_order>19</sort_order>-->
+                            <!--<show_in_default>1</show_in_default>-->
+                            <!--<show_in_website>0</show_in_website>-->
+                            <!--<show_in_store>0</show_in_store>-->
+                        <!--</alternate_engine>-->
+                    <!--</fields>-->
+                <!--</search>-->
+            <!--</groups>-->
+        <!--</catalog>-->
     </sections>
 </config>
