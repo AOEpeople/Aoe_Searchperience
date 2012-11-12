@@ -1,6 +1,6 @@
 <?php
 
-class Aoe_Searchperience_Model_Api_Document extends Mage_Core_Model_Abstract {
+class Aoe_Searchperience_Model_Api_Document extends Apache_Solr_Document {
 
 	const XML_DOCUMENT_TEMPLATE = "<?xml version='1.0'>
 	<document>
