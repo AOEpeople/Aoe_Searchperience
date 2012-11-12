@@ -12,7 +12,8 @@ class Aoe_Searchperience_Model_Adminhtml_System_Config_Backend_Engine extends Ma
      * After save call
      * Invalidate catalog search index if engine was changed
      *
-     * @return Enterprise_Search_Model_Adminhtml_System_Config_Backend_Engine
+     * @see Enterprise_Search_Model_Adminhtml_System_Config_Backend_Engine
+     * @return Aoe_Searchperience_Model_Adminhtml_System_Config_Backend_Engine
      */
     protected function _afterSave()
     {

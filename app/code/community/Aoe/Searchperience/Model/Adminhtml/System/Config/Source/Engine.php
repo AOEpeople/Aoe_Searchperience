@@ -8,6 +8,10 @@
  */
 class Aoe_Searchperience_Model_Adminhtml_System_Config_Source_Engine
 {
+    /**
+     * @see Enterprise_Search_Model_Adminhtml_System_Config_Source_Engine
+     * @return array options for select field
+     */
     public function toOptionArray()
     {
         $searchperienceHelper = Mage::helper('aoe_searchperience'); /* @var $searchperienceHelper Aoe_Searchperience_Helper_Data */
