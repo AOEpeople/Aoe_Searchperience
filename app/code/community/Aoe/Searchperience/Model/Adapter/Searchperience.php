@@ -1,6 +1,6 @@
 <?php
 
-class Aoe_Searchperience_Model_Adapter_Solr extends Enterprise_Search_Model_Adapter_Solr_Abstract
+class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_Model_Adapter_Solr_Abstract
 {
     /**
      * Object name used to create solr document object
@@ -17,7 +17,8 @@ class Aoe_Searchperience_Model_Adapter_Solr extends Enterprise_Search_Model_Adap
      */
     protected function _connect($options = array())
     {
-        // TODO: Implement _connect() method.
+		$this->_client = Mage::getSingleton('aoe_searchperience/client_searchperience', $options);
+		return $this->_client;
     }
 
     /**

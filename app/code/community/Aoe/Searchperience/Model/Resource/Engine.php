@@ -32,7 +32,7 @@ class Aoe_Searchperience_Model_Resource_Engine extends Enterprise_Search_Model_R
     /**
      * Retrieve search engine adapter model
      *
-     * @return Aoe_Searchperience_Model_Adapter_Solr
+     * @return Aoe_Searchperience_Model_Adapter_Searchperience
      */
     protected function _getAdapterModel()
     {
