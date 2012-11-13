@@ -51,17 +51,6 @@
 				</connection>
 			</aoe_searchperience_setup>
 		</resources>
-        <events>
-            <catalog_product_save_after>
-                <observers>
-                    <aoe_searchperience>
-                        <type>singleton</type>
-                        <class>aoe_searchperience/productObserver</class>
-                        <method>productChange</method>
-                    </aoe_searchperience>
-                </observers>
-            </catalog_product_save_after>
-        </events>
     </global>
 
     <frontend>
