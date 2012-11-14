@@ -18,7 +18,7 @@ class Aoe_Searchperience_Model_Adminhtml_System_Config_Source_Engine
 
         $engines = array(
             'catalogsearch/fulltext_engine'      => Mage::helper('enterprise_search')->__('MySql Fulltext'),
-            'aoe_searchperience/resource_engine' => $searchperienceHelper->__('Searchperience')
+            'aoe_searchperience/engine' => $searchperienceHelper->__('Searchperience')
         );
 
         if ($searchperienceHelper->isEnterprise()) $engines['enterprise_search/engine'] = Mage::helper('enterprise_search')->__('Solr');
