@@ -7,14 +7,14 @@ class Aoe_Searchperience_Model_Resource_Engine extends Enterprise_Search_Model_R
     /**
      * Store search engine adapter model instance
      *
-     * @var Enterprise_Search_Model_Adapter_Abstract
+     * @var Aoe_Searchperience_Model_Adapter_Searchperience
      */
     protected $_adapter = null;
 
     /**
      * Initialize search engine adapter
      *
-     * @return Enterprise_Search_Model_Resource_Engine
+     * @return Aoe_searchperience_Model_Resource_Engine
      */
     protected function _initAdapter()
     {
@@ -39,7 +39,7 @@ class Aoe_Searchperience_Model_Resource_Engine extends Enterprise_Search_Model_R
 
     /**
      * Retrieve search engine adapter model
-     *
+     * @param string $adapterName
      * @return Aoe_Searchperience_Model_Adapter_Searchperience
      */
     protected function _getAdapterModel($adapterName)

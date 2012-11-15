@@ -9,6 +9,15 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
      */
     protected $_clientDocObjectName = 'Aoe_Searchperience_Model_Api_Document';
 
+	public function __construct($options = array())
+	{
+		try {
+			$this->_connect($options);
+		} catch (Exception $e) {
+			Mage::logException($e);
+			Mage::throwException('Unable to perform search because of search engine missed configuration.');
+		}
+	}
     /**
      * Connect to Search Engine Client by specified options.
      * Should initialize _client
@@ -30,9 +39,5 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     protected function _search($query, $params = array())
     {
         // TODO: Implement _search() method.
-    }
-
-    public function deleteByQueries() {
-
     }
 }
