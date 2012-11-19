@@ -20,3 +20,9 @@ skin/adminhtml/default/default/css/searchperience/                          skin
 # module
 app/code/community/Aoe/Searchperience/                                      app/code/community/Aoe/Searchperience/
 app/etc/modules/*										                    app/etc/modules/
+
+#install searchperience api client
+@shell if ! [ -e $MODULE/composer.phar ]; then \
+	 (curl -s http://getcomposer.org/installer | php) \
+        fi
+@shell $MODULE/composer.phar install
