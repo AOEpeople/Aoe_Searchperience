@@ -5,7 +5,7 @@ class Aoe_Searchperience_Model_Api_DocumentBuilder_Product extends Aoe_Searchper
 
 	protected function getStaticAttributeCodes() {
 		return array('sku');
-
+    }
 	
 	protected function getEavAttributeCodes() {
 		return array();

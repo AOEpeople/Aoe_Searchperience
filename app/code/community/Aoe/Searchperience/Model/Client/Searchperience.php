@@ -63,6 +63,62 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 	 */
 	public function addDocuments($documents, $allowDups = false, $overwritePending = true, $overwriteCommitted = true)
 	{
-		return true;
+//		foreach ($documents as $document) {
+//            Mage::log(__CLASS__ . ':' . __LINE__ . ' - ' . $this->_documentToXmlFragment($document));
+//        }
 	}
+
+    /**
+     * Create an XML fragment from a {@link Apache_Solr_Document} instance appropriate for use inside a Solr add call
+     *
+     * @return string
+     */
+    protected function _documentToXmlFragment(Apache_Solr_Document $document)
+    {
+        $xml = '<product xmlns="urn:com.searchperience.indexing.product">';
+
+        foreach ($document as $key => $value)
+        {
+            $key = htmlspecialchars($key, ENT_QUOTES, 'UTF-8');
+            $fieldBoost = $document->getFieldBoost($key);
+
+            if (is_array($value))
+            {
+                foreach ($value as $multivalue)
+                {
+                    $xml .= '<field name="' . $key . '"';
+
+                    if ($fieldBoost !== false)
+                    {
+                        $xml .= ' boost="' . $fieldBoost . '"';
+
+                        // only set the boost for the first field in the set
+                        $fieldBoost = false;
+                    }
+
+                    $multivalue = htmlspecialchars($multivalue, ENT_NOQUOTES, 'UTF-8');
+
+                    $xml .= '>' . $multivalue . '</field>';
+                }
+            }
+            else
+            {
+                $xml .= '<field name="' . $key . '"';
+
+                if ($fieldBoost !== false)
+                {
+                    $xml .= ' boost="' . $fieldBoost . '"';
+                }
+
+                $value = htmlspecialchars($value, ENT_NOQUOTES, 'UTF-8');
+
+                $xml .= '>' . $value . '</field>';
+            }
+        }
+
+        $xml .= '</product>';
+
+        // replace any control characters to avoid Solr XML parser exception
+        return $this->_stripCtrlChars($xml);
+    }
 }
