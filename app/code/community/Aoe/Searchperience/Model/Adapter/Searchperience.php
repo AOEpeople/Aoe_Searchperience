@@ -88,14 +88,19 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         );
 
         foreach ($productIndexData as $attributeCode => $value) {
-            // skip unsearchable product attributes
-            if (!in_array($attributeCode, array_keys($this->_searchableProductAttributes))) {
+            if (
+                (!in_array($attributeCode, array_keys($this->_searchableProductAttributes))) ||
+                (
+                    isset($this->_searchableProductAttributes[$attributeCode]) &&
+                    1 == $this->_searchableProductAttributes[$attributeCode]->isUserDefined
+                )
+            ) {
                 continue;
             }
 
             if (is_array($value)) {
                 foreach ($value as $id => $attributeValue) {
-                    $this->_indexData[$id][$attributeCode] = $attributeValue;
+                    $this->_indexData['products'][$id][$attributeCode] = $attributeValue;
                     $productIds[$id] = 1;
                 }
             }
@@ -106,6 +111,8 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
         foreach (array_keys($productIds) as $pid) {
             $product = Mage::getModel('catalog/product')->load($pid);
+
+            $this->_indexData['products'][$pid]['sku'] = $product->getSku();
 
             // fetch price information
             $this->_getProductPriceInformation($product);
@@ -134,25 +141,23 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
             // fetch related products
             foreach ($product->getRelatedProducts() as $relatedProduct) {
-                $this->_indexData[$pid]['related'][] = $relatedProduct->getId();
+                $this->_indexData['products'][$pid]['related'][] = $relatedProduct->getId();
             }
 
             // fetch upsell products
             foreach ($product->getUpSellProducts() as $upsellProduct) {
-                $this->_indexData[$pid]['upsell'][] = $upsellProduct->getId();
+                $this->_indexData['products'][$pid]['upsell'][] = $upsellProduct->getId();
             }
 
             // fetch crosssell products
             foreach ($product->getCrossSellProducts() as $crossProduct) {
-                $this->_indexData[$pid]['cross'][] = $crossProduct->getId();
+                $this->_indexData['products'][$pid]['cross'][] = $crossProduct->getId();
             }
 
             // fetch additional product information
-            //$this->_getAdditionalProductData($product);
+            $this->_getAdditionalProductData($product);
 
         }
-
-        //Mage::log(var_export($this->_indexData, true));
 
         return $this->_indexData;
     }
@@ -172,7 +177,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
         foreach ($attributes as $attributeCode => $getMethod) {
             if (!empty($this->_searchableProductAttributes[$attributeCode])) {
-                $this->_indexData[$product->getId()][$attributeCode] = $product->$getMethod();
+                $this->_indexData['products'][$product->getId()][$attributeCode] = $product->$getMethod();
             }
         }
     }
@@ -193,7 +198,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
         foreach ($attributes as $attributeCode => $getMethod) {
             if (!empty($this->_searchableProductAttributes[$attributeCode])) {
-                $this->_indexData[$product->getId()]['images'][$attributeCode] = $product->$getMethod();
+                $this->_indexData['products'][$product->getId()]['images'][$attributeCode] = $product->$getMethod();
             }
         }
     }
@@ -208,9 +213,9 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         $productData = $product->getData();
 
         foreach ($this->_searchableProductAttributes as $attributeCode => $attribute) {
-            if (!isset($this->_indexData[$product->getId()][$attributeCode]) && !isset($this->_indexData[$attributeCode])) {
+            if (!isset($this->_indexData['products'][$product->getId()][$attributeCode]) && !isset($this->_indexData[$attributeCode])) {
                 if (isset($productData[$attributeCode])) {
-                    $this->_indexData[$product->getId()]['additionalData'][$attributeCode] = $productData[$attributeCode];
+                    $this->_indexData['products'][$product->getId()]['additionalData'][$attributeCode] = $productData[$attributeCode];
                 }
             }
         }
