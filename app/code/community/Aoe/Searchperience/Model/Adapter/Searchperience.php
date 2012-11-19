@@ -61,6 +61,30 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     }
 
     /**
+     * Create Solr Input Documents by specified data
+     *
+     * @param   array $docData
+     * @param   int $storeId
+     *
+     * @return  array
+     */
+    public function prepareDocsPerStore($docData, $storeId)
+    {
+        if (!is_array($docData) || empty($docData)) {
+            return array();
+        }
+
+        $docs = array();
+        foreach ($docData as $productId => $productIndexData) {
+            $doc = new $this->_clientDocObjectName;
+            $doc->setData($this->_prepareIndexProductData($productIndexData, $productId, $storeId));
+            $docs[] = $doc;
+        }
+
+        return $docs;
+    }
+
+    /**
      * Prepare index data for using in search engine metadata.
      * Prepare fields for advanced search, navigation, sorting and fulltext fields for each search weight for
      * quick search and spell.
@@ -73,10 +97,11 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
      */
     protected function _prepareIndexProductData($productIndexData, $productId, $storeId)
     {
-
         if (!$this->isAvailableInIndex($productIndexData, $productId)) {
             return false;
         }
+
+        Mage::log($productId);
 
         // fetch searchable product attributes
         $this->_getSearchableAttributes();
@@ -85,16 +110,11 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         $this->_indexData  = array(
             'storeid'  => $storeId,
             'language' => Mage::getStoreConfig('general/locale/code', $storeId),
+            'in_stock' => (!empty($productIndexData['in_stock']) ? $productIndexData['in_stock'] : ''),
         );
 
         foreach ($productIndexData as $attributeCode => $value) {
-            if (
-                (!in_array($attributeCode, array_keys($this->_searchableProductAttributes))) ||
-                (
-                    isset($this->_searchableProductAttributes[$attributeCode]) &&
-                    1 == $this->_searchableProductAttributes[$attributeCode]->isUserDefined
-                )
-            ) {
+            if ($this->_skipAttribute($attributeCode)) {
                 continue;
             }
 
@@ -167,8 +187,8 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
      *
      * @param $product Mage_Catalog_Model_Product
      */
-    protected function _getProductPriceInformation($product) {
-
+    protected function _getProductPriceInformation($product)
+    {
         // define attributes and get methods
         $attributes = array(
             'special_price' => 'getSpecialPrice',
@@ -187,8 +207,8 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
      *
      * @param $product Mage_Catalog_Model_Product
      */
-    protected function _getProductImageInformation($product) {
-
+    protected function _getProductImageInformation($product)
+    {
         // define attributes and get methods
         $attributes = array(
             'thumbnail'   => 'getThumbnailUrl',
@@ -208,8 +228,8 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
      *
      * @param $product Mage_Catalog_Model_Product
      */
-    protected function _getAdditionalProductData($product) {
-
+    protected function _getAdditionalProductData($product)
+    {
         $productData = $product->getData();
 
         foreach ($this->_searchableProductAttributes as $attributeCode => $attribute) {
@@ -224,13 +244,36 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     /**
      * Determines searchable product attributes
      */
-    protected function _getSearchableAttributes() {
-
+    protected function _getSearchableAttributes()
+    {
         $productAttributeCollection = Mage::getResourceModel('catalog/product_attribute_collection');
         $productAttributeCollection->addSearchableAttributeFilter();
 
         foreach ($productAttributeCollection->getItems() as $attribute) {
             $this->_searchableProductAttributes[$attribute->getAttributeCode()] = $attribute;
         }
+    }
+
+    /**
+     * Checks, if given attribute shall be skipped for indexing
+     *
+     * @param $attributeCode
+     */
+    protected function _skipAttribute($attributeCode)
+    {
+        // not in the list of searchable attributes
+        if (!in_array($attributeCode, array_keys($this->_searchableProductAttributes))) {
+            return true;
+        }
+
+        // is user defined
+        if (
+            isset($this->_searchableProductAttributes[$attributeCode]) &&
+            1 == $this->_searchableProductAttributes[$attributeCode]->isUserDefined
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -1,12 +1,12 @@
 <?php
 
 class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
-
 {
 	/**
 	 * @param array $options
 	 */
-	public  function __construct($options) {
+	public  function __construct($options)
+    {
 		return $this;
 	}
 
@@ -30,7 +30,8 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 	* @param float $timeout maximum time to wait for ping in seconds, -1 for unlimited (default is 2)
 	* @return float Actual time taken to ping the server, FALSE if timeout or HTTP error status occurs
 	*/
-	public function ping($timeout = 2) {
+	public function ping($timeout = 2)
+    {
 		return 0.1;
 	}
 
@@ -50,10 +51,15 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 		return true;
 	}
 
+    public function rollback()
+    {
+        return true;
+    }
+
 	/**
 	 * Add an array of Solr Documents to the index all at once
 	 *
-	 * @param array $documents Should be an array of Apache_Solr_Document instances
+	 * @param array $documents
 	 * @param boolean $allowDups
 	 * @param boolean $overwritePending
 	 * @param boolean $overwriteCommitted
@@ -63,9 +69,10 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 	 */
 	public function addDocuments($documents, $allowDups = false, $overwritePending = true, $overwriteCommitted = true)
 	{
-//		foreach ($documents as $document) {
-//            Mage::log(__CLASS__ . ':' . __LINE__ . ' - ' . $this->_documentToXmlFragment($document));
-//        }
+        foreach ($documents as $document) {
+            // put $this->_documentToXmlFragment($document) to the index
+            Mage::log(__CLASS__ . ':' . __LINE__ . ' - ' . $this->_documentToXmlFragment($document));
+        }
 	}
 
     /**
@@ -75,50 +82,96 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
      */
     protected function _documentToXmlFragment(Apache_Solr_Document $document)
     {
-        $xml = '<product xmlns="urn:com.searchperience.indexing.product">';
+        $writer = new XMLWriter();
+        $writer->openMemory();
+        $writer->startDocument('1.0', 'UTF-8');
+        $writer->startElement('product');
+        $writer->writeAttribute('xmlns', 'urn:com.searchperience.indexing.product');
+        $documentFields = array(
+            'sku'               => 'sku',
+            'title'             => 'name',
+            'description'       => 'description',
+            'short_description' => 'short_description',
+            'price'             => 'price',
+            'special_price'     => 'special_price',
+            'group_price'       => 'group_price'
+        );
+        $documentData = $document->getData();
 
-        foreach ($document as $key => $value)
-        {
-            $key = htmlspecialchars($key, ENT_QUOTES, 'UTF-8');
-            $fieldBoost = $document->getFieldBoost($key);
+        foreach ($documentData['products'] as $productId => $productData) {
+            // for now, process only main product
+            if ($documentData['sku'] == $productData['sku']) {
+                // fetch some default data
+                $writer->writeElement('id', $productId);
+                $writer->writeElement('storeid', $this->_getValueFromArray('storeid', $documentData));
+                $writer->writeElement('language', $this->_getValueFromArray('language', $documentData));
+                $writer->writeElement('availability', $this->_getValueFromArray('in_stock', $documentData));
 
-            if (is_array($value))
-            {
-                foreach ($value as $multivalue)
-                {
-                    $xml .= '<field name="' . $key . '"';
+                // add product data to xml
+                foreach ($documentFields as $elementName => $productDataName) {
+                    $writer->writeElement($elementName, $this->_getValueFromArray($productDataName, $productData));
+                }
 
-                    if ($fieldBoost !== false)
-                    {
-                        $xml .= ' boost="' . $fieldBoost . '"';
+                // add category information to xml
+                $categoryInformation = $this->_getValueFromArray('categories', $documentData, array());
+                foreach ($categoryInformation as $categoryId => $category) {
+                    $writer->writeElement('category_path', $this->_getValueFromArray('path', $category));
+                    $writer->writeElement('category_id', $categoryId);
+                }
 
-                        // only set the boost for the first field in the set
-                        $fieldBoost = false;
+                // add image information to xml
+                $images = $this->_getValueFromArray('images', $productData, array());
+                $writer->writeElement('image_link', $this->_getValueFromArray('image', $images));
+
+                // dynamic fields
+                $additionalData = $this->_getValueFromArray('additionalData', $productData, array());
+                foreach ($additionalData as $key => $value) {
+                    $writer->startElement('attribute');
+                    $writer->writeAttribute('name', $key);
+                    $writer->writeAttribute('type', '');
+                    $writer->writeAttribute('forsorting', 0);
+                    $writer->writeAttribute('forfiltering', 0);
+                    $writer->writeAttribute('forsearching', 0);
+                    $writer->text($value);
+                    $writer->endElement();
+                }
+
+                // add related, upsell and crosssell information
+                $relatedInformation = array(
+                    'related' => 'related_product',
+                    'upsell'  => 'upsell',
+                    'cross'   => 'crosssell',
+                );
+
+                foreach ($relatedInformation as $key => $elementName) {
+                    $assigned = $this->_getValueFromArray($key, $productData, array());
+                    foreach ($assigned as $index => $productId) {
+                        $writer->writeElement($elementName, $productId);
                     }
-
-                    $multivalue = htmlspecialchars($multivalue, ENT_NOQUOTES, 'UTF-8');
-
-                    $xml .= '>' . $multivalue . '</field>';
                 }
-            }
-            else
-            {
-                $xml .= '<field name="' . $key . '"';
-
-                if ($fieldBoost !== false)
-                {
-                    $xml .= ' boost="' . $fieldBoost . '"';
-                }
-
-                $value = htmlspecialchars($value, ENT_NOQUOTES, 'UTF-8');
-
-                $xml .= '>' . $value . '</field>';
             }
         }
 
-        $xml .= '</product>';
+        // end product node
+        $writer->endElement();
+        $writer->endDocument();
 
         // replace any control characters to avoid Solr XML parser exception
-        return $this->_stripCtrlChars($xml);
+        return $this->_stripCtrlChars($writer->outputMemory(true));
+    }
+
+    /**
+     * Used for extracting values from arrays
+     *
+     * @param $key      Key of data to extract
+     * @param $array    Array with data to extract from
+     * @param $default  Default return value if key not found in array
+     */
+    private function _getValueFromArray($key, array $array, $default = '')
+    {
+        if (array_key_exists($key, $array)) {
+            return $array[$key];
+        }
+        return $default;
     }
 }
