@@ -1,5 +1,9 @@
 <?php
 
+$path = dirname( __FILE__ ).'/../../../../../../../vendor/autoload.php';
+require $path;
+
+
 class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 
 {
@@ -121,4 +125,19 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
         // replace any control characters to avoid Solr XML parser exception
         return $this->_stripCtrlChars($xml);
     }
+
+	public function dummy() {
+		$document = new \Searchperience\Api\Client\Domain\Document();
+		$document->setContent('somecontent');
+		$document->setForeignId(9007789);
+		$document->setSource('magento');
+
+		$document->setUrl('');
+
+		$documentRepository = \Searchperience\Common\Factory::getDocumentRepository('', '', '', '');
+		$res = $documentRepository->add($document);
+
+
+		$document = $documentRepository->getByForeignId(9007789);
+	}
 }
