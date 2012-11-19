@@ -5,17 +5,24 @@
             <version>0.2.0</version>
         </Aoe_Searchperience>
     </modules>
-	<admin>
-		<routers>
-			<aoe_searchperience>
-				<use>admin</use>
-				<args>
-					<module>Aoe_Searchperience</module>
-					<frontName>searchperience</frontName>
-				</args>
-			</aoe_searchperience>
-		</routers>
-	</admin>
+    <default>
+        <searchperience>
+            <searchperience>
+                <source>magento</source>
+            </searchperience>
+        </searchperience>
+    </default>
+    <admin>
+        <routers>
+            <aoe_searchperience>
+                <use>admin</use>
+                <args>
+                    <module>Aoe_Searchperience</module>
+                    <frontName>searchperience</frontName>
+                </args>
+            </aoe_searchperience>
+        </routers>
+    </admin>
     <global>
         <blocks>
             <aoe_searchperience>
@@ -42,21 +49,25 @@
             </aoe_searchperience_resource>
             <enterprise_search>
                 <rewrite>
-                    <adminhtml_system_config_source_engine>Aoe_Searchperience_Model_Adminhtml_System_Config_Source_Engine</adminhtml_system_config_source_engine>
-                    <adminhtml_system_config_backend_engine>Aoe_Searchperience_Model_Adminhtml_System_Config_Backend_Engine</adminhtml_system_config_backend_engine>
+                    <adminhtml_system_config_source_engine>
+                        Aoe_Searchperience_Model_Adminhtml_System_Config_Source_Engine
+                    </adminhtml_system_config_source_engine>
+                    <adminhtml_system_config_backend_engine>
+                        Aoe_Searchperience_Model_Adminhtml_System_Config_Backend_Engine
+                    </adminhtml_system_config_backend_engine>
                 </rewrite>
             </enterprise_search>
         </models>
-		<resources>
-			<aoe_searchperience_setup>
-				<setup>
-					<module>Aoe_Searchperience</module>
-				</setup>
-				<connection>
-					<use>core_setup</use>
-				</connection>
-			</aoe_searchperience_setup>
-		</resources>
+        <resources>
+            <aoe_searchperience_setup>
+                <setup>
+                    <module>Aoe_Searchperience</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </aoe_searchperience_setup>
+        </resources>
     </global>
 
     <frontend>

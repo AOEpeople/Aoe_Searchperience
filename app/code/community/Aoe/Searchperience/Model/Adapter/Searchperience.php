@@ -101,8 +101,6 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             return false;
         }
 
-        Mage::log($productId);
-
         // fetch searchable product attributes
         $this->_getSearchableAttributes();
 
@@ -132,7 +130,10 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         foreach (array_keys($productIds) as $pid) {
             $product = Mage::getModel('catalog/product')->load($pid);
 
-            $this->_indexData['products'][$pid]['sku'] = $product->getSku();
+            $this->_indexData['products'][$pid]['id']     = $product->getId();
+            $this->_indexData['products'][$pid]['sku']    = $product->getSku();
+            $this->_indexData['products'][$pid]['url']    = $product->getProductUrl();
+            $this->_indexData['products'][$pid]['unique'] = $product->getId() . '_' . $storeId;
 
             // fetch price information
             $this->_getProductPriceInformation($product);
@@ -176,7 +177,6 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
             // fetch additional product information
             $this->_getAdditionalProductData($product);
-
         }
 
         return $this->_indexData;
