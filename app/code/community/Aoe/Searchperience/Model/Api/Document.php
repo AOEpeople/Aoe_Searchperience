@@ -9,6 +9,8 @@ class Aoe_Searchperience_Model_Api_Document extends Apache_Solr_Document {
 		<content></content>
 	</document>";
 
+    private $_data = array();
+
 	/**
 	 * @return string|void
 	 */
@@ -22,4 +24,24 @@ class Aoe_Searchperience_Model_Api_Document extends Apache_Solr_Document {
 	protected function getForeignId() {
 		return $this->getEntityType() . '_' . $this->getId();
 	}
+
+    /**
+     * Stores data internally
+     *
+     * @param array $data
+     */
+    public function setData($data = array())
+    {
+        $this->_data = $data;
+    }
+
+    /**
+     * Returns internal stored data
+     *
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->_data;
+    }
 }
