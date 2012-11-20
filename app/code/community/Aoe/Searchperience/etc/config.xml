@@ -5,14 +5,6 @@
             <version>0.2.0</version>
         </Aoe_Searchperience>
     </modules>
-    <default>
-        <searchperience>
-            <searchperience>
-                <source>magento</source>
-                <remote_js>http://qvc.deploy.saascluster.aoe-works.de/fileadmin/qvc.js</remote_js>
-            </searchperience>
-        </searchperience>
-    </default>
     <admin>
         <routers>
             <aoe_searchperience>
@@ -96,7 +88,6 @@
                 <aoeSolrDataTypeLivesearch>jsonp</aoeSolrDataTypeLivesearch>
                 <aoeSolrDataTypeSearch>jsonp</aoeSolrDataTypeSearch>
                 <aoeSolrDataTypeLiveSuggest>jsonp</aoeSolrDataTypeLiveSuggest>
-
                 <SolrAutosuggestSelector>input.solr-suggest-field_disabled</SolrAutosuggestSelector>
                 <aoeSolrSearchfieldSelector>input#search</aoeSolrSearchfieldSelector>
                 <aoeSolrLivesuggestSelector>input#search</aoeSolrLivesuggestSelector>
@@ -110,6 +101,10 @@
                 <aoeSolrSearchPid>0</aoeSolrSearchPid>
                 <aoeSolrParentContainerSelector>.page div.main</aoeSolrParentContainerSelector>
             </searchperience_config_js>
+            <searchperience>
+                <source>magento</source>
+                <remote_js>http://qvc.deploy.saascluster.aoe-works.de/fileadmin/qvc.js</remote_js>
+            </searchperience>
         </searchperience>
     </default>
 </config>

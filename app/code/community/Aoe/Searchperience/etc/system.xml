@@ -33,43 +33,6 @@
                             <show_in_store>1</show_in_store>
                             <sort_order>10</sort_order>
                         </api>
-                        <token translate="label, comment" module="aoe_searchperience">
-                            <label>Authentication token</label>
-                            <comment>currently not used</comment>
-                            <frontend_type>text</frontend_type>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <sort_order>20</sort_order>
-                        </token>
-                        <source translate="label, comment" module="aoe_searchperience">
-                            <label>Document source</label>
-                            <comment>Document source, submitted to Searchperience API</comment>
-                            <frontend_type>text</frontend_type>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <sort_order>30</sort_order>
-                        </source>
-                        <remote_js translate="label, comment" module="aoe_searchperience">
-                            <label>Remote JS</label>
-                            <comment>Remote JS from searchperience</comment>
-                            <frontend_type>text</frontend_type>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <sort_order>40</sort_order>
-                        </remote_js>
-                    </fields>
-                </searchperience>
-                <connection_settings translate="label" module="aoe_searchperience">
-                    <label>Connection settings</label>
-                    <sort_order>20</sort_order>
-                    <show_in_default>1</show_in_default>
-                    <show_in_website>1</show_in_website>
-                    <show_in_store>1</show_in_store>
-                    <expanded>1</expanded>
-                    <fields>
                         <customer_key translate="label, comment" module="aoe_searchperience">
                             <label>Customer key</label>
                             <comment>Searchperience API customer key</comment>
@@ -77,7 +40,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <sort_order>10</sort_order>
+                            <sort_order>20</sort_order>
                         </customer_key>
                         <username translate="label, comment" module="aoe_searchperience">
                             <label>Username</label>
@@ -86,19 +49,37 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <sort_order>20</sort_order>
+                            <sort_order>30</sort_order>
                         </username>
                         <password translate="label, comment" module="aoe_searchperience">
                             <label>Password</label>
                             <comment>Searchperience API password</comment>
+                            <frontend_type>password</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>40</sort_order>
+                        </password>
+                        <source translate="label, comment" module="aoe_searchperience">
+                            <label>Document source</label>
+                            <comment>Document source, submitted to Searchperience API</comment>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <sort_order>30</sort_order>
-                        </password>
+                            <sort_order>50</sort_order>
+                        </source>
+                        <remote_js translate="label, comment" module="aoe_searchperience">
+                            <label>Remote JS</label>
+                            <comment>Remote JS from searchperience</comment>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>50</sort_order>
+                        </remote_js>
                     </fields>
-                </connection_settings>
+                </searchperience>
                 <searchperience_config_js translate="label" module="aoe_searchperience">
                     <label>Javascript Config Settings (config.js)</label>
                     <sort_order>20</sort_order>

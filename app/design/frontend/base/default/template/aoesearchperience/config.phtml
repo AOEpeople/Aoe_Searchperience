@@ -38,3 +38,6 @@ var aoeSolrSearchPid                        = <?php echo (int)Mage::getStoreConf
 var aoeSolrParentContainerSelector          = '<?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/aoeSolrParentContainerSelector') ?>';
 <?php endif ?>
 </script>
+<?php if (Mage::getStoreConfig('searchperience/searchperience/remote_js')): ?>
+<script type="text/javascript" src="<?php echo Mage::getStoreConfig('searchperience/searchperience/remote_js'); ?>"></script>
+<?php endif; ?>
