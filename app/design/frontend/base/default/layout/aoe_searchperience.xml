@@ -30,10 +30,6 @@
 
             <action method="addItem">
                 <type>skin_js</type>
-                <name>js/aoesearchperience/config.js</name>
-            </action>
-            <action method="addItem">
-                <type>skin_js</type>
                 <name>js/aoesearchperience/lib.js</name>
             </action>
             <action method="addItem">
