@@ -1,0 +1,40 @@
+<?php /* config values for searchperience - replacement for config.js */ ?>
+<script type="text/javascript">
+//in an environment without baseurl you may want to use the following
+// var	suggestUrl 							= location.protocol + '//' + location.hostname + '/';
+// var	searchUrl 							= location.protocol + '//' + location.hostname + '/';
+// var	widgetUrl 							= location.protocol + '//' + location.hostname + '/';
+// var	liveSearchUrl						= location.protocol + '//' + location.hostname + '/';
+// var	liveSuggestUrl						= location.protocol + '//' + location.hostname + '/';
+
+var enableInnerShiv                         = <?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/enableInnerShiv') ?>;
+var doWidgetInit                            = <?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/doWidgetInit') ?>;
+
+var aoeSolrDataTypeSuggest                  = '<?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/aoeSolrDataTypeSuggest') ?>';
+var aoeSolrDataTypeLivesearch               = '<?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/aoeSolrDataTypeLivesearch') ?>';
+var aoeSolrDataTypeSearch                   = '<?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/aoeSolrDataTypeSearch') ?>';
+var aoeSolrDataTypeLiveSuggest              = '<?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/aoeSolrDataTypeLiveSuggest') ?>';
+
+var aoeSolrAutosuggestSelector              = '<?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/SolrAutosuggestSelector') ?>';
+var aoeSolrSearchfieldSelector              = '<?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/aoeSolrSearchfieldSelector') ?>';
+var aoeSolrLivesuggestSelector              = '<?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/aoeSolrLivesuggestSelector') ?>';
+var aoeSolrForceOnlyFilenameFromAppendix    = <?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/aoeSolrForceOnlyFilenameFromAppendix') ?>;
+var aoeSolrProfilerEnable                   = <?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/aoeSolrProfilerEnable') ?>;
+var solrSelctionContainerSelector           = '<?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/solrSelctionContainerSelector') ?>';
+var aoeSolrInitRemoteWidgets                = <?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/aoeSolrInitRemoteWidgets') ?>;
+var aoeSolrLiveSuggestOffsetTop             = <?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/aoeSolrLiveSuggestOffsetTop') ?>;
+var aoeSolrLiveSuggestOffetLeft             = <?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/aoeSolrLiveSuggestOffetLeft') ?>;
+var aoeSolrLiveSuggestWidth                 = <?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/aoeSolrLiveSuggestWidth') ?>;
+
+<?php if ((int)Mage::getStoreConfig('searchperience/searchperience_config_js/aoeSolrSearchPid') > 0): ?>
+//add this to use the fast cached TSFE
+var aoeSolrSearchPid                        = <?php echo (int)Mage::getStoreConfig('searchperience/searchperience_config_js/aoeSolrSearchPid') ?>;
+<?php endif ?>
+
+<?php if (strlen(Mage::getStoreConfig('searchperience/searchperience_config_js/aoeSolrParentContainerSelector')) > 0): ?>
+//if you need to specify the solr parentcontainer you need to uncomment the following
+//this is typically needed when the search should be displayed on a remote site, where initially is
+//no search container in place
+var aoeSolrParentContainerSelector          = '<?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/aoeSolrParentContainerSelector') ?>';
+<?php endif ?>
+</script>

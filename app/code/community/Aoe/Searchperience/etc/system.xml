@@ -23,7 +23,6 @@
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
-                    <expanded>1</expanded>
                     <fields>
                         <api translate="label, comment" module="aoe_searchperience">
                             <label>Server</label>
@@ -100,26 +99,207 @@
                         </password>
                     </fields>
                 </connection_settings>
+                <searchperience_config_js translate="label" module="aoe_searchperience">
+                    <label>Javascript Config Settings (config.js)</label>
+                    <sort_order>20</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enableInnerShiv translate="label" module="aoe_searchperience">
+                            <label>Enable InnerShiv</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>aoe_searchperience/adminhtml_system_config_source_Yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>10</sort_order>
+                        </enableInnerShiv>
+
+                        <doWidgetInit translate="label" module="aoe_searchperience">
+                            <label>Widget Init</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>aoe_searchperience/adminhtml_system_config_source_Yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>20</sort_order>
+                        </doWidgetInit>
+
+                        <aoeSolrDataTypeSuggest translate="label" module="aoe_searchperience">
+                            <label>Datatype Suggest</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>aoe_searchperience/adminhtml_system_config_source_dataType</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>30</sort_order>
+                        </aoeSolrDataTypeSuggest>
+
+                        <aoeSolrDataTypeLivesearch translate="label" module="aoe_searchperience">
+                            <label>Datatype Livesearch</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>aoe_searchperience/adminhtml_system_config_source_dataType</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>40</sort_order>
+                        </aoeSolrDataTypeLivesearch>
+
+                        <aoeSolrDataTypeSearch translate="label" module="aoe_searchperience">
+                            <label>Datatype Search</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>aoe_searchperience/adminhtml_system_config_source_dataType</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>50</sort_order>
+                        </aoeSolrDataTypeSearch>
+
+                        <aoeSolrDataTypeLiveSuggest translate="label" module="aoe_searchperience">
+                            <label>Datatype LiveSuggest</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>aoe_searchperience/adminhtml_system_config_source_dataType</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>60</sort_order>
+                        </aoeSolrDataTypeLiveSuggest>
+
+                        <SolrAutosuggestSelector translate="label" module="aoe_searchperience">
+                            <label>Autosuggest Selector</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>70</sort_order>
+                        </SolrAutosuggestSelector>
+
+                        <aoeSolrSearchfieldSelector translate="label" module="aoe_searchperience">
+                            <label>Searchfield Selector</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>80</sort_order>
+                        </aoeSolrSearchfieldSelector>
+
+                        <aoeSolrLivesuggestSelector translate="label" module="aoe_searchperience">
+                            <label>Livesuggest Selector</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>90</sort_order>
+                        </aoeSolrLivesuggestSelector>
+
+                        <aoeSolrForceOnlyFilenameFromAppendix translate="label" module="aoe_searchperience">
+                            <label>Only Filename From Appendix</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>100</sort_order>
+                        </aoeSolrForceOnlyFilenameFromAppendix>
+
+                        <aoeSolrProfilerEnable translate="label" module="aoe_searchperience">
+                            <label>Enable Solr Profiler</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>110</sort_order>
+                        </aoeSolrProfilerEnable>
+
+                        <solrSelctionContainerSelector translate="label" module="aoe_searchperience">
+                            <label>Selection Container Selector</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>120</sort_order>
+                        </solrSelctionContainerSelector>
+
+                        <aoeSolrInitRemoteWidgets translate="label" module="aoe_searchperience">
+                            <label>Init Remote Widgets</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>130</sort_order>
+                        </aoeSolrInitRemoteWidgets>
+
+                        <aoeSolrLiveSuggestOffsetTop translate="label" module="aoe_searchperience">
+                            <label>Livesuggest Offset Top</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>140</sort_order>
+                        </aoeSolrLiveSuggestOffsetTop>
+
+                        <aoeSolrLiveSuggestOffetLeft translate="label" module="aoe_searchperience">
+                            <label>Livesuggest Offset Left</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>150</sort_order>
+                        </aoeSolrLiveSuggestOffetLeft>
+
+                        <aoeSolrLiveSuggestWidth translate="label" module="aoe_searchperience">
+                            <label>Livesuggest Width</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>160</sort_order>
+                        </aoeSolrLiveSuggestWidth>
+
+                        <aoeSolrSearchPid translate="label, comment" module="aoe_searchperience">
+                            <label>Search Pid</label>
+                            <comment>use this to use the fast cached TSFE</comment>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>170</sort_order>
+                        </aoeSolrSearchPid>
+
+                        <aoeSolrParentContainerSelector translate="label, comment" module="aoe_searchperience">
+                            <label>Parent Container Selector</label>
+                            <comment>specify solr parentcontainer (leave empty if not needed) - this is typically needed when the search should be displayed on a remote site, where initially is no search container in place</comment>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>180</sort_order>
+                        </aoeSolrParentContainerSelector>
+                    </fields>
+                </searchperience_config_js>
             </groups>
         </searchperience>
 
-        <!--<catalog>-->
-            <!--<groups>-->
-                <!--<search>-->
-                    <!--<fields>-->
-                        <!--<alternate_engine translate="label">-->
-                            <!--<label>Alternative Search Engine</label>-->
-                            <!--<frontend_type>select</frontend_type>-->
-                            <!--<backend_model>aoe_searchperience/adminhtml_system_config_backend_engine</backend_model>-->
-                            <!--<source_model>aoe_searchperience/adminhtml_system_config_source_engine</source_model>-->
-                            <!--<sort_order>19</sort_order>-->
-                            <!--<show_in_default>1</show_in_default>-->
-                            <!--<show_in_website>0</show_in_website>-->
-                            <!--<show_in_store>0</show_in_store>-->
-                        <!--</alternate_engine>-->
-                    <!--</fields>-->
-                <!--</search>-->
-            <!--</groups>-->
-        <!--</catalog>-->
+        <catalog>
+            <groups>
+                <search>
+                    <fields>
+                        <engine translate="label">
+                            <label>Search Engine</label>
+                            <frontend_type>select</frontend_type>
+                            <backend_model>aoe_searchperience/adminhtml_system_config_backend_engine</backend_model>
+                            <source_model>aoe_searchperience/adminhtml_system_config_source_engine</source_model>
+                            <sort_order>19</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </engine>
+                    </fields>
+                </search>
+            </groups>
+        </catalog>
     </sections>
 </config>
