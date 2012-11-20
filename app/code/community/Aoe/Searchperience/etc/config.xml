@@ -5,17 +5,17 @@
             <version>0.2.0</version>
         </Aoe_Searchperience>
     </modules>
-	<admin>
-		<routers>
-			<aoe_searchperience>
-				<use>admin</use>
-				<args>
-					<module>Aoe_Searchperience</module>
-					<frontName>searchperience</frontName>
-				</args>
-			</aoe_searchperience>
-		</routers>
-	</admin>
+    <admin>
+        <routers>
+            <aoe_searchperience>
+                <use>admin</use>
+                <args>
+                    <module>Aoe_Searchperience</module>
+                    <frontName>searchperience</frontName>
+                </args>
+            </aoe_searchperience>
+        </routers>
+    </admin>
     <global>
         <blocks>
             <aoe_searchperience>
@@ -53,16 +53,16 @@
 				</rewrite>
 			</index>
         </models>
-		<resources>
-			<aoe_searchperience_setup>
-				<setup>
-					<module>Aoe_Searchperience</module>
-				</setup>
-				<connection>
-					<use>core_setup</use>
-				</connection>
-			</aoe_searchperience_setup>
-		</resources>
+        <resources>
+            <aoe_searchperience_setup>
+                <setup>
+                    <module>Aoe_Searchperience</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </aoe_searchperience_setup>
+        </resources>
     </global>
 
     <frontend>
@@ -84,4 +84,30 @@
             </updates>
         </layout>
     </adminhtml>
+
+    <default>
+        <searchperience>
+            <searchperience_config_js>
+                <enableInnerShiv>false</enableInnerShiv>
+                <doWidgetInit>false</doWidgetInit>
+                <aoeSolrDataTypeSuggest>jsonp</aoeSolrDataTypeSuggest>
+                <aoeSolrDataTypeLivesearch>jsonp</aoeSolrDataTypeLivesearch>
+                <aoeSolrDataTypeSearch>jsonp</aoeSolrDataTypeSearch>
+                <aoeSolrDataTypeLiveSuggest>jsonp</aoeSolrDataTypeLiveSuggest>
+
+                <SolrAutosuggestSelector>input.solr-suggest-field_disabled</SolrAutosuggestSelector>
+                <aoeSolrSearchfieldSelector>input#search</aoeSolrSearchfieldSelector>
+                <aoeSolrLivesuggestSelector>input#search</aoeSolrLivesuggestSelector>
+                <aoeSolrForceOnlyFilenameFromAppendix>true</aoeSolrForceOnlyFilenameFromAppendix>
+                <aoeSolrProfilerEnable>true</aoeSolrProfilerEnable>
+                <solrSelctionContainerSelector>.page div.main</solrSelctionContainerSelector>
+                <aoeSolrInitRemoteWidgets>false</aoeSolrInitRemoteWidgets>
+                <aoeSolrLiveSuggestOffsetTop>0</aoeSolrLiveSuggestOffsetTop>
+                <aoeSolrLiveSuggestOffetLeft>0</aoeSolrLiveSuggestOffetLeft>
+                <aoeSolrLiveSuggestWidth>500</aoeSolrLiveSuggestWidth>
+                <aoeSolrSearchPid>0</aoeSolrSearchPid>
+                <aoeSolrParentContainerSelector>.page div.main</aoeSolrParentContainerSelector>
+            </searchperience_config_js>
+        </searchperience>
+    </default>
 </config>

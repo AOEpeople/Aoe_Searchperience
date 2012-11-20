@@ -6,6 +6,13 @@ require $path;
 
 class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 {
+    /**
+     * Product data
+     *
+     * @var array
+     */
+    private $_productData = array();
+
 	/**
 	 * @param array $options
 	 */
@@ -63,7 +70,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 	/**
 	 * Add an array of Solr Documents to the index all at once
 	 *
-	 * @param array $documents
+	 * @param array $documentList
 	 * @param boolean $allowDups
 	 * @param boolean $overwritePending
 	 * @param boolean $overwriteCommitted
@@ -71,11 +78,41 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 	 *
 	 * @throws Exception If an error occurs during the service call
 	 */
-	public function addDocuments($documents, $allowDups = false, $overwritePending = true, $overwriteCommitted = true)
+	public function addDocuments($documentList, $allowDups = false, $overwritePending = true, $overwriteCommitted = true)
 	{
-        foreach ($documents as $document) {
-            // put $this->_documentToXmlFragment($document) to the index
-            Mage::log(__CLASS__ . ':' . __LINE__ . ' - ' . $this->_documentToXmlFragment($document));
+        $customerKey    = Mage::getStoreConfig('searchperience/connection_settings/customer_key', 'default');
+        $username       = Mage::getStoreConfig('searchperience/connection_settings/username', 'default');
+        $password       = Mage::getStoreConfig('searchperience/connection_settings/password', 'default');
+        $baseUrl        = Mage::getStoreConfig('searchperience/searchperience/api', 'default');
+        $documentSource = Mage::getStoreConfig('searchperience/searchperience/source', 'default');
+
+        if (in_array(null, array($customerKey, $username, $password, $documentSource, $baseUrl))) {
+            Mage::getSingleton('core/session')->addError(
+                Mage::helper('core')->__('No valid connection settings for searchperience connection found!')
+            );
+            return false;
+        }
+
+        foreach ($documentList as $rawDocument) {
+            $documentData = $rawDocument->getData();
+            $productData  = $this->_getProcessableProductData($documentData);
+            $document     = new \Searchperience\Api\Client\Domain\Document();
+
+            $document->setContent($this->_documentToXmlFragment($rawDocument));
+            $document->setForeignId($this->_getValueFromArray('unique', $productData));
+            $document->setSource($documentSource);
+            $document->setUrl($this->_getValueFromArray('url', $productData));
+
+            $documentRepository = \Searchperience\Common\Factory::getDocumentRepository(
+                $baseUrl,
+                $customerKey,
+                $username,
+                $password
+            );
+
+            $res = $documentRepository->add($document);
+            //Mage::log($res);
+            //Mage::log(var_export($documentRepository->getByForeignId($this->_getValueFromArray('unique', $productData)), true));
         }
 	}
 
@@ -101,58 +138,55 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             'group_price'       => 'group_price'
         );
         $documentData = $document->getData();
+        $productData  = $this->_getProcessableProductData($documentData);
+        $productId    = $this->_getValueFromArray('id', $productData);
 
-        foreach ($documentData['products'] as $productId => $productData) {
-            // for now, process only main product
-            if ($documentData['sku'] == $productData['sku']) {
-                // fetch some default data
-                $writer->writeElement('id', $productId);
-                $writer->writeElement('storeid', $this->_getValueFromArray('storeid', $documentData));
-                $writer->writeElement('language', $this->_getValueFromArray('language', $documentData));
-                $writer->writeElement('availability', $this->_getValueFromArray('in_stock', $documentData));
+        // fetch some default data
+        $writer->writeElement('id', $productId);
+        $writer->writeElement('storeid', $this->_getValueFromArray('storeid', $documentData));
+        $writer->writeElement('language', $this->_getValueFromArray('language', $documentData));
+        $writer->writeElement('availability', $this->_getValueFromArray('in_stock', $documentData));
 
-                // add product data to xml
-                foreach ($documentFields as $elementName => $productDataName) {
-                    $writer->writeElement($elementName, $this->_getValueFromArray($productDataName, $productData));
-                }
+        // add product data to xml
+        foreach ($documentFields as $elementName => $productDataName) {
+            $writer->writeElement($elementName, $this->_getValueFromArray($productDataName, $productData));
+        }
 
-                // add category information to xml
-                $categoryInformation = $this->_getValueFromArray('categories', $documentData, array());
-                foreach ($categoryInformation as $categoryId => $category) {
-                    $writer->writeElement('category_path', $this->_getValueFromArray('path', $category));
-                    $writer->writeElement('category_id', $categoryId);
-                }
+        // add category information to xml
+        $categoryInformation = $this->_getValueFromArray('categories', $documentData, array());
+        foreach ($categoryInformation as $categoryId => $category) {
+            $writer->writeElement('category_path', $this->_getValueFromArray('path', $category));
+            $writer->writeElement('category_id', $categoryId);
+        }
 
-                // add image information to xml
-                $images = $this->_getValueFromArray('images', $productData, array());
-                $writer->writeElement('image_link', $this->_getValueFromArray('image', $images));
+        // add image information to xml
+        $images = $this->_getValueFromArray('images', $productData, array());
+        $writer->writeElement('image_link', $this->_getValueFromArray('image', $images));
 
-                // dynamic fields
-                $additionalData = $this->_getValueFromArray('additionalData', $productData, array());
-                foreach ($additionalData as $key => $value) {
-                    $writer->startElement('attribute');
-                    $writer->writeAttribute('name', $key);
-                    $writer->writeAttribute('type', '');
-                    $writer->writeAttribute('forsorting', 0);
-                    $writer->writeAttribute('forfiltering', 0);
-                    $writer->writeAttribute('forsearching', 0);
-                    $writer->text($value);
-                    $writer->endElement();
-                }
+        // dynamic fields
+        $additionalData = $this->_getValueFromArray('additionalData', $productData, array());
+        foreach ($additionalData as $key => $value) {
+            $writer->startElement('attribute');
+            $writer->writeAttribute('name', $key);
+            $writer->writeAttribute('type', '');
+            $writer->writeAttribute('forsorting', 0);
+            $writer->writeAttribute('forfiltering', 0);
+            $writer->writeAttribute('forsearching', 0);
+            $writer->text($value);
+            $writer->endElement();
+        }
 
-                // add related, upsell and crosssell information
-                $relatedInformation = array(
-                    'related' => 'related_product',
-                    'upsell'  => 'upsell',
-                    'cross'   => 'crosssell',
-                );
+        // add related, upsell and crosssell information
+        $relatedInformation = array(
+            'related' => 'related_product',
+            'upsell'  => 'upsell',
+            'cross'   => 'crosssell',
+        );
 
-                foreach ($relatedInformation as $key => $elementName) {
-                    $assigned = $this->_getValueFromArray($key, $productData, array());
-                    foreach ($assigned as $index => $productId) {
-                        $writer->writeElement($elementName, $productId);
-                    }
-                }
+        foreach ($relatedInformation as $key => $elementName) {
+            $assigned = $this->_getValueFromArray($key, $productData, array());
+            foreach ($assigned as $index => $productId) {
+                $writer->writeElement($elementName, $productId);
             }
         }
 
@@ -162,6 +196,25 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 
         // replace any control characters to avoid Solr XML parser exception
         return $this->_stripCtrlChars($writer->outputMemory(true));
+    }
+
+    /**
+     * Iterates document data and returns processable product data
+     *
+     * @param $documentData
+     * @return array
+     */
+    private function _getProcessableProductData($documentData)
+    {
+        if (empty($this->_productData)) {
+            foreach ($documentData['products'] as $productId => $productData) {
+                // for now, process only main product
+                if ($documentData['sku'] == $productData['sku']) {
+                    $this->_productData = $productData;
+                }
+            }
+        }
+        return $this->_productData;
     }
 
     /**
@@ -178,19 +231,4 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
         }
         return $default;
     }
-
-	public function dummy() {
-		$document = new \Searchperience\Api\Client\Domain\Document();
-		$document->setContent('somecontent');
-		$document->setForeignId(9007789);
-		$document->setSource('magento');
-
-		$document->setUrl('');
-
-		$documentRepository = \Searchperience\Common\Factory::getDocumentRepository('', '', '', '');
-		$res = $documentRepository->add($document);
-
-
-		$document = $documentRepository->getByForeignId(9007789);
-	}
 }

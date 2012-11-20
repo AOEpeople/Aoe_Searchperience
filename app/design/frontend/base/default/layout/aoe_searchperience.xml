@@ -5,30 +5,78 @@
 		<reference name="top.search">
 			<action method="setTemplate" ><template>aoesearchperience/form.mini.phtml</template></action>
 		</reference>
-		<reference name="head">
+        <reference name="head">
 
-			<action method="addItem"><type>skin_css</type><name>css/aoesearchperience/styles.css</name><params/></action>
-			<action method="addItem"><type>skin_css</type><name>css/aoesearchperience/search.css</name><params/></action>
-			<action method="addItem"><type>skin_css</type><name>css/aoesearchperience/qvc_search.css</name><params/></action>
-			<action method="addItem"><type>skin_css</type><name>css/aoesearchperience/livesuggest.css</name><params/></action>
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>css/aoesearchperience/styles.css</name>
+                <params/>
+            </action>
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>css/aoesearchperience/search.css</name>
+                <params/>
+            </action>
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>css/aoesearchperience/qvc_search.css</name>
+                <params/>
+            </action>
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>css/aoesearchperience/livesuggest.css</name>
+                <params/>
+            </action>
 
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/aoesearchperience/lib.js</name>
+            </action>
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/aoesearchperience/jquery.cookie.js</name>
+            </action>
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/aoesearchperience/jquery-ui-1.8.8.custom.min.js</name>
+            </action>
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/aoesearchperience/jquery.liveSearch.js</name>
+            </action>
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/aoesearchperience/default_range_slider.js</name>
+            </action>
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/aoesearchperience/hashcache.js</name>
+            </action>
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/aoesearchperience/jquery.ba-hashchange.min.js</name>
+            </action>
 
-			<action method="addItem"><type>skin_js</type><name>js/aoesearchperience/config.js</name></action>
-			<action method="addItem"><type>skin_js</type><name>js/aoesearchperience/lib.js</name></action>
-			<action method="addItem"><type>skin_js</type><name>js/aoesearchperience/jquery.cookie.js</name></action>
-			<action method="addItem"><type>skin_js</type><name>js/aoesearchperience/jquery-ui-1.8.8.custom.min.js</name></action>
-			<action method="addItem"><type>skin_js</type><name>js/aoesearchperience/jquery.liveSearch.js</name></action>
-			<action method="addItem"><type>skin_js</type><name>js/aoesearchperience/default_range_slider.js</name></action>
-			<action method="addItem"><type>skin_js</type><name>js/aoesearchperience/hashcache.js</name></action>
-			<action method="addItem"><type>skin_js</type><name>js/aoesearchperience/jquery.ba-hashchange.min.js</name></action>
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/aoesearchperience/abstract_controller.js</name>
+            </action>
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/aoesearchperience/search.js</name>
+            </action>
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/aoesearchperience/faceting.js</name>
+            </action>
 
-			<action method="addItem"><type>skin_js</type><name>js/aoesearchperience/abstract_controller.js</name></action>
-			<action method="addItem"><type>skin_js</type><name>js/aoesearchperience/search.js</name></action>
-			<action method="addItem"><type>skin_js</type><name>js/aoesearchperience/faceting.js</name></action>
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/aoesearchperience/livesuggest.js</name>
+            </action>
 
-			<action method="addItem"><type>skin_js</type><name>js/aoesearchperience/livesuggest.js</name></action>
-
-		</reference>
+            <block type="core/template" name="aoe_searchperience_config_js" template="aoesearchperience/config.phtml" before="-" />
+        </reference>
 	</default>
 	<catalogsearch_result_index>
 		<reference name="search.result">
