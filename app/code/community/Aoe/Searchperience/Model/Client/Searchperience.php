@@ -74,15 +74,15 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 	 * @param boolean $allowDups
 	 * @param boolean $overwritePending
 	 * @param boolean $overwriteCommitted
-	 * @return Apache_Solr_Response
+	 * @return
 	 *
 	 * @throws Exception If an error occurs during the service call
 	 */
 	public function addDocuments($documentList, $allowDups = false, $overwritePending = true, $overwriteCommitted = true)
 	{
-        $customerKey    = Mage::getStoreConfig('searchperience/connection_settings/customer_key', 'default');
-        $username       = Mage::getStoreConfig('searchperience/connection_settings/username', 'default');
-        $password       = Mage::getStoreConfig('searchperience/connection_settings/password', 'default');
+        $customerKey    = Mage::getStoreConfig('searchperience/searchperience/customer_key', 'default');
+        $username       = Mage::getStoreConfig('searchperience/searchperience/username', 'default');
+        $password       = Mage::getStoreConfig('searchperience/searchperience/password', 'default');
         $baseUrl        = Mage::getStoreConfig('searchperience/searchperience/api', 'default');
         $documentSource = Mage::getStoreConfig('searchperience/searchperience/source', 'default');
 
@@ -101,7 +101,6 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             $document->setContent($this->_documentToXmlFragment($rawDocument));
             $document->setForeignId($this->_getValueFromArray('unique', $productData));
             $document->setSource($documentSource);
-            $document->setUrl($this->_getValueFromArray('url', $productData));
 
             $documentRepository = \Searchperience\Common\Factory::getDocumentRepository(
                 $baseUrl,
@@ -110,9 +109,15 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
                 $password
             );
 
-            $res = $documentRepository->add($document);
-            //Mage::log($res);
-            //Mage::log(var_export($documentRepository->getByForeignId($this->_getValueFromArray('unique', $productData)), true));
+            try {
+                $documentRepository->add($document);
+            } catch (Exception $e) {
+                Mage::getSingleton('core/session')->addError(
+                    Mage::helper('core')->__(
+                        sprintf('Errors occured while trying to add document to repository: %s', $e->getMessage())
+                    )
+                );
+            }
         }
 	}
 
@@ -125,7 +130,6 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
     {
         $writer = new XMLWriter();
         $writer->openMemory();
-        $writer->startDocument('1.0', 'UTF-8');
         $writer->startElement('product');
         $writer->writeAttribute('xmlns', 'urn:com.searchperience.indexing.product');
         $documentFields = array(
@@ -192,7 +196,6 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 
         // end product node
         $writer->endElement();
-        $writer->endDocument();
 
         // replace any control characters to avoid Solr XML parser exception
         return $this->_stripCtrlChars($writer->outputMemory(true));
