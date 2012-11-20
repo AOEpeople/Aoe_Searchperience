@@ -52,6 +52,15 @@
                             <show_in_store>1</show_in_store>
                             <sort_order>30</sort_order>
                         </source>
+                        <remote_js translate="label, comment" module="aoe_searchperience">
+                            <label>Remote JS</label>
+                            <comment>Remote JS from searchperience</comment>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>40</sort_order>
+                        </remote_js>
                     </fields>
                 </searchperience>
                 <connection_settings translate="label" module="aoe_searchperience">
