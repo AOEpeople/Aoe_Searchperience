@@ -42,29 +42,14 @@
                             <show_in_store>1</show_in_store>
                             <sort_order>20</sort_order>
                         </token>
-                        <source translate="label, comment" module="aoe_searchperience">
-                            <label>Document source</label>
-                            <comment>Document source, submitted to Searchperience API</comment>
-                            <frontend_type>text</frontend_type>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <sort_order>30</sort_order>
-                        </source>
                     </fields>
                 </searchperience>
-<<<<<<< HEAD
                 <searchperience_config_js translate="label" module="aoe_searchperience">
                     <label>Javascript Config Settings (config.js)</label>
-=======
-                <connection_settings translate="label" module="aoe_searchperience">
-                    <label>Connection settings</label>
->>>>>>> 31b8e2d18b9e48d07516e1b6db9e06751a4ef21b
                     <sort_order>20</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
-<<<<<<< HEAD
                     <fields>
                         <enableInnerShiv translate="label" module="aoe_searchperience">
                             <label>Enable InnerShiv</label>
@@ -146,18 +131,10 @@
 
                         <aoeSolrLivesuggestSelector translate="label" module="aoe_searchperience">
                             <label>Livesuggest Selector</label>
-=======
-                    <expanded>1</expanded>
-                    <fields>
-                        <customer_key translate="label, comment" module="aoe_searchperience">
-                            <label>Customer key</label>
-                            <comment>Searchperience API customer key</comment>
->>>>>>> 31b8e2d18b9e48d07516e1b6db9e06751a4ef21b
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-<<<<<<< HEAD
                             <sort_order>90</sort_order>
                         </aoeSolrLivesuggestSelector>
 
@@ -230,46 +207,24 @@
                         <aoeSolrSearchPid translate="label, comment" module="aoe_searchperience">
                             <label>Search Pid</label>
                             <comment>use this to use the fast cached TSFE</comment>
-=======
-                            <sort_order>10</sort_order>
-                        </customer_key>
-                        <username translate="label, comment" module="aoe_searchperience">
-                            <label>Username</label>
-                            <comment>Searchperience API username</comment>
->>>>>>> 31b8e2d18b9e48d07516e1b6db9e06751a4ef21b
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-<<<<<<< HEAD
                             <sort_order>170</sort_order>
                         </aoeSolrSearchPid>
 
                         <aoeSolrParentContainerSelector translate="label, comment" module="aoe_searchperience">
-                            <label>Search Pid</label>
+                            <label>Parent Container Selector</label>
                             <comment>specify solr parentcontainer (leave empty if not needed) - this is typically needed when the search should be displayed on a remote site, where initially is no search container in place</comment>
-=======
-                            <sort_order>20</sort_order>
-                        </username>
-                        <password translate="label, comment" module="aoe_searchperience">
-                            <label>Password</label>
-                            <comment>Searchperience API password</comment>
->>>>>>> 31b8e2d18b9e48d07516e1b6db9e06751a4ef21b
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-<<<<<<< HEAD
-                            <sort_order>170</sort_order>
+                            <sort_order>180</sort_order>
                         </aoeSolrParentContainerSelector>
                     </fields>
                 </searchperience_config_js>
-=======
-                            <sort_order>30</sort_order>
-                        </password>
-                    </fields>
-                </connection_settings>
->>>>>>> 31b8e2d18b9e48d07516e1b6db9e06751a4ef21b
             </groups>
         </searchperience>
 
