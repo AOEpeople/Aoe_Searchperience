@@ -78,9 +78,4 @@
             <block type="core/template" name="aoe_searchperience_config_js" template="aoesearchperience/config.phtml" before="-" />
         </reference>
 	</default>
-	<catalogsearch_result_index>
-		<reference name="search.result">
-			<action method="setTemplate" ><template>aoesearchperience/result.phtml</template></action>
-		</reference>
-	</catalogsearch_result_index>
 </layout>
