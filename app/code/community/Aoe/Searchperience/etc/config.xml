@@ -103,7 +103,6 @@
             </searchperience_config_js>
             <searchperience>
                 <source>magento</source>
-                <remote_js>http://qvc.deploy.saascluster.aoe-works.de/fileadmin/qvc.js</remote_js>
             </searchperience>
         </searchperience>
     </default>
