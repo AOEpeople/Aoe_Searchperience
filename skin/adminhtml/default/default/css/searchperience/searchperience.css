@@ -6,11 +6,6 @@ ul.tabs span .sp_logo
 
 /* searchperience part in magento config */
 .content-header h3 .sp_logo         { margin-top: -6px; }
-.sp_info, .sp_info fieldset         { overflow: hidden; }
-.sp_info a                          { color: black; font-weight: bold; text-decoration: none; }
-.sp_info h2 a, .sp_info h2 a:hover  { font-weight: bold; padding-left: 0; color: black; font-size: 15px; text-decoration: none; line-height: 20px; letter-spacing: -1px; font-family: "Lucida Grande","Lucida Sans","Lucida Sans Unicode",Arial,sans-serif; }
-.sp_info_column                     { overflow: auto; height: 155px; width: 49%; float: left; }
-.sp_info_column_right               { float: right; }
-.sp_info_column div                 { margin-left: 140px; }
-.sp_learnmore                       { clear: both; border-top: 1px solid #D6D6D6; padding-top: 10px; }
-.sp_learnmore a                     { text-decoration: underline; }
+.sp_info, .sp_info fieldset         { overflow: hidden; text-align: center; }
+.sp_info a                          { color: black; font-weight: bold; text-decoration: underline; }
+.sp_info .sp_learnmore              { margin-top: 5px; padding-top: 10px; border-top: 1px solid #D6D6D6; }
