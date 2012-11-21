@@ -75,7 +75,7 @@
                 <name>js/aoesearchperience/livesuggest.js</name>
             </action>
 
-            <block type="core/template" name="aoe_searchperience_config_js" template="aoesearchperience/config.phtml" before="-" />
+            <block type="core/template" name="aoe_searchperience_config_js" template="aoesearchperience/config.phtml" />
         </reference>
 	</default>
 </layout>
