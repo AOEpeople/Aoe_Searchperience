@@ -77,7 +77,12 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         $docs = array();
         foreach ($docData as $productId => $productIndexData) {
             $doc = new $this->_clientDocObjectName;
-            $doc->setData($this->_prepareIndexProductData($productIndexData, $productId, $storeId));
+            $productIndexData = $this->_prepareIndexProductData($productIndexData, $productId, $storeId);
+            if (!$productIndexData) {
+                continue;
+            }
+
+            $doc->setData($productIndexData);
             $docs[] = $doc;
         }
 
@@ -111,72 +116,67 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             'in_stock' => (!empty($productIndexData['in_stock']) ? $productIndexData['in_stock'] : ''),
         );
 
+        $product = Mage::getModel('catalog/product')->load($productId);
+
+        $this->_indexData['productData']['id']     = $product->getId();
+        $this->_indexData['productData']['sku']    = $product->getSku();
+        $this->_indexData['productData']['url']    = $product->getProductUrl();
+        $this->_indexData['productData']['unique'] = $product->getId() . '_' . $storeId;
+
+        // fetch price information
+        $this->_getProductPriceInformation($product);
+
+        // fetch image information
+        $this->_getProductImageInformation($product);
+
+        // fetch category information
+        foreach ($product->getCategoryIds() as $categoryId) {
+            if (!isset($this->_indexData['categories'][$categoryId])) {
+                $category = Mage::getModel('catalog/category')->load($categoryId);
+                $this->_indexData['categories'][$categoryId]['name'] = $category->getName();
+
+                $pathCategories = explode('/', $category->getPath());
+                $path = array();
+
+                foreach($pathCategories as $pathCategory) {
+                    $cat = Mage::getModel('catalog/category')->load($pathCategory);
+                    if ($cat->getLevel() > 1) {
+                        $path[] = $cat->getName();
+                    }
+                }
+                $this->_indexData['categories'][$categoryId]['path'] = implode(' > ', $path);
+            }
+        }
+
+        // fetch related products
+        foreach ($product->getRelatedProducts() as $relatedProduct) {
+            $this->_indexData['productData']['related'][] = $relatedProduct->getId();
+        }
+
+        // fetch upsell products
+        foreach ($product->getUpSellProducts() as $upsellProduct) {
+            $this->_indexData['productData']['upsell'][] = $upsellProduct->getId();
+        }
+
+        // fetch crosssell products
+        foreach ($product->getCrossSellProducts() as $crossProduct) {
+            $this->_indexData['productData']['cross'][] = $crossProduct->getId();
+        }
+
+        // fetch additional product information
+        $this->_getAdditionalProductData($product);
+
         foreach ($productIndexData as $attributeCode => $value) {
             if ($this->_skipAttribute($attributeCode)) {
                 continue;
             }
 
             if (is_array($value)) {
-                foreach ($value as $id => $attributeValue) {
-                    $this->_indexData['products'][$id][$attributeCode] = $attributeValue;
-                    $productIds[$id] = 1;
-                }
+                $this->_indexData['productData'][$attributeCode] = $value[$productId];
             }
             else {
                 $this->_indexData[$attributeCode] = $value;
             }
-        }
-
-        foreach (array_keys($productIds) as $pid) {
-            $product = Mage::getModel('catalog/product')->load($pid);
-
-            $this->_indexData['products'][$pid]['id']     = $product->getId();
-            $this->_indexData['products'][$pid]['sku']    = $product->getSku();
-            $this->_indexData['products'][$pid]['url']    = $product->getProductUrl();
-            $this->_indexData['products'][$pid]['unique'] = $product->getId() . '_' . $storeId;
-
-            // fetch price information
-            $this->_getProductPriceInformation($product);
-
-            // fetch image information
-            $this->_getProductImageInformation($product);
-
-            // fetch category information
-            foreach ($product->getCategoryIds() as $categoryId) {
-                if (!isset($this->_indexData['categories'][$categoryId])) {
-                    $category = Mage::getModel('catalog/category')->load($categoryId);
-                    $this->_indexData['categories'][$categoryId]['name'] = $category->getName();
-
-                    $pathCategories = explode('/', $category->getPath());
-                    $path = array();
-
-                    foreach($pathCategories as $pathCategory) {
-                        $cat = Mage::getModel('catalog/category')->load($pathCategory);
-                        if ($cat->getLevel() > 1) {
-                            $path[] = $cat->getName();
-                        }
-                    }
-                    $this->_indexData['categories'][$categoryId]['path'] = implode(' > ', $path);
-                }
-            }
-
-            // fetch related products
-            foreach ($product->getRelatedProducts() as $relatedProduct) {
-                $this->_indexData['products'][$pid]['related'][] = $relatedProduct->getId();
-            }
-
-            // fetch upsell products
-            foreach ($product->getUpSellProducts() as $upsellProduct) {
-                $this->_indexData['products'][$pid]['upsell'][] = $upsellProduct->getId();
-            }
-
-            // fetch crosssell products
-            foreach ($product->getCrossSellProducts() as $crossProduct) {
-                $this->_indexData['products'][$pid]['cross'][] = $crossProduct->getId();
-            }
-
-            // fetch additional product information
-            $this->_getAdditionalProductData($product);
         }
 
         return $this->_indexData;
@@ -197,7 +197,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
         foreach ($attributes as $attributeCode => $getMethod) {
             if (!empty($this->_searchableProductAttributes[$attributeCode])) {
-                $this->_indexData['products'][$product->getId()][$attributeCode] = $product->$getMethod();
+                $this->_indexData['productData'][$attributeCode] = $product->$getMethod();
             }
         }
     }
@@ -218,7 +218,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
         foreach ($attributes as $attributeCode => $getMethod) {
             if (!empty($this->_searchableProductAttributes[$attributeCode])) {
-                $this->_indexData['products'][$product->getId()]['images'][$attributeCode] = $product->$getMethod();
+                $this->_indexData['productData']['images'][$attributeCode] = $product->$getMethod();
             }
         }
     }
@@ -233,9 +233,9 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         $productData = $product->getData();
 
         foreach ($this->_searchableProductAttributes as $attributeCode => $attribute) {
-            if (!isset($this->_indexData['products'][$product->getId()][$attributeCode]) && !isset($this->_indexData[$attributeCode])) {
+            if (!isset($this->_indexData['productData'][$attributeCode]) && !isset($this->_indexData[$attributeCode])) {
                 if (isset($productData[$attributeCode])) {
-                    $this->_indexData['products'][$product->getId()]['additionalData'][$attributeCode] = $productData[$attributeCode];
+                    $this->_indexData['productData']['additionalData'][$attributeCode] = $productData[$attributeCode];
                 }
             }
         }
@@ -246,11 +246,13 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
      */
     protected function _getSearchableAttributes()
     {
-        $productAttributeCollection = Mage::getResourceModel('catalog/product_attribute_collection');
-        $productAttributeCollection->addSearchableAttributeFilter();
+        if (empty($this->_searchableProductAttributes)) {
+            $productAttributeCollection = Mage::getResourceModel('catalog/product_attribute_collection');
+            $productAttributeCollection->addSearchableAttributeFilter();
 
-        foreach ($productAttributeCollection->getItems() as $attribute) {
-            $this->_searchableProductAttributes[$attribute->getAttributeCode()] = $attribute;
+            foreach ($productAttributeCollection->getItems() as $attribute) {
+                $this->_searchableProductAttributes[$attribute->getAttributeCode()] = $attribute;
+            }
         }
     }
 

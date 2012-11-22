@@ -5,5 +5,8 @@
 "license": "MIT",
 "require": {
 	"aoemedia/searchperience-api-client":"dev-master"
+},
+"require-dev": {
+    "guzzle/plugin-log": "*"
 }
 }

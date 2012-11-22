@@ -13,12 +13,67 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
      */
     private $_productData = array();
 
+    /**
+     * Searchperience API customer key
+     *
+     * @var string
+     */
+    private $_customerKey;
+
+    /**
+     * Searchperience API username
+     *
+     * @var string
+     */
+    private $_username;
+
+    /**
+     * Searchperience API password
+     *
+     * @var string
+     */
+    private $_password;
+
+    /**
+     * Searchperience API base URL
+     *
+     * @var string
+     */
+    private $_baseUrl;
+
+    /**
+     * Searchperience API document source
+     *
+     * @var string
+     */
+    private $_documentSource;
+
+    /**
+     * @var Searchperience\Api\Client\Domain\DocumentRepository
+     */
+    private $_documentRepository;
+
 	/**
 	 * @param array $options
 	 */
 	public  function __construct($options)
     {
-		return $this;
+        // fetching settings from magento backend
+        $this->_customerKey    = Mage::getStoreConfig('searchperience/searchperience/customer_key', 'default');
+        $this->_username       = Mage::getStoreConfig('searchperience/searchperience/username',     'default');
+        $this->_password       = Mage::getStoreConfig('searchperience/searchperience/password',     'default');
+        $this->_baseUrl        = Mage::getStoreConfig('searchperience/searchperience/api',          'default');
+        $this->_documentSource = Mage::getStoreConfig('searchperience/searchperience/source',       'default');
+
+        //\Searchperience\Common\Factory::$HTTP_DEBUG = true;
+        $this->_documentRepository = \Searchperience\Common\Factory::getDocumentRepository(
+            $this->_baseUrl,
+            $this->_customerKey,
+            $this->_username,
+            $this->_password
+        );
+
+        return $this;
 	}
 
     /**
@@ -62,6 +117,9 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 		return true;
 	}
 
+    /**
+     * @return bool
+     */
     public function rollback()
     {
         return true;
@@ -80,45 +138,37 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 	 */
 	public function addDocuments($documentList, $allowDups = false, $overwritePending = true, $overwriteCommitted = true)
 	{
-        $customerKey    = Mage::getStoreConfig('searchperience/searchperience/customer_key', 'default');
-        $username       = Mage::getStoreConfig('searchperience/searchperience/username', 'default');
-        $password       = Mage::getStoreConfig('searchperience/searchperience/password', 'default');
-        $baseUrl        = Mage::getStoreConfig('searchperience/searchperience/api', 'default');
-        $documentSource = Mage::getStoreConfig('searchperience/searchperience/source', 'default');
-
-        if (in_array(null, array($customerKey, $username, $password, $documentSource, $baseUrl))) {
+        if (in_array(null, array($this->_customerKey, $this->_username, $this->_password, $this->_documentSource, $this->_baseUrl))) {
             Mage::getSingleton('core/session')->addError(
                 Mage::helper('core')->__('No valid connection settings for searchperience connection found!')
             );
             return false;
         }
 
-        foreach ($documentList as $rawDocument) {
+        foreach ($documentList as $index => $rawDocument) {
             $documentData = $rawDocument->getData();
-            $productData  = $this->_getProcessableProductData($documentData);
+            $productData  = ((isset($documentData['productData']) ? $documentData['productData'] : array()));
             $document     = new \Searchperience\Api\Client\Domain\Document();
 
             $document->setContent($this->_documentToXmlFragment($rawDocument));
             $document->setForeignId($this->_getValueFromArray('unique', $productData));
-            $document->setSource($documentSource);
-
-            $documentRepository = \Searchperience\Common\Factory::getDocumentRepository(
-                $baseUrl,
-                $customerKey,
-                $username,
-                $password
-            );
+            $document->setSource($this->_documentSource);
+            $document->setUrl($this->_getValueFromArray('url', $productData));
 
             try {
-                $documentRepository->add($document);
+                $result = $this->_documentRepository->add($document);
+                Mage::log('Searchperience API log result: ' . $result);
             } catch (Exception $e) {
+                Mage::log(sprintf('Errors occured while trying to add document to repository: %s', $e->getMessage()));
                 Mage::getSingleton('core/session')->addError(
                     Mage::helper('core')->__(
                         sprintf('Errors occured while trying to add document to repository: %s', $e->getMessage())
                     )
                 );
             }
+            unset($document, $rawDocument, $documentList[$index]);
         }
+        unset($documentList);
 	}
 
     /**
@@ -131,7 +181,6 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
         $writer = new XMLWriter();
         $writer->openMemory();
         $writer->startElement('product');
-        $writer->writeAttribute('xmlns', 'urn:com.searchperience.indexing.product');
         $documentFields = array(
             'sku'               => 'sku',
             'title'             => 'name',
@@ -142,7 +191,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             'group_price'       => 'group_price'
         );
         $documentData = $document->getData();
-        $productData  = $this->_getProcessableProductData($documentData);
+        $productData  = ((isset($documentData['productData']) ? $documentData['productData'] : array()));
         $productId    = $this->_getValueFromArray('id', $productData);
 
         // fetch some default data
@@ -198,26 +247,11 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
         $writer->endElement();
 
         // replace any control characters to avoid Solr XML parser exception
-        return $this->_stripCtrlChars($writer->outputMemory(true));
-    }
+        $return = $this->_stripCtrlChars($writer->outputMemory(true));
 
-    /**
-     * Iterates document data and returns processable product data
-     *
-     * @param $documentData
-     * @return array
-     */
-    private function _getProcessableProductData($documentData)
-    {
-        if (empty($this->_productData)) {
-            foreach ($documentData['products'] as $productId => $productData) {
-                // for now, process only main product
-                if ($documentData['sku'] == $productData['sku']) {
-                    $this->_productData = $productData;
-                }
-            }
-        }
-        return $this->_productData;
+        Mage::log($return);
+
+        return $return;
     }
 
     /**
