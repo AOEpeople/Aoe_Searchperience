@@ -1,17 +1,17 @@
 # modman configuration file
 
 # frontend design
-app/design/frontend/base/default/layout/*						            app/design/frontend/base/default/layout/
-app/design/frontend/base/default/template/aoesearchperience/*				app/design/frontend/base/default/template/aoesearchperience/
+app/design/frontend/base/default/layout/*                                   app/design/frontend/base/default/layout/
+app/design/frontend/base/default/template/aoesearchperience/*               app/design/frontend/base/default/template/aoesearchperience/
 
 # backend design
-app/design/adminhtml/default/default/layout/searchperience/             app/design/adminhtml/default/default/layout/searchperience/
-app/design/adminhtml/default/default/template/searchperience/             app/design/adminhtml/default/default/template/searchperience/
+app/design/adminhtml/default/default/layout/searchperience/                 app/design/adminhtml/default/default/layout/searchperience/
+app/design/adminhtml/default/default/template/searchperience/               app/design/adminhtml/default/default/template/searchperience/
 
 # frontend skin
-skin/frontend/base/default/js/												skin/frontend/base/default/js/aoesearchperience/
-skin/frontend/base/default/css/												skin/frontend/base/default/css/aoesearchperience/
-skin/frontend/base/default/i/												skin/frontend/base/default/i/aoesearchperience/
+skin/frontend/base/default/js/                                              skin/frontend/base/default/js/aoesearchperience/
+skin/frontend/base/default/css/aoesearchperience/                           skin/frontend/base/default/css/aoesearchperience/
+skin/frontend/base/default/i/                                               skin/frontend/base/default/i/aoesearchperience/
 
 # backend skin
 skin/adminhtml/default/default/images/searchperience/                       skin/adminhtml/default/default/images/searchperience/
@@ -19,7 +19,7 @@ skin/adminhtml/default/default/css/searchperience/                          skin
 
 # module
 app/code/community/Aoe/Searchperience/                                      app/code/community/Aoe/Searchperience/
-app/etc/modules/*										                    app/etc/modules/
+app/etc/modules/*                                                           app/etc/modules/
 
 #install searchperience api client
 @shell if ! [ -e $MODULE/composer.phar ]; then \

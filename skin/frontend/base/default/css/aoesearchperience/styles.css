@@ -1,0 +1,309 @@
+/* Imports*/
+/*------------------------------ */
+
+/* Core*/
+/*------------------------------ */
+/*a:focus { outline: none; }*/
+/*.hidden { display: none; }*/
+/*.show { display: block!important; }*/
+/*.no-border, a img { border: none!important; }*/
+.no-bullets li { list-style: none; }
+.no-flow { overflow: hidden; }
+.c:after, .columns:after, .b-tabs-nav:after, .b-wi:after, .b-filter-body:after { content: ""; display: block; height: 0; clear: both; visibility: hidden; }
+.img-repl, .check, .help-title { text-indent: -9999px; overflow: hidden; display: block; }
+.cc { clear: both; }
+
+.b-simple-tabs li { behavior: url(../css/PIE.htc); }
+
+/* Main styles*/
+/*------------------------------ */
+/*html { background: #fff; font: 13px/16px Arial, Helvetica, sans-serif; }*/
+/*body {  }*/
+
+/*a { color: #FF5700; }*/
+/*#aoe_solr .gray { color: #959595; }*/
+
+/* Horizontal Menu*/
+/*------------------------------ */
+#aoe_solr .nav-h { overflow: hidden; }
+#aoe_solr .nav-h li { float: left; list-style: none;}
+#aoe_solr .nav-h a { display: block; }
+
+/* Vertical Menu*/
+/*------------------------------ */
+#aoe_solr .nav-v { border-top: 1px solid #ccc; }
+#aoe_solr .nav-v li { padding: 2px 0; list-style: none; border-bottom: 1px solid #ccc; }
+#aoe_solr .nav-v li ul { padding-left: 1em; margin-top: 2px; }
+#aoe_solr .nav-v li li { border: none; border-top: 1px solid #ccc; }
+#aoe_solr .nav-v a { text-decoration: none; display: block; }
+#aoe_solr .nav-v a:hover { text-decoration: underline; }
+
+/* Content elements*/
+/*------------------------------ */
+#aoe_solr blockquote { background: #252624 url(../../i/aoesearchperience/blockquote.png) repeat-x; color: #999; padding: 43px 110px 32px 188px; margin: 20px -50px; position:relative;}
+#aoe_solr blockquote h4 { color: #fff; font-size: 18px; line-height: 24px; margin: 0 0 12px 0; }
+#aoe_solr blockquote p { font-size: 16px; line-height: 24px; }
+#aoe_solr blockquote a { color: #fefefe; }
+#aoe_solr blockquote .quote 	{ position:absolute; top:39px; left:58px; background:transparent url(../../i/aoesearchperience/quote.png) no-repeat 0 0; display:inline-block; width:77px; height:64px;}
+/*code, pre { font-family: "Monaco", "Courier New", Courier, monospace; }*/
+/*pre { border: 1px dashed #aaa; line-height: 1.7em; padding: 5px; font-size: .9em; background-color: #eee; margin: 0; }*/
+/*strong, .strong { font-weight: bold; }*/
+/*em, .em { font-style: italic; }*/
+/*dfn { font-style: italic; font-weight: bold; }*/
+/*del { text-decoration: line-through; }*/
+/*sup, sub { vertical-align: baseline; position: relative; }*/
+/*sup { top: -0.4em; }*/
+/*sub { bottom: -0.3em; }*/
+/*small, .small { font-size: 0.8em; }*/
+/*big, .big { font-size: 1.2em; }*/
+
+/*hr { color: #ccc; background-color: #ccc; height: 1px; border-width: 0; margin: 20px -49px; }*/
+
+/* Text align, float*/
+/*------------------------------ */
+#aoe_solr .a-left { text-align: left; }
+#aoe_solr .a-center { text-align: center; }
+#aoe_solr .a-right { text-align: right; }
+
+#aoe_solr .f-l { float: left; }
+#aoe_solr .f-r { float: right; }
+
+/* Images*/
+/*------------------------------ */
+#aoe_solr img.f-left { margin-right: 1em; }
+#aoe_solr img.f-r { margin-left: 1em; }
+
+/* Main structure*/
+/*------------------------------ */
+#aoe_solr 			{ width: 941px; padding: 0 0 0 41px; }
+/*#header 		{ padding: 45px 0 0 0; height: 75px; }*/
+
+/*#section 		{ }*/
+#aoe_solr .b-logo 		{ width: 239px; float: left; }
+#aoe_solr .l-sidebar,
+#aoe_solr .l-content		{ float: left; }
+#aoe_solr .l-sidebar		{ width: 207px; margin: 18px 32px 0 0; }
+#aoe_solr .l-content		{ width: 497px; margin: 0 32px 30px 0; padding: 24px 0 0 0; }
+#second-bar		{ width: 173px; margin: 0 0 30px 0; padding: 3px 0 0 0; }
+
+
+/* Different font*/
+/*------------------------------ */
+
+
+/* General styles*/
+/*------------------------------ */
+/*a 					{  }*/
+/*a:visited 			{  }*/
+/*a:hover 			{  }*/
+/*a:active 			{  }*/
+/*p 					{ margin-bottom:20px;}*/
+/*button 				{ border:0; background:transparent; cursor: pointer; margin: 0!important; overflow: visible; }*/
+
+/* Default bu*/
+/*------------------------------ */
+.bu,
+.bu span				{ line-height:29px; display:inline-block; border: none; background: transparent url(../../i/aoesearchperience/button.png) no-repeat left -9999px; cursor: pointer; text-decoration: none; color: #fff; height:29px; font-family: Arial, sans-serif; cursor: pointer; }
+.bu 					{ vertical-align:middle; padding: 0 0 0 4px; color:#fff; font-size: 11px;}
+.bu::-moz-focus-inner	{ padding: 0; border: 0; }
+.bu span				{ background-position: right -29px; padding: 0px 11px 0px 7px;}
+.bu:hover,
+
+.bu:hover span,
+	button:hover .bu,
+	button:hover .bu span{ text-decoration:none; background-position:left -50px;}
+.bu:hover span,
+	button:hover .bu span{ background-position: right -75px;}
+
+.bu-big,
+.bu-big span 			{ height: 33px; line-height: 33px; background: url(../../i/aoesearchperience/button.png) no-repeat left -308px; }
+.bu-big 				{ padding-left: 13px; font-weight: bold; font-size: 15px; }
+.bu-big span 			{ background: url(../../i/aoesearchperience/button.png) no-repeat right -341px; padding: 0 13px 0 0; }
+.bu-big:hover,
+button:hover .bu-big 	{ background-position: left -528px; }
+.bu-big:hover span,
+button:hover .bu-big span { background-position: right -561px; }
+.bu-big:active, .bu-big.active,
+button:active .bu-big, button.active .bu-big 	{ background-position: left -748px; }
+.bu-big:active span, .bu-big:active span,
+button:active .bu-big span { background-position: right -781px; line-height: 35px; }
+
+.bu-small,
+.bu-small span			{ line-height:24px; display:inline-block; background: url(../../i/aoesearchperience/button.png) no-repeat left -260px; cursor: pointer; text-decoration: none; color: #fff; height:24px;}
+.bu-small 				{ padding: 0 0 0 3px; }
+.bu-small span			{ background: url(../../i/aoesearchperience/button.png) no-repeat right -284px; padding: 0 8px 0 8px; }
+.bu-small:hover			{ background-position: left -480px; }
+.bu-small:hover span	{ background-position: right -504px; }
+.bu-small:active		{ background-position: left -700px; }
+.bu-small:active span	{ background-position: right -724px; line-height: 26px; }
+
+/* Main content elements*/
+/*------------------------------ */
+#content 				{ overflow:hidden; position:relative; z-index: 10;}
+#content h1,
+#content h2,
+#content h3,
+#content h4 			{ font-weight:bold; color:#000; line-height:30px; margin: 26px 0 17px 0;}
+#content h1 			{ font-size:24px; letter-spacing:-1px;}
+#content h2				{ font-size:21px; letter-spacing:-1px;}
+#content h3				{ font-size:18px; margin-bottom: 8px; }
+#content h4				{ font-size:15px; margin-bottom: 8px; }
+#content h2:first-child			{ margin-top: 0; }
+#aoe_solr .title 			{ font-size:14px; color:#000; line-height:18px; font-weight:bold; margin-bottom:8px;}
+#aoe_solr .title a 			{ color:#000;}
+#aoe_solr .page-title
+.bu-small			{ margin: -2px 0 0 0!important; }
+#aoe_solr .page-title		{ font-size:24px; margin: 4px 0 24px 0; font-weight:bold;;}
+#aoe_solr .subtitle 		{ font-size:14px; color:#919191;}
+
+#content ul { margin: 0 0 20px 20px; }
+#content ul li { list-style: disc; }
+
+/* Simple tabs*/
+/*--------------------------------------- */
+
+.b-simple-tabs { border-bottom: 1px solid #ccc; padding: 0 0 0 10px; height: 32px; }
+.b-simple-tabs ul { overflow: hidden; }
+.b-simple-tabs li { float: left; margin: 0 6px 0 0; border: 1px solid #dfdfdf; border-width: 1px 1px 0 1px; -webkit-border-radius: 3px 3px 0 0; -moz-border-radius: 3px 3px 0 0; border-radius: 3px 3px 0 0;
+	background: #f1f2f2;
+	background: -webkit-gradient(linear, 0 0, 0 bottom, from(#fafafa), to(#e8e9ea));
+	background: -moz-linear-gradient(#fafafa, #e8e9ea);
+	background: linear-gradient(#fafafa, #e8e9ea);
+	-pie-background: linear-gradient(#fafafa, #e8e9ea);
+}
+.b-simple-tabs a { padding: 0 15px; line-height: 31px; height: 31px; text-decoration: none; color: #000; }
+.b-simple-tabs .cur { background: #fff; height: 32px; }
+
+/* Search Form*/
+/*------------------------------ */
+
+/*.b-search-form, .b-search-form-button, .acResults li { position: relative; behavior: url(../css/PIE.htc); }*/
+
+/*.b-search-form { position: absolute; left: 280px; top: 49px; width: 702px; z-index: 2000; }*/
+/*.b-search-form .bu { vertical-align: top; }*/
+/*.b-search-form-text { border: 1px solid #acaeb1; outline: none; background: #fff; color: #444; font-size: 15px; height: 19px; width: 585px; padding: 6px 13px; margin: 0 12px 0 0; }*/
+/*.b-search-form-text.placeholder { font-style: italic; color: #9a9a9a; }*/
+/*.b-search-form-notes { font-size: 11px; color: #9a9a9a; position: absolute; left: 279px; top: 84px; }*/
+/*.b-search-form-text-error { border: 1px solid #f00!important; }*/
+
+/* Navigation block*/
+/*------------------------------ */
+#aoe_solr .b-nav-tree { font-size: 13px; }
+#aoe_solr .b-nav-tree ul, #aoe_solr .b-nav-tree { margin: 0; }
+#aoe_solr .b-nav-tree li { list-style: none; list-style: none; position: relative; }
+#aoe_solr .b-nav-tree a { display: block; text-decoration: none; color: #f47026; border-bottom: 1px solid #dedede; padding: 5px 25px 6px 13px; }
+#aoe_solr .b-nav-tree ul a { padding-left: 24px; }
+#aoe_solr .b-nav-tree ul ul { font-size: 12px; }
+#aoe_solr .b-nav-tree ul ul a { padding: 6px 25px 5px 36px; }
+#aoe_solr .b-nav-tree .cur > a { color: #000; font-weight: bolder; background-color: #F6F6F6}
+
+#aoe_solr .b-nav-tree .i { position: absolute; width: 9px; height: 13px; background: url(../../i/aoesearchperience/b-nav-tree.png); }
+#aoe_solr .b-nav-tree > li > .i { top: 9px; right: 11px; }
+#aoe_solr .b-nav-tree > .cur > .i { background-position: -9px 0; }
+#aoe_solr .b-nav-tree ul > li > .i { top: 10px; left: 13px; background: #f47026; width: 4px; height: 4px; }
+#aoe_solr .b-nav-tree ul > .cur > .i { background: #000; }
+#aoe_solr .b-nav-tree ul li .i { top: 11px; left: 13px; background: #f47026; width: 4px; height: 4px; }
+#aoe_solr .b-nav-tree ul .cur > .i { background: #000; }
+#aoe_solr .b-nav-tree ul ul .i { top: 12px; left: 26px; width: 3px; height: 3px; }
+#aoe_solr .b-nav-tree ul ul .cur  { background-color: #F6F6F6; }
+
+/* Filter block*/
+/*------------------------------ */
+.b-filter { margin: 0 0 20px 0 }
+.b-filter-head { position: relative; padding: 5px 13px 8px 13px; color: #000; font-size: 13px; }
+.b-filter-toggle { position: absolute; right: 13px; top: 5px; color: #888; cursor: pointer; -moz-user-select: none; -webkit-user-select: none; }
+.b-filter-toggle-icon { margin: -2px 6px 0 0; background: url(../../i/aoesearchperience/b-filter-toggle.gif) no-repeat 0 100%; height: 3px; width: 6px; display: inline-block; vertical-align: middle; }
+.b-filter-toggle-on .b-filter-toggle-icon { background-position: 0 0; }
+.b-filter-toggle-off .b-filter-toggle-element { display: none; }
+.b-filter-body { font-size: 12px; color: #888; padding: 10px 14px; background: #f6f6f6; border: 1px solid #ccc; border-width: 1px 0; }
+.b-filter-body .reset { font-size: 11px; margin: 0 0 10px; display: block; }
+.reset a { text-decoration: none; }
+
+#aoe_solr .b-filter-list { margin: 0; }
+#aoe_solr .b-filter-list li { margin: 0 0 5px 0; list-style: none; padding: 5px 10px 5px; }
+#aoe_solr .b-filter-list li:hover {background: #fbfbfb;}
+#aoe_solr .b-filter-list input { position: absolute; left: 5px; top: 2px; }
+#aoe_solr .b-filter-list a { color: #145C63; text-decoration: none;  display: block; }
+#aoe_solr .b-filter-list a:hover { color: #002d13; }
+#aoe_solr .b-filter-list .cur a { color: #000; font-weight: bold; }
+#aoe_solr .b-filter-list .cur {  background: url("../../i/aoesearchperience/b-filter-cur.png") no-repeat 158px 8px transparent; }
+
+#aoe_solr .b-filter-colorlist {  }
+#aoe_solr .b-filter-colorlist .i { display: inline-block; width: 13px; height: 13px; position: relative; top: 2px; margin: 0 13px 0 0; }
+#aoe_solr .b-filter-colorlist li { padding-left: 0; }
+#aoe_solr .b-filter-colorlist li:hover {background: #fbfbfb;}
+
+#aoe_solr .b-filter-selectablelist .i { width: 13px; height: 13px; display: none inline-block; margin: 0 13px 0 0; position: relative; top: 1px; background: url(../../i/aoesearchperience/b-filter-selectablelist.png) no-repeat; }
+#aoe_solr .b-filter-selectablelist .cur .i { background-position: 0 -13px; }
+
+/* Pager block*/
+/*------------------------------ */
+#aoe_solr .paging { font-size: 13px; margin: 0 0 20px 0; padding: 10px 0 0 0; border-top: 1px solid #acaeb1; }
+#aoe_solr .paging a { text-decoration: none; color: #FF5700!important; }
+#aoe_solr .paging a:hover { text-decoration: underline; }
+#aoe_solr .paging li { list-style: none; display: inline; padding: 0 4px 0 0; }
+
+/* Items List*/
+/*------------------------------ */
+#aoe_solr .b-list-head { overflow: hidden; font-size: 13px; height: 40px; }
+#aoe_solr .b-list-head-sorting {  }
+#aoe_solr .b-list-head-sorting label { margin: 0 15px 0 0; }
+#aoe_solr .b-list-head-count { float: right; margin: 0 40px 0 0; }
+#aoe_solr .b-list-head .paging { float: right; }
+
+#aoe_solr .b-item { margin: 0 0 25px 0; overflow: hidden; }
+#aoe_solr .b-item-pic { float: left; margin: 0 12px 0 0; width: 130px; text-align: center; }
+#aoe_solr .b-item-pic img { display: block; margin: 0 auto; }
+#aoe_solr .b-item h2 { font-size: 13px; font-weight: bold; margin: 0 0 8px 0; line-height: normal; }
+#aoe_solr .b-item p { margin: 0 0 2px 0; }
+#aoe_solr .b-item-text { margin: 0 0 5px 0!important; }
+#aoe_solr .b-item-text em { font-weight: bold; font-style: normal; }
+#aoe_solr .b-item-tag { font-size: 11px; display: inline-block; margin: 0 5px 0 0; }
+#aoe_solr .b-item-tag, #aoe_solr .b-item-link, #aoe_solr .b-item-meta { font-size: 11px; }
+#aoe_solr .b-item-meta { color: #a4a4a4; }
+#aoe_solr .b-item.with-pic h2,
+#aoe_solr .b-item.with-pic .b-item-text,
+#aoe_solr .b-item.with-pic .b-item-meta { padding-left: 143px; }
+
+/* Sidebar box*/
+/*--------------------------------------- */
+#aoe_solr .b-box { margin: 0 0 25px 0; }
+#aoe_solr .b-box dt { padding: 9px 17px;  min-height: 16px; padding: 20px 17px 8px; }
+#aoe_solr .b-box dd { background: #f5f5f5; border: 1px solid #ccc; border-width: 1px 0; padding: 13px 19px 16px 19px; font-size: 11px; line-height: 16px; }
+#aoe_solr .b-box p { margin: 0; }
+#aoe_solr .b-box .pic { border: 1px solid #dedede; margin: 0 0 12px 0; background: #fff; }
+#aoe_solr .b-box .pic img { display: block; }
+#aoe_solr .b-box h2 { font-weight: bold; font-size: 13px; line-height: 19px; margin: 0 0 12px 0; }
+
+/* Related results*/
+/*--------------------------------------- */
+/*.b-related {  }*/
+/*.b-related h2 { margin: 0; }*/
+/*.b-related p { margin: 0 0 12px 0; }*/
+
+/* Suggest block*/
+/*--------------------------------------- */
+.b-suggest { color: #9a9a9a; font-size: 12px; }
+
+/* Price range block*/
+/*--------------------------------------- */
+
+.ui-slider { height: 35px; position: relative; background: url(../../i/aoesearchperience/ui-slider.png) no-repeat right 8px; margin: 0 6px 20px; }
+.ui-slider-handle { padding-top: 26px; height: 12px; width: 40px; background: url(../../i/aoesearchperience/ui-slider-handle.png) no-repeat top center; position: absolute; margin: 0 0 0 -20px; line-height: 11px; font-size: 11px; text-decoration: none; color: #000; text-align: center; }
+.ui-slider-handle span { position: absolute; top: 30px; }
+.ui-slider-first span { left: 35%; }
+.ui-slider-second span { right: 35%; }
+.ui-slider-range { background: #e36823; border-bottom: 3px solid #f47026; border-top: 1px solid #c1591e; position: absolute; height: 1px; top: 8px; }
+
+.range-form { font-size: 10px;  margin-bottom: 10px;}
+.b-range-form-text { border: 1px solid #acaeb1; outline: none; background: #fff; color: #444; font-size: 10px; height: 18px; width: 30px; padding: 2px 2px; margin: 0 1px 0 0; display: inline;}
+.range-filter .bu-small { float: right; }
+
+/* Languanes block*/
+/*------------------------------ */
+/*.lang 						{ position:absolute; left:1000px; top:13px; list-style:none;}*/
+/*.lang li 					{ float:left; background:#fff; padding:1px; line-height:10px;margin-left:6px;}*/
+/*.lang li:hover 				{ background:#b9b9b9;}*/
+/*.lang li.active 			{ background:#f27727;}*/
+/*.lang li a 					{ display:inline-block; width:18px; height:13px; text-decoration:none; background:transparent url(../../i/aoesearchperience/ico-lang.gif) no-repeat 0 0;}*/
+/*.lang li a.en 				{ background-position:-18px 0;}*/
