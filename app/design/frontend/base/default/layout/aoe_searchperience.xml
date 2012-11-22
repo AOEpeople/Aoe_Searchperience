@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <layout version="0.1.0">
-	<default>
-		<reference name="top.search">
-			<action method="setTemplate" ><template>aoesearchperience/form.mini.phtml</template></action>
-		</reference>
+    <default>
+        <reference name="top.search">
+            <action method="setTemplate" ><template>aoesearchperience/form.mini.phtml</template></action>
+        </reference>
         <reference name="head">
             <action method="addCss"><stylesheet>css/aoesearchperience/styles.css</stylesheet></action>
             <action method="addCss"><stylesheet>css/aoesearchperience/search.css</stylesheet></action>
             <block type="core/template" name="aoe_searchperience_config_js" template="aoesearchperience/config.phtml"/>
         </reference>
-	</default>
+    </default>
 </layout>
