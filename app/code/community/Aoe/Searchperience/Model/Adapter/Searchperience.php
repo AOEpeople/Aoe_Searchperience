@@ -192,6 +192,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         // define attributes and get methods
         $attributes = array(
             'special_price' => 'getSpecialPrice',
+            // @TODO: make group prices work!
             'group_price'   => 'getGroupPrice',
         );
 
@@ -209,6 +210,9 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
      */
     protected function _getProductImageInformation($product)
     {
+        $width  = 201;
+        $height = 201;
+
         // define attributes and get methods
         $attributes = array(
             'thumbnail'   => 'getThumbnailUrl',
@@ -217,9 +221,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         );
 
         foreach ($attributes as $attributeCode => $getMethod) {
-            if (!empty($this->_searchableProductAttributes[$attributeCode])) {
-                $this->_indexData['productData']['images'][$attributeCode] = $product->$getMethod();
-            }
+            $this->_indexData['productData']['images'][$attributeCode] = $product->$getMethod($width, $height);
         }
     }
 

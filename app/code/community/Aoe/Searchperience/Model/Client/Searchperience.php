@@ -53,6 +53,8 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
      */
     private $_documentRepository;
 
+    public static $statistics = array();
+
 	/**
 	 * @param array $options
 	 */
@@ -153,12 +155,18 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             $document->setContent($this->_documentToXmlFragment($rawDocument));
             $document->setForeignId($this->_getValueFromArray('unique', $productData));
             $document->setSource($this->_documentSource);
-            $document->setMimeType('application/xml');
+            //$document->setMimeType('application/searchperienceproduct+xml');
+            $document->setMimeType('text/xml');
             $document->setUrl($this->_getValueFromArray('url', $productData));
 
             try {
+
                 $result = $this->_documentRepository->add($document);
-                Mage::log('Searchperience API log result: ' . $result);
+                if (!isset(self::$statistics[$result])) {
+                    self::$statistics[$result] = 0;
+                }
+                self::$statistics[$result]++;
+                //Mage::log('Searchperience API log result: ' . $result);
             } catch (Exception $e) {
                 Mage::log(sprintf('Errors occured while trying to add document to repository: %s', $e->getMessage()));
                 Mage::getSingleton('core/session')->addError(
@@ -215,7 +223,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 
         // add image information to xml
         $images = $this->_getValueFromArray('images', $productData, array());
-        $writer->writeElement('image_link', $this->_getValueFromArray('image', $images));
+        $writer->writeElement('image_link', $this->_getValueFromArray('small_image', $images));
 
         // dynamic fields
         $additionalData = $this->_getValueFromArray('additionalData', $productData, array());
@@ -250,7 +258,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
         // replace any control characters to avoid Solr XML parser exception
         $return = $this->_stripCtrlChars($writer->outputMemory(true));
 
-        Mage::log($return);
+        //Mage::log($return);
 
         return $return;
     }
