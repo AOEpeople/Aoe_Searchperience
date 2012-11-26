@@ -1,9 +1,24 @@
+
+#aoe_solr_loader {
+
+	background-image: url(../../i/ajax-loader.gif); width: 32px; height: 32px;
+}
+
+.live-dummy-content{
+	width: 750px;
+	height: 500px;
+}
+#aoe_solr {text-align: left;}
+#aoe_solr .cc {clear:both}
+#aoe_solr a {color: #FF5700;}
+
 #aoe_solr .b-ajax-search-results { width: 750px; color: #3c3c3c; position: relative; padding: 20px 0 0 0; }
 #aoe_solr .b-ajax-search-results-close { width: 16px; height: 16px; position: absolute; top: 0; right: 5px; background: url(../../i/b-ajax-search-results-close.png) no-repeat; cursor: pointer; }
+
 #aoe_solr .b-ajax-sr-single {  }
 #aoe_solr .b-ajax-sr-single-title h2 { font: bold 27px Arial, sans-serif; margin: 0 0 5px 0; }
 #aoe_solr .b-ajax-sr-single-cat { font-size: 12px; margin: 0 0 25px 0; }
-#aoe_solr .b-ajax-sr-single-cat a { text-decoration: none; color: #3c3c3c; }
+#aoe_solr #aoe_solr.b-ajax-sr-single-cat a { text-decoration: none; color: #3c3c3c; }
 #aoe_solr .b-ajax-sr-single-cat a:hover { text-decoration: underline; }
 #aoe_solr .b-ajax-sr-single-descr { font-size: 14px; line-height: 20px; }
 
@@ -19,26 +34,17 @@
 
 #aoe_solr .b-ajax-sr-cc { clear: both; }
 
-/* Jquery autosuggest
---------------------------------------- */
-#aoe_solr .ac_results { z-index: 1200; width: 611px!important; }
-#aoe_solr .ac_results ul { border: 1px solid #cacaca; border-top: 0; background: #fff; }
-#aoe_solr .ac_results li { border-top: 1px solid #e4e5e6; padding: 4px 13px 6px 13px; color: #9a9a9a; }
-#aoe_solr .ac_results strong { color: #010110; }
-#aoe_solr .ac_results li:first-child { border-top: 0; }
-#aoe_solr .ac_results .ac_over,
-#aoe_solr .ac_results li:hover { background: #FAA136; cursor: pointer; color: #000; }
-
 /* Pager
 --------------------------------------- */
 
 #aoe_solr .b-ajax-sr-pager { position: relative; height: 30px; padding: 5px 0 0 0; }
-#aoe_solr .b-ajax-sr-pager ul { text-align: center; }
+#aoe_solr .b-ajax-sr-pager ul { margin: 0; text-align: center; }
 #aoe_solr .b-ajax-sr-pager li { display: inline-block; zoom: 1; *display: inline; width: 8px; height: 8px; overflow: hidden; background: url(../../i/b-ajax-sr-pager.png) no-repeat; margin-left: 5px; cursor: pointer; }
 #aoe_solr .b-ajax-sr-pager li:first-child { margin-left: 0; }
 #aoe_solr .b-ajax-sr-pager li:hover,
 #aoe_solr .b-ajax-sr-pager li.cur { background-position: -8px 0; }
 #aoe_solr .b-ajax-sr-pager .bu { position: absolute; top: 0; right: 5px; }
+
 
 /* Fancy box
 --------------------------------------- */
@@ -51,7 +57,7 @@
 #fancybox-outer { position: relative; width: 100%; height: 100%; background: #fff; }
 #fancybox-content { width: 0; height: 0; padding: 0; outline: none; position: relative; overflow: hidden; z-index: 1102; border: 0px solid #fff; }
 #fancybox-hide-sel-frame { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: transparent; z-index: 1101; }
-#fancybox-close { position: absolute; top: -15px; right: -15px; width: 30px; height: 30px; background: transparent url('../../i/fancybox.png') -40px 0px; cursor: pointer; z-index: 1103; display: none; }
+#fancybox-close { position: absolute; top: -15px; right: -15px; width: 30px; height: 30px; cursor: pointer; z-index: 1103; display: none; }
 #fancybox-error { color: #444; font: normal 12px/20px Arial; padding: 14px; margin: 0; }
 #fancybox-img { width: 100%; height: 100%; padding: 0; margin: 0; border: none; outline: none; line-height: 0; vertical-align: top; }
 #fancybox-frame { width: 100%; height: 100%; border: none; display: block; }
@@ -69,57 +75,38 @@
 #fancybox-right:hover span { left: auto; right: 20px; }
 .fancybox-bg { display: none; }
 
+#aoe_solr .ui-slider-min, #aoe_solr .ui-slider-max {display: none}
 
-/* live suggest */
-#aoe_solr_livesuggest {
-    z-index:1200;
-    border: 1px solid #e4e5e6;
-    background: #fff;
-}
 
-.ls_results {
-    margin: 0 0 0 -2px;
-    z-index: 1200;
-}
 
-.ls_results ul {
-    width: 49%;
-    float: left
-}
+/* List type select
+--------------------------------------- */
+#aoe_solr .select {}
+#aoe_solr .sort:after             { clear: both; }
+#aoe_solr .sort {margin: 1px 1px 0 0 }
+#aoe_solr .list-select                         { border:1px solid #e8e8e8; border-top:1px solid #afafaf; border-radius:3px; margin:0;  height:5px; padding: 15px 0 0 0; position:relative; z-index: 1000; color:#000; font-size:11px; min-width:130px; background: url(data:image/gif;base64,R0lGODlhBwAFAPABAAAAAP7+/iH5BAAAAAAALAAAAAAHAAUAAAIJjB+gC8m3UDoFADs=) no-repeat scroll 110px 7px #FFFFFF}
+#aoe_solr .list-select li                      { list-style:none inside; visibility:hidden; background:#fff; width: auto }
+#aoe_solr .list-select li.unselected           { border:1px solid #e8e8e8; border-width:0 1px 1px 1px; margin:-3px -1px; border-radius:0 0 3px 3px; padding:3px 0;}
+#aoe_solr .list-select li.selected             { visibility:visible; position:absolute; top:2px; }
+#aoe_solr .list-select:hover                           { overflow:visible; }
+#aoe_solr .list-select:hover li                        { visibility:visible;}
 
-.ls_results li.ac_head, .ls_results li.dr_head {
-    font-size: 13px;
-    font-weight: bold;
-    padding: 10px 10px 5px;
-}
+#aoe_solr .list-select li a                            { display:block; padding:0 10px 0 5px; color:#000; text-decoration:none; white-space:nowrap; }
+#aoe_solr .list-select li.unselected a:hover                   { background:#f5f5f5;}
 
-.ls_results li.ac_head:hover, .ls_results li.dr_head:hover {
-    background: none;
-}
+#aoe_solr .list-select:after                           { position:absolute; right:4px; top:9px; background-position:-256px -18px; width:7px; height:4px; margin:0;}
 
-.ls_results li {
-    padding: 3px 13px 5px 13px;
-    color: #9a9a9a;
-}
 
-.ls_results strong {
-    color: #010110;
-}
+#aoe_solr .list-select li.selected:first-child + .unselected,
+#aoe_solr .list-select li.unselected:first-child { padding-top:10px;}
 
-.ls_results li:first-child {
-    border-top: 0;
-}
+#aoe_solr .sort                           { float:right; }
+#aoe_solr .sort .label            { float:left; margin-right:10px; line-height:20px;}
+#aoe_solr .sort .select           { float:right;}
 
-.ls_results li:hover {
-    background: #FAA136;
-    cursor: pointer;
-    color: #000;
-}
-
-.ls_results .directresultlist li.suggestionitem {
-    border-bottom: 1px dotted #C9D4E3;
-    min-height: 100px;
-    overflow: hidden;
-}
-.ls_results .directresultlist li img {float: left}
-/* .ls_results .directresultlist .dr_right {float: right} */
+/* Pager block
+------------------------------ */
+#aoe_solr .paging { font-size: 13px; margin: 0 0 20px 0; padding: 10px 0 0 0; border-top: 1px solid #acaeb1; }
+#aoe_solr .paging a { text-decoration: none; color: #FF5700!important; }
+#aoe_solr .paging a:hover { text-decoration: underline; }
+#aoe_solr .paging li { list-style: none; display: inline; padding: 0 4px 0 0; }
