@@ -194,6 +194,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     {
         $usedForSorting   = array();
         $usedForFiltering = array();
+		$attributeTypes = array();
 
         foreach ($productIndexData as $attributeCode => $attributeValue) {
 
@@ -218,6 +219,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             if (!$attribute || $attributeCode == 'price' || empty($attributeValue)) {
                 continue;
             }
+
 
             $attribute->setStoreId($storeId);
 
@@ -275,6 +277,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                         }
                     }
                 }
+
             }
 
 //            // Preparing data for sorting field
@@ -302,8 +305,8 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             if ($attribute->getIsFilterable() || $attribute->getIsFilterableInSearch()) {
                 $usedForFiltering[] = $attributeCode;
             }
-            $fieldName = $this->getSearchEngineFieldName($attribute);
-            $productIndexData[$fieldName] = empty($preparedValue[$productId]) && !empty($preparedNavValue[$productId]) ? $preparedNavValue[$productId] : $preparedValue[$productId];
+			$attributeTypes[$attributeCode] = $this->getAttributeSearchType($attribute);
+            $productIndexData[$attributeCode] = empty($preparedValue[$productId]) && !empty($preparedNavValue[$productId]) ? $preparedNavValue[$productId] : $preparedValue[$productId];
 
             // Adding data for advanced search field (without additional prefix)
 //            if (($attribute->getIsVisibleInAdvancedSearch() ||  $attribute->getIsFilterable()
@@ -341,6 +344,45 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
         //return $productIndexData;
     }
+
+	/**
+	 * @param Mage_Catalog_Model_Resource_Eav_Attribute|string $attribute
+	 */
+	private function getAttributeSearchType($attribute)
+	{
+		if (is_string($attribute)) {
+			if ($attribute == 'price') {
+				return 'float';
+			}
+
+			$eavConfig  = Mage::getSingleton('eav/config');
+			$entityType = $eavConfig->getEntityType('catalog_product');
+			$attribute  = $eavConfig->getAttribute($entityType, $attribute);
+		}
+		$attributeCode = $attribute->getAttributeCode();
+		if ($attributeCode == 'price') {
+			return $this->getPriceFieldName();
+		}
+
+		$backendType    = $attribute->getBackendType();
+		$frontendInput  = $attribute->getFrontendInput();
+
+		if ($frontendInput == 'multiselect') {
+			$fieldType = 'string';
+		} elseif ($frontendInput == 'select') {
+			$fieldType = 'string';
+		} elseif ($frontendInput == 'boolean') {
+			$fieldType = 'string';
+		} elseif ($backendType == 'decimal') {
+			$fieldType = 'float';
+		} elseif ($backendType == 'datetime') {
+			$fieldType = 'date';
+		} else {
+			$fieldType = 'text';
+		}
+
+		return $fieldType;
+	}
 
     /**
      * Retrieve attribute solr field name
@@ -514,4 +556,5 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
         return false;
     }
+
 }
