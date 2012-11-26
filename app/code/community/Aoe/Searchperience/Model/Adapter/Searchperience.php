@@ -141,7 +141,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                 foreach($pathCategories as $pathCategory) {
                     $cat = Mage::getModel('catalog/category')->load($pathCategory);
                     if ($cat->getLevel() > 1) {
-                        $pathPart = htmlentities($cat->getName(), ENT_XML1, 'UTF-8');
+                        $pathPart = $cat->getName();
                         $pathPart = str_replace('/','&#47;', $pathPart);
                         $path[] = $pathPart;
                     }
@@ -165,9 +165,6 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             $this->_indexData['productData']['cross'][] = $crossProduct->getId();
         }
 
-        // fetch additional product information
-        $this->_getAdditionalProductData($product);
-
         foreach ($productIndexData as $attributeCode => $value) {
             if ($this->_skipAttribute($attributeCode)) {
                 continue;
@@ -180,6 +177,9 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                 $this->_indexData[$attributeCode] = $value;
             }
         }
+
+        // fetch additional product information
+        $this->_getAdditionalProductData($product);
 
         return $this->_indexData;
     }

@@ -258,7 +258,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
         // replace any control characters to avoid Solr XML parser exception
         $return = $this->_stripCtrlChars($writer->outputMemory(true));
 
-        //Mage::log($return);
+        Mage::log($return);
 
         return $return;
     }
