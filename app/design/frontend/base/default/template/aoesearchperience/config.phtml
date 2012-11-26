@@ -1,11 +1,10 @@
 <?php /* config values for searchperience - replacement for config.js */ ?>
 <script type="text/javascript">
-//in an environment without baseurl you may want to use the following
-// var	suggestUrl 							= location.protocol + '//' + location.hostname + '/';
-// var	searchUrl 							= location.protocol + '//' + location.hostname + '/';
-// var	widgetUrl 							= location.protocol + '//' + location.hostname + '/';
-// var	liveSearchUrl						= location.protocol + '//' + location.hostname + '/';
-// var	liveSuggestUrl						= location.protocol + '//' + location.hostname + '/';
+var	suggestUrl 							= '<?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/suggestUrl'); ?>';
+var	searchUrl 							= '<?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/searchUrl') ?>';
+var	widgetUrl 							= '<?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/widgetUrl') ?>';
+var	liveSearchUrl						= '<?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/liveSearchUrl') ?>';
+var	liveSuggestUrl						= '<?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/liveSuggestUrl') ?>';
 
 var enableInnerShiv                         = <?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/enableInnerShiv') ?>;
 var doWidgetInit                            = <?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/doWidgetInit') ?>;

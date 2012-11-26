@@ -87,6 +87,46 @@
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
                     <fields>
+                        <suggestUrl translate="label" module="aoe_searchperience">
+                            <label>Suggest URL</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>1</sort_order>
+                        </suggestUrl>
+                        <searchUrl translate="label" module="aoe_searchperience">
+                            <label>Search URL</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>2</sort_order>
+                        </searchUrl>
+                        <widgetUrl translate="label" module="aoe_searchperience">
+                            <label>Widget URL</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>3</sort_order>
+                        </widgetUrl>
+                        <liveSearchUrl translate="label" module="aoe_searchperience">
+                            <label>Livesearch URL</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>4</sort_order>
+                        </liveSearchUrl>
+                        <liveSuggestUrl translate="label" module="aoe_searchperience">
+                            <label>Livesuggest URL</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>5</sort_order>
+                        </liveSuggestUrl>
                         <enableInnerShiv translate="label" module="aoe_searchperience">
                             <label>Enable InnerShiv</label>
                             <frontend_type>select</frontend_type>
