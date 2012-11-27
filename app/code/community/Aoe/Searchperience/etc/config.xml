@@ -113,6 +113,8 @@
             </searchperience_config_js>
             <searchperience>
                 <source>magento</source>
+                <listViewImageWidth>201</listViewImageWidth>
+                <listViewImageHeight>201</listViewImageHeight>
             </searchperience>
         </searchperience>
     </default>
