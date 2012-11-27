@@ -155,8 +155,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             $document->setContent($this->_documentToXmlFragment($rawDocument));
             $document->setForeignId($this->_getValueFromArray('unique', $productData));
             $document->setSource($this->_documentSource);
-            //$document->setMimeType('application/searchperienceproduct+xml');
-            $document->setMimeType('text/xml');
+            $document->setMimeType('application/searchperienceproduct-xml');
             $document->setUrl($this->_getValueFromArray('url', $productData));
 
             try {
