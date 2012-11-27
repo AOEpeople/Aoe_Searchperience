@@ -166,9 +166,9 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
                     self::$statistics[$result] = 0;
                 }
                 self::$statistics[$result]++;
-                Mage::log('Searchperience API log result: ' . $result);
+                //Mage::log('Searchperience API log result: ' . $result);
             } catch (Exception $e) {
-                Mage::log(sprintf('Errors occured while trying to add document to repository: %s', $e->getMessage()));
+               // Mage::log(sprintf('Errors occured while trying to add document to repository: %s', $e->getMessage()));
                 Mage::getSingleton('core/session')->addError(
                     Mage::helper('core')->__(
                         sprintf('Errors occured while trying to add document to repository: %s', $e->getMessage())
@@ -187,6 +187,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
      */
     protected function _documentToXmlFragment(Apache_Solr_Document $document)
     {
+
         $writer = new XMLWriter();
         $writer->openMemory();
         $writer->startElement('product');
@@ -230,11 +231,22 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
         foreach ($additionalData as $key => $value) {
             $writer->startElement('attribute');
             $writer->writeAttribute('name', $key);
-            $writer->writeAttribute('type', '');
-            $writer->writeAttribute('forsorting', 0);
-            $writer->writeAttribute('forfiltering', 0);
-            $writer->writeAttribute('forsearching', 0);
-            $writer->text($value);
+            $writer->writeAttribute('type', $this->_getValueFromArray($key, $documentData['attributeTypes'], 'string') );
+			if (isset($documentData['attributesUsedForSorting'][$key])) {
+				$writer->writeAttribute('forsorting', $documentData['attributesUsedForSorting'][$key]);
+			}
+			if (isset($documentData['attributesUsedForFiltering'][$key])) {
+				$writer->writeAttribute('forfiltering', $documentData['attributesUsedForFiltering'][$key]);
+			}
+            $writer->writeAttribute('forsearching', 1);
+			if (!is_array($value)) {
+				$value = (array)$value;
+			}
+			$value = array_unique($value);
+			foreach ($value as $key => $attributeValue) {
+				$writer->writeElement('value', $attributeValue);
+			}
+
             $writer->endElement();
         }
 
@@ -258,7 +270,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
         // replace any control characters to avoid Solr XML parser exception
         $return = $this->_stripCtrlChars($writer->outputMemory(true));
 
-        Mage::log($return);
+//        Mage::log($return);
 
         return $return;
     }

@@ -69,15 +69,25 @@
         </layout>
     </frontend>
 
-    <adminhtml>
-        <layout>
-            <updates>
-                <searchperienece>
-                    <file>searchperience/searchperience.xml</file>
-                </searchperienece>
-            </updates>
-        </layout>
-    </adminhtml>
+	<adminhtml>
+		<layout>
+			<updates>
+				<searchperienece>
+					<file>searchperience/searchperience.xml</file>
+				</searchperienece>
+			</updates>
+		</layout>
+		<events>
+			<catelogsearch_searchable_attributes_load_after>
+				<observers>
+					<enterprise_search>
+						<class>aoe_searchperience/observer</class>
+						<method>storeSearchableAttributes</method>
+					</enterprise_search>
+				</observers>
+			</catelogsearch_searchable_attributes_load_after>
+		</events>
+	</adminhtml>
 
     <default>
         <searchperience>
