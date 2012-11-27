@@ -165,9 +165,9 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
                     self::$statistics[$result] = 0;
                 }
                 self::$statistics[$result]++;
-                //Mage::log('Searchperience API log result: ' . $result);
+                Mage::log('Searchperience API log result: ' . $result);
             } catch (Exception $e) {
-               // Mage::log(sprintf('Errors occured while trying to add document to repository: %s', $e->getMessage()));
+                Mage::log(sprintf('Errors occured while trying to add document to repository: %s', $e->getMessage()));
                 Mage::getSingleton('core/session')->addError(
                     Mage::helper('core')->__(
                         sprintf('Errors occured while trying to add document to repository: %s', $e->getMessage())
@@ -269,7 +269,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
         // replace any control characters to avoid Solr XML parser exception
         $return = $this->_stripCtrlChars($writer->outputMemory(true));
 
-//        Mage::log($return);
+        Mage::log($return);
 
         return $return;
     }
