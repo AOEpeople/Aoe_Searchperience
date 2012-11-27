@@ -119,7 +119,8 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             'in_stock' => (!empty($productIndexData['in_stock']) ? $productIndexData['in_stock'] : ''),
         );
 
-        $product = Mage::getModel('catalog/product')->load($productId);
+		/** @var $product Mage_Catalog_Model_Product */
+        $product = Mage::getModel('catalog/product')->setStoreId($storeId)->load($productId);
 
         $this->_indexData['productData']['id']     = $product->getId();
         $this->_indexData['productData']['sku']    = $product->getSku();
