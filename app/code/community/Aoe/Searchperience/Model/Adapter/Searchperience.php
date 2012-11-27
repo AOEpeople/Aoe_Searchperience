@@ -77,7 +77,8 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         $docs = array();
         foreach ($docData as $productId => $productIndexData) {
             $doc = new $this->_clientDocObjectName;
-            $productIndexData = $this->_prepareIndexProductData($productIndexData, $productId, $storeId);
+			$productIndexData = $this->_prepareIndexProductData($productIndexData, $productId, $storeId);
+
             if (!$productIndexData) {
                 continue;
             }
@@ -89,17 +90,17 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         return $docs;
     }
 
-    /**
-     * Prepare index data for using in search engine metadata.
-     * Prepare fields for advanced search, navigation, sorting and fulltext fields for each search weight for
-     * quick search and spell.
-     *
-     * @param array $productIndexData
-     * @param int $productId
-     * @param int $storeId
-     *
-     * @return  array|bool
-     */
+	/**
+	 * Prepare index data for using in search engine metadata.
+	 * Prepare fields for advanced search, navigation, sorting and fulltext fields for each search weight for
+	 * quick search and spell.
+	 *
+	 * @param array $productIndexData
+	 * @param int $productId
+	 * @param int $storeId
+	 *
+	 * @return  array|bool
+	 */
     protected function _prepareIndexProductData($productIndexData, $productId, $storeId)
     {
         if (!$this->isAvailableInIndex($productIndexData, $productId)) {
@@ -108,8 +109,10 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
         // fetch searchable product attributes
         $this->_getSearchableAttributes();
+		$this->_indexableAttributeParams = $this->_searchableProductAttributes;
 
-        $productIds        = array();
+
+		$productIds        = array();
         $this->_indexData  = array(
             'storeid'  => $storeId,
             'language' => Mage::getStoreConfig('general/locale/code', $storeId),
@@ -123,6 +126,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         $this->_indexData['productData']['url']    = $product->getProductUrl();
         $this->_indexData['productData']['unique'] = $product->getId() . '_' . $storeId;
 
+		$this->_usedFields = array_merge($this->_usedFields, array('id', 'description', 'short_description', 'price', 'name', 'tax_class_id'));
         // fetch price information
         $this->_getProductPriceInformation($product);
 
@@ -179,10 +183,179 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         }
 
         // fetch additional product information
-        $this->_getAdditionalProductData($product);
-
+		list($dynamicFields, $usedForSorting, $usedForFiltering, $attributeTypes) = $this->_getAdditionalProductData($productIndexData, $productId, $storeId);
+		$this->_indexData['productData']['additionalData'] = $dynamicFields;
+		$this->_indexData['attributesUsedForSorting'] = $usedForSorting;
+		$this->_indexData['attributesUsedForFiltering'] = $usedForFiltering;
+		$this->_indexData['attributeTypes'] = $attributeTypes;
         return $this->_indexData;
     }
+
+    /**
+     * Get additional product data
+     *
+     * @param $product Mage_Catalog_Model_Product
+     */
+    protected function _getAdditionalProductData($productIndexData, $productId, $storeId)
+    {
+        $usedForSorting   = array();
+        $usedForFiltering = array();
+		$attributeTypes = array();
+
+        foreach ($productIndexData as $attributeCode => $attributeValue) {
+
+            if ($attributeCode == 'visibility') {
+                $productIndexData[$attributeCode] = $attributeValue[$productId];
+                continue;
+            }
+
+            // Prepare processing attribute info
+            if (isset($this->_indexableAttributeParams[$attributeCode])) {
+                /* @var $attribute Mage_Catalog_Model_Resource_Eav_Attribute */
+                $attribute = $this->_indexableAttributeParams[$attributeCode];
+            } else {
+                $attribute = null;
+            }
+
+            // Prepare values for required fields
+            if (in_array($attributeCode, $this->_usedFields)) {
+                unset($productIndexData[$attributeCode]);
+				continue;
+            }
+
+            if (!$attribute || $attributeCode == 'price' || empty($attributeValue)) {
+                continue;
+            }
+
+
+            $attribute->setStoreId($storeId);
+
+            // Preparing data for solr fields
+            if ($attribute->getIsSearchable() || $attribute->getIsVisibleInAdvancedSearch()
+                || $attribute->getIsFilterable() || $attribute->getIsFilterableInSearch()
+            ) {
+
+                $backendType = $attribute->getBackendType();
+                $frontendInput = $attribute->getFrontendInput();
+
+                if ($attribute->usesSource()) {
+                    if ($frontendInput == 'multiselect') {
+                        $preparedValue = array();
+                        foreach ($attributeValue as $val) {
+                            $preparedValue = array_merge($preparedValue, explode(',', $val));
+                        }
+                        $preparedNavValue = $preparedValue;
+                    } else {
+                        // safe condition
+                        if (!is_array($attributeValue)) {
+                            $preparedValue = array($attributeValue);
+                        } else {
+                            $preparedValue = array_unique($attributeValue);
+                        }
+
+                        $preparedNavValue = $preparedValue;
+                        // Ensure that self product value will be saved after array_unique function for sorting purpose
+                        if (isset($attributeValue[$productId])) {
+                            if (!isset($preparedNavValue[$productId])) {
+                                $selfValueKey = array_search($attributeValue[$productId], $preparedNavValue);
+                                unset($preparedNavValue[$selfValueKey]);
+                                $preparedNavValue[$productId] = $attributeValue[$productId];
+                            }
+                        }
+                    }
+
+                    foreach ($preparedValue as $id => $val) {
+                        $preparedValue[$id] = $attribute->getSource()->getOptionText($val);
+                    }
+                } else { // no source
+                    $preparedValue = $attributeValue;
+                    if ($backendType == 'datetime') {
+                        if (is_array($attributeValue)) {
+                            $preparedValue = array();
+                            foreach ($attributeValue as &$val) {
+                                $val = $this->_getSolrDate($storeId, $val);
+                                if (!empty($val)) {
+                                    $preparedValue[] = $val;
+                                }
+                            }
+                            unset($val); //clear link to value
+                            $preparedValue = array_unique($preparedValue);
+                        } else {
+                            $preparedValue = $this->_getSolrDate($storeId, $attributeValue);
+                        }
+                    }
+                }
+
+            }
+
+            if ($attribute->getUsedForSortBy()) {
+                $usedForSorting[$attributeCode] = 1;
+            }
+
+            if ($attribute->getIsFilterable() || $attribute->getIsFilterableInSearch()) {
+                $usedForFiltering[$attributeCode] = 1;
+            }
+			$attributeTypes[$attributeCode] = $this->getAttributeSearchType($attribute);
+
+//			if (is_array($preparedValue[$productId])) {
+//				if (isset($preparedValue[$productId])) {
+//					$sortValue = $preparedValue[$productId];
+//				} else {
+//					$sortValue = null;
+//				}
+//			}
+
+         //   $productIndexData[$attributeCode] = empty($preparedValue[$productId]) && !empty($preparedNavValue[$productId]) ? $preparedNavValue[$productId] : $preparedValue[$productId];
+
+			$productIndexData[$attributeCode] = $preparedValue;
+            unset($preparedNavValue, $preparedValue, $fieldName, $attribute);
+        }
+
+
+        return array($productIndexData, $usedForSorting, $usedForFiltering, $attributeTypes);
+    }
+
+	/**
+	 * @param Mage_Catalog_Model_Resource_Eav_Attribute|string $attribute
+	 */
+	private function getAttributeSearchType($attribute)
+	{
+		if (is_string($attribute)) {
+			if ($attribute == 'price') {
+				return 'float';
+			}
+
+			$eavConfig  = Mage::getSingleton('eav/config');
+			$entityType = $eavConfig->getEntityType('catalog_product');
+			$attribute  = $eavConfig->getAttribute($entityType, $attribute);
+		}
+		$attributeCode = $attribute->getAttributeCode();
+		if ($attributeCode == 'price') {
+			return $this->getPriceFieldName();
+		}
+
+		$backendType    = $attribute->getBackendType();
+		$frontendInput  = $attribute->getFrontendInput();
+
+		if ($frontendInput == 'multiselect') {
+			$fieldType = 'string';
+		} elseif ($frontendInput == 'select') {
+			$fieldType = 'string';
+		} elseif ($frontendInput == 'boolean') {
+			$fieldType = 'string';
+		} elseif ($backendType == 'decimal') {
+			$fieldType = 'float';
+		} elseif ($backendType == 'varchar') {
+			$fieldType = 'string';
+		} elseif ($backendType == 'datetime') {
+			$fieldType = 'date';
+		} else {
+			$fieldType = 'text';
+		}
+
+		return $fieldType;
+	}
+
 
     /**
      * Get price information for product
@@ -228,24 +401,6 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     }
 
     /**
-     * Get additional product data
-     *
-     * @param $product Mage_Catalog_Model_Product
-     */
-    protected function _getAdditionalProductData($product)
-    {
-        $productData = $product->getData();
-
-        foreach ($this->_searchableProductAttributes as $attributeCode => $attribute) {
-            if (!isset($this->_indexData['productData'][$attributeCode]) && !isset($this->_indexData[$attributeCode])) {
-                if (isset($productData[$attributeCode])) {
-                    $this->_indexData['productData']['additionalData'][$attributeCode] = $productData[$attributeCode];
-                }
-            }
-        }
-    }
-
-    /**
      * Determines searchable product attributes
      */
     protected function _getSearchableAttributes()
@@ -282,4 +437,5 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
         return false;
     }
+
 }
