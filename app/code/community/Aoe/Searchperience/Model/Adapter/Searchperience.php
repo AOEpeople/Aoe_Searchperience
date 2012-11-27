@@ -439,4 +439,34 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         return false;
     }
 
+    /**
+     * Retrieve date value as timestamp
+     *
+     * @param int $storeId
+     * @param string $date
+     *
+     * @return string|null
+     */
+    protected function _getSolrDate($storeId, $date = null)
+    {
+        if (!isset($this->_dateFormats[$storeId])) {
+            $timezone = Mage::getStoreConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_TIMEZONE, $storeId);
+            $locale   = Mage::getStoreConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_LOCALE, $storeId);
+            $locale   = new Zend_Locale($locale);
+
+            $dateObj  = new Zend_Date(null, null, $locale);
+            $dateObj->setTimezone($timezone);
+            $this->_dateFormats[$storeId] = array($dateObj, $locale->getTranslation(null, 'date', $locale));
+        }
+
+        if (is_empty_date($date)) {
+            return null;
+        }
+
+        list($dateObj, $localeDateFormat) = $this->_dateFormats[$storeId];
+        $dateObj->setDate($date, $localeDateFormat);
+
+        return $dateObj->getTimestamp();
+    }
+
 }
