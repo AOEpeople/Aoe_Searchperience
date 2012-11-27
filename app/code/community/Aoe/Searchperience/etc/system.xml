@@ -78,6 +78,22 @@
                             <show_in_store>1</show_in_store>
                             <sort_order>50</sort_order>
                         </remote_js>
+                        <listViewImageWidth translate="label" module="aoe_searchperience">
+                            <label>List view image width</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>60</sort_order>
+                        </listViewImageWidth>
+                        <listViewImageHeight translate="label" module="aoe_searchperience">
+                            <label>List view image height</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>70</sort_order>
+                        </listViewImageHeight>
                     </fields>
                 </searchperience>
                 <searchperience_config_js translate="label" module="aoe_searchperience">

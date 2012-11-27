@@ -386,8 +386,8 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
      */
     protected function _getProductImageInformation($product)
     {
-        $width  = 201;
-        $height = 201;
+        $width  = Mage::getStoreConfig('searchperience/searchperience/listViewImageWidth');
+        $height = Mage::getStoreConfig('searchperience/searchperience/listViewImageHeight');
 
         // define attributes and get methods
         $attributes = array(
