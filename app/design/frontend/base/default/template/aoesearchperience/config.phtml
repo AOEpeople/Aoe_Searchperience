@@ -1,6 +1,5 @@
 <?php /* config values for searchperience - replacement for config.js */ ?>
 <script type="text/javascript">
-var paginationType = 'scroll';
 var	suggestUrl 							= '<?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/suggestUrl'); ?>';
 var	searchUrl 							= '<?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/searchUrl') ?>';
 var	widgetUrl 							= '<?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/widgetUrl') ?>';
@@ -25,6 +24,7 @@ var aoeSolrInitRemoteWidgets                = <?php echo Mage::getStoreConfig('s
 var aoeSolrLiveSuggestOffsetTop             = <?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/aoeSolrLiveSuggestOffsetTop') ?>;
 var aoeSolrLiveSuggestOffetLeft             = <?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/aoeSolrLiveSuggestOffetLeft') ?>;
 var aoeSolrLiveSuggestWidth                 = <?php echo Mage::getStoreConfig('searchperience/searchperience_config_js/aoeSolrLiveSuggestWidth') ?>;
+var aoeSolrPaginationType = 'scroll';
 
 <?php if ((int)Mage::getStoreConfig('searchperience/searchperience_config_js/aoeSolrSearchPid') > 0): ?>
 //add this to use the fast cached TSFE
