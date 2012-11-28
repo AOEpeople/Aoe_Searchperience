@@ -196,6 +196,11 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
         // fetch additional product information
 		list($dynamicFields, $usedForSorting, $usedForFiltering, $attributeTypes) = $this->_getAdditionalProductData($productIndexData, $productId, $storeId);
+		$badge = $product->getBadge();
+		if ($badge !== FALSE) {
+			$dynamicFields['badge'] = $badge['code'];
+			$attributeTypes['badge'] = 'string';
+		}
 		$this->_indexData['productData']['additionalData'] = $dynamicFields;
 		$this->_indexData['attributesUsedForSorting'] = $usedForSorting;
 		$this->_indexData['attributesUsedForFiltering'] = $usedForFiltering;
