@@ -198,7 +198,6 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
      */
     protected function _documentToXmlFragment(Apache_Solr_Document $document)
     {
-
         $writer = new XMLWriter();
         $writer->openMemory();
         $writer->startDocument('1.0', 'UTF-8');
@@ -210,7 +209,8 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             'short_description' => 'short_description',
             'price'             => 'price',
             'special_price'     => 'special_price',
-            'group_price'       => 'group_price'
+            'group_price'       => 'group_price',
+            'rating'            => 'rating',
         );
         $documentData = $document->getData();
         $productData  = ((isset($documentData['productData']) ? $documentData['productData'] : array()));

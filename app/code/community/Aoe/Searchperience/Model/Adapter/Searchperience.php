@@ -146,11 +146,14 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
 		/** @var $product Mage_Catalog_Model_Product */
         $product = Mage::getModel('catalog/product')->setStoreId($storeId)->load($productId);
+        // fetch review data for requested product
+        Mage::getModel('review/review')->getEntitySummary($product, $storeId);
 
         $this->_indexData['productData']['id']     = $productId;
         $this->_indexData['productData']['sku']    = $productIndexData['sku'];
         $this->_indexData['productData']['url']    = $product->getProductUrl();
         $this->_indexData['productData']['unique'] = Mage::helper('aoe_searchperience')->getProductUniqueId($productId, $storeId);
+        $this->_indexData['productData']['rating'] = $product->getRatingSummary()->getRatingSummary();
 
 		$this->_usedFields = array_merge($this->_usedFields, array('id', 'description', 'short_description', 'price', 'name', 'tax_class_id'));
         // fetch price information
