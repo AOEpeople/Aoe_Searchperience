@@ -90,6 +90,17 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         return $docs;
     }
 
+
+	/**
+	 * Returns unique identifier for product for given store
+	 * @param $productId
+	 * @param $storeId
+	 * @return string
+	 */
+	protected function getProductUniqueId($productId, $storeId) {
+		return $productId . '_' . $storeId;
+	}
+
 	/**
 	 * Prepare index data for using in search engine metadata.
 	 * Prepare fields for advanced search, navigation, sorting and fulltext fields for each search weight for
@@ -122,10 +133,10 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 		/** @var $product Mage_Catalog_Model_Product */
         $product = Mage::getModel('catalog/product')->setStoreId($storeId)->load($productId);
 
-        $this->_indexData['productData']['id']     = $product->getId();
-        $this->_indexData['productData']['sku']    = $product->getSku();
+        $this->_indexData['productData']['id']     = $productId;
+        $this->_indexData['productData']['sku']    = $productIndexData['sku'];
         $this->_indexData['productData']['url']    = preg_replace('/^http(s)?:/', '', $product->getProductUrl());
-        $this->_indexData['productData']['unique'] = $product->getId() . '_' . $storeId;
+        $this->_indexData['productData']['unique'] = $this->getProductUniqueId($productId, $storeId);
 
 		$this->_usedFields = array_merge($this->_usedFields, array('id', 'description', 'short_description', 'price', 'name', 'tax_class_id'));
         // fetch price information
@@ -156,17 +167,17 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         }
 
         // fetch related products
-        foreach ($product->getRelatedProducts() as $relatedProduct) {
-            $this->_indexData['productData']['related'][] = $relatedProduct->getId();
-        }
+		foreach ($this->getLinkedProductIds($productId) as $relatedProduct) {
+			$this->_indexData['productData']['related'][] = $relatedProduct;
+		}
 
         // fetch upsell products
-        foreach ($product->getUpSellProducts() as $upsellProduct) {
+        foreach ($this->getLinkedProductIds($productId, Mage_Catalog_Model_Product_Link::LINK_TYPE_UPSELL) as $upsellProduct) {
             $this->_indexData['productData']['upsell'][] = $upsellProduct->getId();
         }
 
         // fetch crosssell products
-        foreach ($product->getCrossSellProducts() as $crossProduct) {
+        foreach ($this->getLinkedProductIds($productId, Mage_Catalog_Model_Product_Link::LINK_TYPE_CROSSSELL) as $crossProduct) {
             $this->_indexData['productData']['cross'][] = $crossProduct->getId();
         }
 
@@ -191,6 +202,24 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 		$this->_indexData['attributeTypes'] = $attributeTypes;
         return $this->_indexData;
     }
+
+	/**
+	 * Returns array of related products ids
+	 * @param $productId
+	 * @param int $relationType
+	 * @param int $limit
+	 * @return mixed
+	 */
+	protected function getLinkedProductIds($productId, $relationType=Mage_Catalog_Model_Product_Link::LINK_TYPE_RELATED, $limit=10) {
+		/** @var $linkModel Mage_Catalog_Model_Product_Link */
+		$linkModel = Mage::getSingleton('catalog/product_link');
+		$collection = $linkModel->setLinkTypeId($relationType)->getLinkCollection();
+		$collection->addFieldToFilter('product_id',  array('eq' => $productId))
+			->addLinkTypeIdFilter()
+			->addFieldToSelect('linked_product_id')
+			->setPageSize($limit)->setCurPage(1);
+		return $collection->getColumnValues('linked_product_id');
+	}
 
     /**
      * Get additional product data
