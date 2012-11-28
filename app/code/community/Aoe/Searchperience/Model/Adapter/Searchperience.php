@@ -173,12 +173,12 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
         // fetch upsell products
         foreach ($this->getLinkedProductIds($productId, Mage_Catalog_Model_Product_Link::LINK_TYPE_UPSELL) as $upsellProduct) {
-            $this->_indexData['productData']['upsell'][] = $upsellProduct->getId();
+            $this->_indexData['productData']['upsell'][] = $upsellProduct;
         }
 
         // fetch crosssell products
         foreach ($this->getLinkedProductIds($productId, Mage_Catalog_Model_Product_Link::LINK_TYPE_CROSSSELL) as $crossProduct) {
-            $this->_indexData['productData']['cross'][] = $crossProduct->getId();
+            $this->_indexData['productData']['cross'][] = $crossProduct;
         }
 
         foreach ($productIndexData as $attributeCode => $value) {
