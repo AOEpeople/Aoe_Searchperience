@@ -161,8 +161,6 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             $document->setMimeType('application/searchperience+xml');
             $document->setUrl($this->_getValueFromArray('url', $productData));
 
-            Mage::log($this->_getValueFromArray('url', $productData));
-
             try {
                 $result = $this->documentRepository->add($document);
                 if (!isset(self::$statistics[$result])) {
