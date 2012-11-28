@@ -110,3 +110,22 @@
 #aoe_solr .paging a { text-decoration: none; color: #FF5700!important; }
 #aoe_solr .paging a:hover { text-decoration: underline; }
 #aoe_solr .paging li { list-style: none; display: inline; padding: 0 4px 0 0; }
+
+/* Ajax loader */
+.ajaxloading {
+  display: none;
+  background-image: url('../../i/ajax-loader.gif');
+}
+
+.ajaxloading.active{
+  display: block;
+}
+
+.moreresult {
+  display: none;
+}
+
+.moreresult.active {
+  display: block;
+  width: 50px;
+}

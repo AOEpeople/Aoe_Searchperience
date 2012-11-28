@@ -210,11 +210,22 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
         // fetch additional product information
 		list($dynamicFields, $usedForSorting, $usedForFiltering, $attributeTypes) = $this->_getAdditionalProductData($productIndexData, $productId, $storeId);
+
 		$this->_indexData['productData']['additionalData'] = $dynamicFields;
 		$this->_indexData['attributesUsedForSorting'] = $usedForSorting;
 		$this->_indexData['attributesUsedForFiltering'] = $usedForFiltering;
 		$this->_indexData['attributeTypes'] = $attributeTypes;
-        return $this->_indexData;
+
+		$options = new Varien_Object();
+		$options->setIndexData($this->_indexData);
+		$options->indexData = $this->_indexData;
+		$options->setProduct($product);
+
+		Mage::dispatchEvent(
+			'aoe_searchperience_prepareIndexProductData_after',
+			array('adapter' => $this, 'options' => $options, 'someData' => $this->_indexData)
+		);
+        return $options->getIndexData();
     }
 
 	/**

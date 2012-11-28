@@ -5,8 +5,8 @@
             <action method="setTemplate" ><template>aoesearchperience/form.mini.phtml</template></action>
         </reference>
         <reference name="head">
+            <action method="addCss"><stylesheet>css/aoesearchperience/base-search.css</stylesheet></action>
             <action method="addCss"><stylesheet>css/aoesearchperience/styles.css</stylesheet></action>
-            <action method="addCss"><stylesheet>css/aoesearchperience/search_base.css</stylesheet></action>
             <block type="core/template" name="aoe_searchperience_config_js" template="aoesearchperience/config.phtml"/>
         </reference>
     </default>
