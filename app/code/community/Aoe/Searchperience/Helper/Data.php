@@ -12,4 +12,16 @@ class Aoe_Searchperience_Helper_Data extends Mage_Core_Helper_Abstract
     {
         return $this->isModuleEnabled('Enterprise_Search');
     }
+
+    /**
+     * Returns unique identifier for product for given store
+     *
+     * @param $productId
+     * @param $storeId
+     * @return string
+     */
+    public function getProductUniqueId($productId, $storeId)
+    {
+        return $productId . '_' . $storeId;
+    }
 }

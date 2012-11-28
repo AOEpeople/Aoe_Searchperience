@@ -51,8 +51,13 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
     /**
      * @var Searchperience\Api\Client\Domain\DocumentRepository
      */
-    private $_documentRepository;
+    private $documentRepository;
 
+    /**
+     * Some statistics about transactions with API
+     *
+     * @var array
+     */
     public static $statistics = array();
 
 	/**
@@ -68,7 +73,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
         $this->_documentSource = Mage::getStoreConfig('searchperience/searchperience/source',       'default');
 
         //\Searchperience\Common\Factory::$HTTP_DEBUG = true;
-        $this->_documentRepository = \Searchperience\Common\Factory::getDocumentRepository(
+        $this->documentRepository = \Searchperience\Common\Factory::getDocumentRepository(
             $this->_baseUrl,
             $this->_customerKey,
             $this->_username,
@@ -127,17 +132,15 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
         return true;
     }
 
-	/**
-	 * Add an array of Solr Documents to the index all at once
-	 *
-	 * @param array $documentList
-	 * @param boolean $allowDups
-	 * @param boolean $overwritePending
-	 * @param boolean $overwriteCommitted
-	 * @return
-	 *
-	 * @throws Exception If an error occurs during the service call
-	 */
+    /**
+     * Add an array of Solr Documents to the index all at once
+     *
+     * @param array $documentList
+     * @param boolean $allowDups
+     * @param boolean $overwritePending
+     * @param boolean $overwriteCommitted
+     * @return void|false
+     */
 	public function addDocuments($documentList, $allowDups = false, $overwritePending = true, $overwriteCommitted = true)
 	{
         if (in_array(null, array($this->_customerKey, $this->_username, $this->_password, $this->_documentSource, $this->_baseUrl))) {
@@ -158,16 +161,17 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             $document->setMimeType('application/searchperience+xml');
             $document->setUrl($this->_getValueFromArray('url', $productData));
 
-            try {
+            Mage::log($this->_getValueFromArray('url', $productData));
 
-                $result = $this->_documentRepository->add($document);
+            try {
+                $result = $this->documentRepository->add($document);
                 if (!isset(self::$statistics[$result])) {
                     self::$statistics[$result] = 0;
                 }
                 self::$statistics[$result]++;
                 Mage::log('Searchperience API log result: ' . $result);
             } catch (Exception $e) {
-                Mage::log(sprintf('Errors occured while trying to add document to repository: %s', $e->getMessage()));
+                Mage::logException($e);
                 Mage::getSingleton('core/session')->addError(
                     Mage::helper('core')->__(
                         sprintf('Errors occured while trying to add document to repository: %s', $e->getMessage())
@@ -178,6 +182,16 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
         }
         unset($documentList);
 	}
+
+    /**
+     * Returns API document repository
+     *
+     * @return Searchperience\Api\Client\Domain\DocumentRepository
+     */
+    public function getDocumentRepository()
+    {
+        return $this->documentRepository;
+    }
 
     /**
      * Create an XML fragment from a {@link Apache_Solr_Document} instance appropriate for use inside a Solr add call

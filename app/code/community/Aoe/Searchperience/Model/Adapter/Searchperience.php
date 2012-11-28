@@ -90,16 +90,30 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         return $docs;
     }
 
-
-	/**
-	 * Returns unique identifier for product for given store
-	 * @param $productId
-	 * @param $storeId
-	 * @return string
-	 */
-	protected function getProductUniqueId($productId, $storeId) {
-		return $productId . '_' . $storeId;
-	}
+    /**
+     * Remove documents from Solr index
+     *
+     * @param  int|string|array $docIDs
+     * @param  string|array|null $queries if "all" specified and $docIDs are empty, then all documents will be removed
+     * @return Enterprise_Search_Model_Adapter_Abstract
+     */
+    public function deleteDocs($docIDs = array(), $queries = null)
+    {
+        foreach ($queries as $query) {
+            try {
+                $this->_client->getDocumentRepository()->deleteByForeignId($query);
+                Mage::log(sprintf('successfully deleted document with foreign id %s from repository', $query));
+            } catch (Exception $e) {
+                Mage::logException($e);
+                Mage::getSingleton('core/session')->addError(
+                    Mage::helper('core')->__(
+                        sprintf('Errors occured while trying to delete a document from repository: %s', $e->getMessage())
+                    )
+                );
+            }
+        }
+        return $this;
+    }
 
 	/**
 	 * Prepare index data for using in search engine metadata.
@@ -136,7 +150,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         $this->_indexData['productData']['id']     = $productId;
         $this->_indexData['productData']['sku']    = $productIndexData['sku'];
         $this->_indexData['productData']['url']    = $product->getProductUrl();
-        $this->_indexData['productData']['unique'] = $this->getProductUniqueId($productId, $storeId);
+        $this->_indexData['productData']['unique'] = Mage::helper('aoe_searchperience')->getProductUniqueId($productId, $storeId);
 
 		$this->_usedFields = array_merge($this->_usedFields, array('id', 'description', 'short_description', 'price', 'name', 'tax_class_id'));
         // fetch price information
