@@ -10,11 +10,11 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     protected $_clientDocObjectName = 'Aoe_Searchperience_Model_Api_Document';
 
     /**
-     * Holds searchable product attributes
+     * Holds indexable product attributes
      *
      * @var array
      */
-    protected  $_searchableProductAttributes = array();
+    protected  $_indexableAttributeParams = array();
 
     /**
      * Holds data for indexing product
@@ -91,28 +91,23 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     }
 
     /**
-     * Remove documents from Solr index
+     * Delete single document from index
      *
-     * @param  int|string|array $docIDs
-     * @param  string|array|null $queries if "all" specified and $docIDs are empty, then all documents will be removed
-     * @return Enterprise_Search_Model_Adapter_Abstract
+     * @param $documentId
      */
-    public function deleteDocs($docIDs = array(), $queries = null)
+    public function deleteDocument($documentId)
     {
-        foreach ($queries as $query) {
-            try {
-                $this->_client->getDocumentRepository()->deleteByForeignId($query);
-                Mage::log(sprintf('successfully deleted document with foreign id %s from repository', $query));
-            } catch (Exception $e) {
-                Mage::logException($e);
-                Mage::getSingleton('core/session')->addError(
-                    Mage::helper('core')->__(
-                        sprintf('Errors occured while trying to delete a document from repository: %s', $e->getMessage())
-                    )
-                );
-            }
+        try {
+            $this->_client->getDocumentRepository()->deleteByForeignId($documentId);
+            Mage::log(sprintf('successfully deleted document with foreign id %s from repository', $documentId));
+        } catch (Exception $e) {
+            Mage::logException($e);
+            Mage::getSingleton('core/session')->addError(
+                Mage::helper('core')->__(
+                    sprintf('Errors occured while trying to delete a document from repository: %s', $e->getMessage())
+                )
+            );
         }
-        return $this;
     }
 
 	/**
@@ -128,14 +123,15 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 	 */
     protected function _prepareIndexProductData($productIndexData, $productId, $storeId)
     {
+        $searchperienceHelper = Mage::helper('aoe_searchperience');
+
         if (!$this->isAvailableInIndex($productIndexData, $productId)) {
+            $this->deleteDocument($searchperienceHelper->getProductUniqueId($productId, $storeId));
             return false;
         }
 
         // fetch searchable product attributes
         $this->_getSearchableAttributes();
-		$this->_indexableAttributeParams = $this->_searchableProductAttributes;
-
 
 		$productIds        = array();
         $this->_indexData  = array(
@@ -152,7 +148,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         $this->_indexData['productData']['id']     = $productId;
         $this->_indexData['productData']['sku']    = $productIndexData['sku'];
         $this->_indexData['productData']['url']    = $product->getProductUrl();
-        $this->_indexData['productData']['unique'] = Mage::helper('aoe_searchperience')->getProductUniqueId($productId, $storeId);
+        $this->_indexData['productData']['unique'] = $searchperienceHelper->getProductUniqueId($productId, $storeId);
         $this->_indexData['productData']['rating'] = $product->getRatingSummary()->getRatingSummary();
 
 		$this->_usedFields = array_merge($this->_usedFields, array('id', 'description', 'short_description', 'price', 'name', 'tax_class_id'));
@@ -238,7 +234,8 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 	 * @param int $limit
 	 * @return mixed
 	 */
-	protected function getLinkedProductIds($productId, $relationType=Mage_Catalog_Model_Product_Link::LINK_TYPE_RELATED, $limit=10) {
+	protected function getLinkedProductIds($productId, $relationType=Mage_Catalog_Model_Product_Link::LINK_TYPE_RELATED, $limit=10)
+    {
 		/** @var $linkModel Mage_Catalog_Model_Product_Link */
 		$linkModel = Mage::getSingleton('catalog/product_link');
 		$collection = $linkModel->setLinkTypeId($relationType)->getLinkCollection();
@@ -430,7 +427,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         );
 
         foreach ($attributes as $attributeCode => $getMethod) {
-            if (!empty($this->_searchableProductAttributes[$attributeCode])) {
+            if (!empty($this->_indexableAttributeParams[$attributeCode])) {
                 $this->_indexData['productData'][$attributeCode] = $product->$getMethod();
             }
         }
@@ -463,12 +460,12 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
      */
     protected function _getSearchableAttributes()
     {
-        if (empty($this->_searchableProductAttributes)) {
+        if (empty($this->_indexableAttributeParams)) {
             $productAttributeCollection = Mage::getResourceModel('catalog/product_attribute_collection');
             $productAttributeCollection->addSearchableAttributeFilter();
 
             foreach ($productAttributeCollection->getItems() as $attribute) {
-                $this->_searchableProductAttributes[$attribute->getAttributeCode()] = $attribute;
+                $this->_indexableAttributeParams[$attribute->getAttributeCode()] = $attribute;
             }
         }
     }
@@ -481,14 +478,14 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     protected function _skipAttribute($attributeCode)
     {
         // not in the list of searchable attributes
-        if (!in_array($attributeCode, array_keys($this->_searchableProductAttributes))) {
+        if (!in_array($attributeCode, array_keys($this->_indexableAttributeParams))) {
             return true;
         }
 
         // is user defined
         if (
-            isset($this->_searchableProductAttributes[$attributeCode]) &&
-            1 == $this->_searchableProductAttributes[$attributeCode]->isUserDefined
+            isset($this->_indexableAttributeParams[$attributeCode]) &&
+            1 == $this->_indexableAttributeParams[$attributeCode]->isUserDefined
         ) {
             return true;
         }
