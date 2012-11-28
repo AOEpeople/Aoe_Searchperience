@@ -57,6 +57,9 @@
                 </connection>
             </aoe_searchperience_setup>
         </resources>
+		<!--<events>-->
+			<!--<aoe_searchperience_prepareIndexProductData_after/>-->
+		<!--</events>-->
     </global>
 
     <frontend>
