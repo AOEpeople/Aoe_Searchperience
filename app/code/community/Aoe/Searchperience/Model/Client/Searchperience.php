@@ -189,6 +189,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 
         $writer = new XMLWriter();
         $writer->openMemory();
+        $writer->startDocument('1.0', 'UTF-8');
         $writer->startElement('product');
         $documentFields = array(
             'sku'               => 'sku',
@@ -265,6 +266,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 
         // end product node
         $writer->endElement();
+        $writer->endDocument();
 
         // replace any control characters to avoid Solr XML parser exception
         $return = $this->_stripCtrlChars($writer->outputMemory(true));
