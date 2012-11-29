@@ -91,23 +91,28 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     }
 
     /**
-     * Delete single document from index
+     * Remove documents from Solr index
      *
-     * @param $documentId
+     * @param  int|string|array $docIDs
+     * @param  string|array|null $queries if "all" specified and $docIDs are empty, then all documents will be removed
+     * @return Aoe_Searchperience_Model_Adapter_Searchperience
      */
-    public function deleteDocument($documentId)
+    public function deleteDocs($docIDs = array(), $queries = null)
     {
-        try {
-            $this->_client->getDocumentRepository()->deleteByForeignId($documentId);
-            Mage::log(sprintf('successfully deleted document with foreign id %s from repository', $documentId));
-        } catch (Exception $e) {
-            Mage::logException($e);
-            Mage::getSingleton('core/session')->addError(
-                Mage::helper('core')->__(
-                    sprintf('Errors occured while trying to delete a document from repository: %s', $e->getMessage())
-                )
-            );
+        foreach ($queries as $query) {
+            try {
+                $this->_client->getDocumentRepository()->deleteByForeignId($query);
+                Mage::log(sprintf('successfully deleted document with foreign id %s from repository', $query));
+            } catch (Exception $e) {
+                Mage::logException($e);
+                Mage::getSingleton('core/session')->addError(
+                    Mage::helper('core')->__(
+                        sprintf('Errors occured while trying to delete a document from repository: %s', $e->getMessage())
+                    )
+                );
+            }
         }
+        return $this;
     }
 
 	/**
@@ -126,7 +131,6 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         $searchperienceHelper = Mage::helper('aoe_searchperience');
 
         if (!$this->isAvailableInIndex($productIndexData, $productId)) {
-            $this->deleteDocument($searchperienceHelper->getProductUniqueId($productId, $storeId));
             return false;
         }
 

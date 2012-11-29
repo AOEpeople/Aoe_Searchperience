@@ -28,6 +28,11 @@
             </aoe_searchperience>
         </helpers>
         <models>
+            <catalogsearch_resource>
+                <rewrite>
+                    <fulltext>Aoe_Searchperience_Model_Resource_Fulltext</fulltext>
+                </rewrite>
+            </catalogsearch_resource>
             <aoe_searchperience>
                 <class>Aoe_Searchperience_Model</class>
                 <resourceModel>aoe_searchperience_resource</resourceModel>
