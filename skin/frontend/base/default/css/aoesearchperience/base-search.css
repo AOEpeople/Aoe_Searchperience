@@ -1,12 +1,12 @@
 
 #aoe_solr_loader {
 
-	background-image: url(../../i/ajax-loader.gif); width: 32px; height: 32px;
+    background-image: url(../../i/ajax-loader.gif); width: 32px; height: 32px;
 }
 
 .live-dummy-content{
-	width: 750px;
-	height: 500px;
+    width: 750px;
+    height: 500px;
 }
 #aoe_solr {text-align: left;}
 #aoe_solr .cc {clear:both}
@@ -49,7 +49,7 @@
 /* Fancy box
 --------------------------------------- */
 
-#fancybox-loading { position: fixed; top: 50%; left: 50%; width: 32px; height: 32px; margin-top: -20px; margin-left: -20px; cursor: pointer; overflow: hidden; z-index: 1104; display: none; background-image: url('../../i/ajax-loader.gif'); }
+#fancybox-loading { position: fixed; top: 50%; left: 50%; width: 32px; height: 32px; margin-top: -20px; margin-left: -20px; cursor: pointer; overflow: hidden; z-index: 1104; display: none; background-image: url('../i/ajax-loader.gif'); }
 #fancybox-loading div { position: absolute; top: 0; left: 0; width: 32px; height: 480px;  }
 #fancybox-overlay { position: absolute; top: 0; left: 0; width: 100%; z-index: 1100; display: none; }
 #fancybox-tmp { padding: 0; margin: 0; border: 0; overflow: auto; display: none; }
@@ -111,21 +111,5 @@
 #aoe_solr .paging a:hover { text-decoration: underline; }
 #aoe_solr .paging li { list-style: none; display: inline; padding: 0 4px 0 0; }
 
-/* Ajax loader */
-.ajaxloading {
-  display: none;
-  background-image: url('../../i/ajax-loader.gif');
-}
-
-.ajaxloading.active{
-  display: block;
-}
-
-.moreresult {
-  display: none;
-}
-
-.moreresult.active {
-  display: block;
-  width: 50px;
-}
+#aoe_solr .ajaxloading.active { display: block}
+#aoe_solr .scrollpagination-moreresult.inactive {opacity: 0.5}
