@@ -113,4 +113,8 @@
 
 #aoe_solr .ajaxloading { display: none}
 #aoe_solr .ajaxloading.active { display: block}
-#aoe_solr .scrollpagination-moreresult.inactive {opacity: 0.5}
+#aoe_solr .scrollpagination-moreresult {opacity: 0.5}
+#aoe_solr .scrollpagination-moreresult.active {
+    opacity: 1;
+    cursor: pointer
+}
