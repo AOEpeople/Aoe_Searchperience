@@ -1,5 +1,5 @@
 
-#aoe_solr_loader {
+#aoe_solr_loader, #aoe_solr .ajaxloading {
 
     background-image: url(../../i/aoesearchperience/ajax-loader.gif); width: 32px; height: 32px;
 }
@@ -111,5 +111,6 @@
 #aoe_solr .paging a:hover { text-decoration: underline; }
 #aoe_solr .paging li { list-style: none; display: inline; padding: 0 4px 0 0; }
 
+#aoe_solr .ajaxloading { display: none}
 #aoe_solr .ajaxloading.active { display: block}
 #aoe_solr .scrollpagination-moreresult.inactive {opacity: 0.5}
