@@ -71,12 +71,12 @@
 #aoe_solr .b-simple-tabs { border-bottom: 1px solid #ccc; padding: 0 0 0 10px; height: 32px; }
 #aoe_solr .b-simple-tabs ul { overflow: hidden; }
 #aoe_solr .b-simple-tabs li { float: left; margin: 0 6px 0 0; border: 1px solid #dfdfdf; border-width: 1px 1px 0 1px; -webkit-border-radius: 3px 3px 0 0; -moz-border-radius: 3px 3px 0 0; border-radius: 3px 3px 0 0;
-	background: #f1f2f2;
-	background: -webkit-gradient(linear, 0 0, 0 bottom, from(#fafafa), to(#e8e9ea));
-	background: -moz-linear-gradient(#fafafa, #e8e9ea);
-	background: linear-gradient(#fafafa, #e8e9ea);
-	-pie-background: linear-gradient(#fafafa, #e8e9ea);
-	list-style: none outside none;
+    background: #f1f2f2;
+    background: -webkit-gradient(linear, 0 0, 0 bottom, from(#fafafa), to(#e8e9ea));
+    background: -moz-linear-gradient(#fafafa, #e8e9ea);
+    background: linear-gradient(#fafafa, #e8e9ea);
+    -pie-background: linear-gradient(#fafafa, #e8e9ea);
+    list-style: none outside none;
 }
 #aoe_solr .b-simple-tabs a { padding: 0 15px; line-height: 31px; height: 31px; text-decoration: none; color: #000; }
 #aoe_solr .b-simple-tabs .cur { background: #fff; height: 32px; }
@@ -86,7 +86,7 @@
 /* Navigation block
 ------------------------------ */
 #aoe_solr  .b-nav-tree { font-size: 13px; }
-#aoe_solr  .b-nav-tree ul, #aoe_solr .b-nav-tree { margin: 0; }
+#aoe_solr  .b-nav-tree ul, #aoe_solr .b-nav-tree { margin: 0; padding: 0}
 #aoe_solr .b-nav-tree li { list-style: none; list-style: none; position: relative; }
 #aoe_solr .b-nav-tree a { display: block; text-decoration: none; color: #f47026; border-bottom: 1px solid #dedede; padding: 5px 25px 6px 13px; }
 #aoe_solr .b-nav-tree ul a { padding-left: 24px; }
@@ -200,20 +200,33 @@
 #aoe_solr .range-filter .bu-small { float: right; }
 
 #aoe_solr .bu-small {
-	background: -moz-linear-gradient(center top , #EDEDED 5%, #DFDFDF 100%) repeat scroll 0 0 #EDEDED;
-	border: 1px solid gainsboro;
-	border-radius: 6px 6px 6px 6px;
-	box-shadow: 0 1px 0 0 #FFFFFF inset;
-	color: #777777;
-	display: inline-block;
-	font-family: arial;
-	font-size: 12px;
-	font-weight: bold;
-	margin-top: -2px;
-	padding: 4px 6px;
-	text-decoration: none;
-	text-shadow: 1px 1px 0 white;
-	cursor: pointer;
-	margin: 0 !important;
-	overflow: visible;
+    background: -moz-linear-gradient(center top , #EDEDED 5%, #DFDFDF 100%) repeat scroll 0 0 #EDEDED;
+    border: 1px solid gainsboro;
+    border-radius: 6px 6px 6px 6px;
+    box-shadow: 0 1px 0 0 #FFFFFF inset;
+    color: #777777;
+    display: inline-block;
+    font-family: arial;
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: -2px;
+    padding: 4px 6px;
+    text-decoration: none;
+    text-shadow: 1px 1px 0 white;
+    cursor: pointer;
+    margin: 0 !important;
+    overflow: visible;
 }
+
+#aoe_solr .scrollpagination-moreresult  {
+    background-color: #FFFFFF;
+    background: -moz-linear-gradient(center top , #EDEDED 5%, #DFDFDF 100%) repeat scroll 0 0 #EDEDED;
+    box-shadow: 0 1px 0 0 #FFFFFF inset;
+    color: #777777;
+    height: 14px;
+    margin: 10px auto;
+    padding: 8px;
+    text-align: center;
+    width: 100px;
+}
+

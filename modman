@@ -9,9 +9,8 @@ app/design/adminhtml/default/default/layout/searchperience/                 app/
 app/design/adminhtml/default/default/template/searchperience/               app/design/adminhtml/default/default/template/searchperience/
 
 # frontend skin
-skin/frontend/base/default/js/                                              skin/frontend/base/default/js/aoesearchperience/
 skin/frontend/base/default/css/aoesearchperience/                           skin/frontend/base/default/css/aoesearchperience/
-skin/frontend/base/default/i/                                               skin/frontend/base/default/i/aoesearchperience/
+skin/frontend/base/default/i/aoesearchperience/                                               skin/frontend/base/default/i/aoesearchperience/
 
 # backend skin
 skin/adminhtml/default/default/images/searchperience/                       skin/adminhtml/default/default/images/searchperience/
