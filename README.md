@@ -3,6 +3,10 @@ Aoe_Searchperience
 
 Module integrating Searchperience (Solr SaaS solution from AOE Media) with Magento
 
+Core modifications:
+=======================
+see attached patch file
+
 Indexing of Attributes:
 =======================
 
