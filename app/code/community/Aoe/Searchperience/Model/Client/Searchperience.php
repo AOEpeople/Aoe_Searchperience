@@ -256,7 +256,9 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 			}
 			$value = array_unique($value);
 			foreach ($value as $key => $attributeValue) {
-				$writer->writeElement('value', $attributeValue);
+                if ($attributeValue) {
+                    $writer->writeElement('value', $attributeValue);
+                }
 			}
 
             $writer->endElement();
