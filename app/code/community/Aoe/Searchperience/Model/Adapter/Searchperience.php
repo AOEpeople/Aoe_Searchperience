@@ -162,6 +162,11 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         // fetch image information
         $this->_getProductImageInformation($product);
 
+        $skippableCategories = array();
+        if (($skipCategories = Mage::getStoreConfig('searchperience/searchperience/skipCategories'))) {
+            $skippableCategories = array_map('trim', explode(',', $skipCategories));
+        }
+
         // fetch category information
         foreach ($product->getCategoryIds() as $categoryId) {
             if (!isset($this->_indexData['categories'][$categoryId])) {
@@ -173,6 +178,13 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
                 foreach($pathCategories as $pathCategory) {
                     $cat = Mage::getModel('catalog/category')->load($pathCategory);
+
+                    // do not include skippable categories in list
+                    if (in_array($cat->getId(), $skippableCategories)) {
+                        unset($this->_indexData['categories'][$categoryId]);
+                        continue 2;
+                    }
+
                     if ($cat->getLevel() > 1) {
                         $pathPart = $cat->getName();
                         $pathPart = str_replace('/','&#47;', $pathPart);
