@@ -36,6 +36,8 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 			Mage::logException($e);
 			Mage::throwException('Unable to perform search because of search engine missed configuration.');
 		}
+
+        $this->_filterFields = array('name', 'description', 'short_description');
 	}
     /**
      * Connect to Search Engine Client by specified options.
@@ -155,7 +157,8 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         $this->_indexData['productData']['unique'] = $searchperienceHelper->getProductUniqueId($productId, $storeId);
         $this->_indexData['productData']['rating'] = $product->getRatingSummary()->getRatingSummary();
 
-		$this->_usedFields = array_merge($this->_usedFields, array('id', 'description', 'short_description', 'price', 'name', 'tax_class_id'));
+		$this->_usedFields   = array_merge($this->_usedFields, array('id', 'description', 'short_description', 'price', 'name', 'tax_class_id'));
+
         // fetch price information
         $this->_getProductPriceInformation($product);
 
@@ -216,10 +219,10 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             }
 
             if (is_array($value)) {
-                $this->_indexData['productData'][$attributeCode] = $value[$productId];
+                $this->_indexData['productData'][$attributeCode] = $this->_filterValue($value[$productId], $attributeCode);
             }
             else {
-                $this->_indexData[$attributeCode] = $value;
+                $this->_indexData[$attributeCode] = $this->_filterValue($value, $attributeCode);
             }
         }
 
@@ -231,6 +234,8 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 		$this->_indexData['attributesUsedForFiltering'] = $usedForFiltering;
 		$this->_indexData['attributeTypes'] = $attributeTypes;
 
+        Mage::log(var_export($this->_indexData, true));
+
 		$options = new Varien_Object();
 		$options->setIndexData($this->_indexData);
 		$options->indexData = $this->_indexData;
@@ -241,6 +246,21 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 			array('adapter' => $this, 'options' => $options, 'someData' => $this->_indexData)
 		);
         return $options->getIndexData();
+    }
+
+    /**
+     * Filters value for better indexing
+     *
+     * @param   string  $value
+     * @param   string  $attributeCode
+     * @return  string  $value
+     */
+    private function _filterValue($value, $attributeCode)
+    {
+        if (in_array($attributeCode, $this->_filterFields)) {
+            $value = strip_tags(preg_replace('/<br\s?\/?>/', ' ', $value));
+        }
+        return $value;
     }
 
 	/**
