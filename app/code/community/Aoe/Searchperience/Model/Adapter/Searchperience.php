@@ -449,7 +449,10 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
         foreach ($attributes as $attributeCode => $getMethod) {
             if (!empty($this->_indexableAttributeParams[$attributeCode])) {
-                $this->_indexData['productData'][$attributeCode] = $product->$getMethod();
+				$value = $product->$getMethod();
+				if($value) {
+					$this->_indexData['productData'][$attributeCode] = $value;
+				}
             }
         }
     }
