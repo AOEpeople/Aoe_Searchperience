@@ -10,13 +10,6 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     protected $_clientDocObjectName = 'Aoe_Searchperience_Model_Api_Document';
 
     /**
-     * Holds indexable product attributes
-     *
-     * @var array
-     */
-    protected  $_indexableAttributeParams = array();
-
-    /**
      * Holds data for indexing product
      *
      * @var array
@@ -136,10 +129,6 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             return false;
         }
 
-        // fetch searchable product attributes
-        $this->_getSearchableAttributes();
-
-		$productIds        = array();
         $this->_indexData  = array(
             'storeid'  => $storeId,
             'language' => Mage::getStoreConfig('general/locale/code', $storeId),
@@ -234,8 +223,6 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 		$this->_indexData['attributesUsedForFiltering'] = $usedForFiltering;
 		$this->_indexData['attributeTypes'] = $attributeTypes;
 
-        Mage::log(var_export($this->_indexData, true));
-
 		$options = new Varien_Object();
 		$options->setIndexData($this->_indexData);
 		$options->indexData = $this->_indexData;
@@ -318,8 +305,8 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                 continue;
             }
 
-
             $attribute->setStoreId($storeId);
+            $preparedValue = array();
 
             // Preparing data for solr fields
             if ($attribute->getIsSearchable() || $attribute->getIsVisibleInAdvancedSearch()
@@ -331,7 +318,6 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
                 if ($attribute->usesSource()) {
                     if ($frontendInput == 'multiselect') {
-                        $preparedValue = array();
                         foreach ($attributeValue as $val) {
                             $preparedValue = array_merge($preparedValue, explode(',', $val));
                         }
@@ -362,7 +348,6 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                     $preparedValue = $attributeValue;
                     if ($backendType == 'datetime') {
                         if (is_array($attributeValue)) {
-                            $preparedValue = array();
                             foreach ($attributeValue as &$val) {
                                 $val = $this->_getSolrDate($storeId, $val);
                                 if (!empty($val)) {
@@ -386,6 +371,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             if ($attribute->getIsFilterable() || $attribute->getIsFilterableInSearch()) {
                 $usedForFiltering[$attributeCode] = 1;
             }
+
 			$attributeTypes[$attributeCode] = $this->getAttributeSearchType($attribute);
 
 //			if (is_array($preparedValue[$productId])) {
@@ -401,7 +387,6 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 			$productIndexData[$attributeCode] = $preparedValue;
             unset($preparedNavValue, $preparedValue, $fieldName, $attribute);
         }
-
 
         return array($productIndexData, $usedForSorting, $usedForFiltering, $attributeTypes);
     }
@@ -488,21 +473,6 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
         foreach ($attributes as $attributeCode => $getMethod) {
             $this->_indexData['productData']['images'][$attributeCode] = $product->$getMethod($width, $height);
-        }
-    }
-
-    /**
-     * Determines searchable product attributes
-     */
-    protected function _getSearchableAttributes()
-    {
-        if (empty($this->_indexableAttributeParams)) {
-            $productAttributeCollection = Mage::getResourceModel('catalog/product_attribute_collection');
-            $productAttributeCollection->addSearchableAttributeFilter();
-
-            foreach ($productAttributeCollection->getItems() as $attribute) {
-                $this->_indexableAttributeParams[$attribute->getAttributeCode()] = $attribute;
-            }
         }
     }
 

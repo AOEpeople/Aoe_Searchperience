@@ -10,7 +10,6 @@ class Aoe_Searchperience_Model_Observer{
 	 */
 	public function storeSearchableAttributes(Varien_Event_Observer $observer)
 	{
-		Mage::log("fsdfdsdsfs");
 		$engine     = $observer->getEvent()->getEngine();
 		$attributes = $observer->getEvent()->getAttributes();
 		if (!$engine || !$attributes) {

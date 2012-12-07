@@ -62,9 +62,17 @@
                 </connection>
             </aoe_searchperience_setup>
         </resources>
-		<!--<events>-->
-			<!--<aoe_searchperience_prepareIndexProductData_after/>-->
-		<!--</events>-->
+        <events>
+            <catelogsearch_searchable_attributes_load_after>
+                <observers>
+                    <searchperience>
+                        <class>aoe_searchperience/observer</class>
+                        <method>storeSearchableAttributes</method>
+                    </searchperience>
+                </observers>
+            </catelogsearch_searchable_attributes_load_after>
+            <!--<aoe_searchperience_prepareIndexProductData_after/>-->
+        </events>
     </global>
 
     <frontend>
@@ -85,16 +93,6 @@
 				</searchperienece>
 			</updates>
 		</layout>
-		<events>
-			<catelogsearch_searchable_attributes_load_after>
-				<observers>
-					<enterprise_search>
-						<class>aoe_searchperience/observer</class>
-						<method>storeSearchableAttributes</method>
-					</enterprise_search>
-				</observers>
-			</catelogsearch_searchable_attributes_load_after>
-		</events>
 	</adminhtml>
 
     <default>
