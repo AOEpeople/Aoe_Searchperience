@@ -178,16 +178,16 @@ class Mage_Shell_Compiler extends Mage_Shell_Abstract
         return <<<USAGE
 Usage:  php -f indexer.php -- [options]
 
-  --status <indexer>            Show Indexer(s) Status
-  --status-reindex_required     Set status to "Reindex Required"
-  --mode <indexer>              Show Indexer(s) Index Mode
-  --mode-realtime <indexer>     Set index mode type "Update on Save"
-  --mode-manual <indexer>       Set index mode type "Manual Update"
-  --mode-queued <indexer>       Set index mode type "Queue Events"
-  --reindex <indexer>           Reindex Data
-  info                          Show allowed indexers
-  reindexall                    Reindex Data by all indexers
-  help                          This help
+  --status <indexer>                    Show Indexer(s) Status
+  --status-reindex_required <indexer>   Set status to "Reindex Required"
+  --mode <indexer>                      Show Indexer(s) Index Mode
+  --mode-realtime <indexer>             Set index mode type "Update on Save"
+  --mode-manual <indexer>               Set index mode type "Manual Update"
+  --mode-queued <indexer>               Set index mode type "Queue Events"
+  --reindex <indexer>                   Reindex Data
+  info                                  Show allowed indexers
+  reindexall                            Reindex Data by all indexers
+  help                                  This help
 
   <indexer>     Comma separated indexer codes or value "all" for all indexers
 
