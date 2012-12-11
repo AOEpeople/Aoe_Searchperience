@@ -232,6 +232,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 			'aoe_searchperience_prepareIndexProductData_after',
 			array('adapter' => $this, 'options' => $options, 'someData' => $this->_indexData)
 		);
+
         return $options->getIndexData();
     }
 
@@ -311,6 +312,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             // Preparing data for solr fields
             if ($attribute->getIsSearchable() || $attribute->getIsVisibleInAdvancedSearch()
                 || $attribute->getIsFilterable() || $attribute->getIsFilterableInSearch()
+                || $attribute->getUsedForSortBy()
             ) {
 
                 $backendType = $attribute->getBackendType();
@@ -345,7 +347,6 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                         $preparedValue[$id] = $attribute->getSource()->getOptionText($val);
                     }
                 } else { // no source
-                    $preparedValue = $attributeValue;
                     if ($backendType == 'datetime') {
                         if (is_array($attributeValue)) {
                             foreach ($attributeValue as &$val) {
@@ -372,19 +373,9 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                 $usedForFiltering[$attributeCode] = 1;
             }
 
-			$attributeTypes[$attributeCode] = $this->getAttributeSearchType($attribute);
-
-//			if (is_array($preparedValue[$productId])) {
-//				if (isset($preparedValue[$productId])) {
-//					$sortValue = $preparedValue[$productId];
-//				} else {
-//					$sortValue = null;
-//				}
-//			}
-
-         //   $productIndexData[$attributeCode] = empty($preparedValue[$productId]) && !empty($preparedNavValue[$productId]) ? $preparedNavValue[$productId] : $preparedValue[$productId];
-
+			$attributeTypes[$attributeCode]   = $this->getAttributeSearchType($attribute);
 			$productIndexData[$attributeCode] = $preparedValue;
+            
             unset($preparedNavValue, $preparedValue, $fieldName, $attribute);
         }
 
@@ -501,6 +492,8 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
         return false;
     }
+
+
 
     /**
      * Retrieve date value as timestamp

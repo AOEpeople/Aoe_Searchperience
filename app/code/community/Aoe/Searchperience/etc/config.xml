@@ -124,4 +124,12 @@
             </searchperience>
         </searchperience>
     </default>
+    <crontab>
+        <jobs>
+            <searchperience_eventprocessing>
+                <schedule><cron_expr>*/1 * * * *</cron_expr></schedule>
+                <run><model>aoe_searchperience/indexer_indexer::reindexAll</model></run>
+            </searchperience_eventprocessing>
+        </jobs>
+    </crontab>
 </config>

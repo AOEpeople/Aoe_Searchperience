@@ -250,7 +250,10 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 			if (isset($documentData['attributesUsedForFiltering'][$key])) {
 				$writer->writeAttribute('forfiltering', $documentData['attributesUsedForFiltering'][$key]);
 			}
-            $writer->writeAttribute('forsearching', 1);
+//            if (isset($documentData['attributeTypes'][$key]) && ($documentData['attributeTypes'][$key] != 'date')) {
+//                $writer->writeAttribute('forsearching', 1);
+//            }
+
 			if (!is_array($value)) {
 				$value = (array)$value;
 			}
