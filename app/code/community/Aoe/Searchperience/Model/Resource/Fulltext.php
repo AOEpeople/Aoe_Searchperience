@@ -109,4 +109,20 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
 
         return $this;
     }
+
+	/**
+	 * Retrieve attribute source value for search
+	 *
+	 * @param int $attributeId
+	 * @param mixed $value
+	 * @param int $storeId
+	 * @return mixed
+	 */
+	protected function _getAttributeValue($attributeId, $value, $storeId)
+	{
+		if (is_string($value)) {
+			$value = preg_replace('#<\s*br\s*/?\s*>#', ' ', $value);
+		}
+		return parent::_getAttributeValue($attributeId, $value, $storeId);
+	}
 }
