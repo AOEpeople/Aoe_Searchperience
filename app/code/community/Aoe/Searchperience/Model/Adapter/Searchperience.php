@@ -29,8 +29,6 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 			Mage::logException($e);
 			Mage::throwException('Unable to perform search because of search engine missed configuration.');
 		}
-
-        $this->_filterFields = array('name', 'description', 'short_description');
 	}
     /**
      * Connect to Search Engine Client by specified options.
@@ -208,10 +206,10 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             }
 
             if (is_array($value)) {
-                $this->_indexData['productData'][$attributeCode] = $this->_filterValue($value[$productId], $attributeCode);
+                $this->_indexData['productData'][$attributeCode] = $value[$productId];
             }
             else {
-                $this->_indexData[$attributeCode] = $this->_filterValue($value, $attributeCode);
+                $this->_indexData[$attributeCode] = $value;
             }
         }
 
@@ -234,21 +232,6 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 		);
 
         return $options->getIndexData();
-    }
-
-    /**
-     * Filters value for better indexing
-     *
-     * @param   string  $value
-     * @param   string  $attributeCode
-     * @return  string  $value
-     */
-    private function _filterValue($value, $attributeCode)
-    {
-        if (in_array($attributeCode, $this->_filterFields)) {
-            $value = strip_tags(preg_replace('/<br\s?\/?>/', ' ', $value));
-        }
-        return $value;
     }
 
 	/**
