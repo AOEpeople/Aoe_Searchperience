@@ -23,7 +23,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
      */
     public function __construct($options = array())
 	{
-		try {
+        try {
 			$this->_connect($options);
 		} catch (Exception $e) {
 			Mage::logException($e);
@@ -95,7 +95,10 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         foreach ($queries as $query) {
             try {
                 $this->_client->getDocumentRepository()->deleteByForeignId($query);
-                Mage::log(sprintf('successfully deleted document with foreign id %s from repository', $query));
+
+                if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+                    Mage::log(sprintf('successfully deleted document with foreign id %s from repository', $query));
+                }
             } catch (Exception $e) {
                 Mage::logException($e);
                 Mage::getSingleton('core/session')->addError(
