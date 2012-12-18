@@ -167,7 +167,10 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
                     self::$statistics[$result] = 0;
                 }
                 self::$statistics[$result]++;
-                Mage::log('Searchperience API log result: ' . $result);
+
+                if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+                    Mage::log('Searchperience API log result: ' . $result);
+                }
             } catch (Exception $e) {
                 Mage::logException($e);
                 Mage::getSingleton('core/session')->addError(
@@ -288,7 +291,9 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
         // replace any control characters to avoid Solr XML parser exception
         $return = $this->_stripCtrlChars($writer->outputMemory(true));
 
-        Mage::log($return);
+        if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+            Mage::log($return);
+        }
 
         return $return;
     }

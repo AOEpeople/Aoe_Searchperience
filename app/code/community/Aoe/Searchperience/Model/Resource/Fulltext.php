@@ -105,7 +105,9 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
 //        $profiler_url = sprintf('http://qvc.vbox/xhprof_html/index.php?run=%s&source=%s', $run_id, $profiler_namespace);
 //
 //        Mage::log($profiler_url);
-        Mage::log('statistics: ' . var_export(Aoe_Searchperience_Model_Client_Searchperience::$statistics, true));
+        if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+            Mage::log('statistics: ' . var_export(Aoe_Searchperience_Model_Client_Searchperience::$statistics, true));
+        }
 
         return $this;
     }
