@@ -7,13 +7,6 @@ require $path;
 class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 {
     /**
-     * Product data
-     *
-     * @var array
-     */
-    private $_productData = array();
-
-    /**
      * Searchperience API customer key
      *
      * @var string
