@@ -10,9 +10,9 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     protected $_clientDocObjectName = 'Aoe_Searchperience_Model_Api_Document';
 
     /**
-	 * @var array of categories $categories[store][categoryId]=>category data
+     * @var array of categories $categories[store][categoryId]=>category data
      */
-	protected $categories = array();
+    protected $categories = array();
 
     /**
      * Special cases for attribute times
@@ -43,24 +43,26 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
      * @param array $options
      */
     public function __construct($options = array())
-	{
+    {
         try {
-			$this->_connect($options);
-		} catch (Exception $e) {
-			Mage::logException($e);
-			Mage::throwException('Unable to perform search because of search engine missed configuration.');
-		}
-	}
+            $this->_connect($options);
+        } catch (Exception $e) {
+            Mage::logException($e);
+            Mage::throwException('Unable to perform search because of search engine missed configuration.');
+        }
+    }
+
     /**
      * Connect to Search Engine Client by specified options.
      * Should initialize _client
      *
      * @param array $options
+     * @return \Mage_Core_Model_Abstract
      */
     protected function _connect($options = array())
     {
-		$this->_client = Mage::getSingleton('aoe_searchperience/client_searchperience', $options);
-		return $this->_client;
+        $this->_client = Mage::getSingleton('aoe_searchperience/client_searchperience', $options);
+        return $this->_client;
     }
 
     /**
@@ -87,11 +89,11 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         if (!is_array($docData) || empty($docData)) {
             return array();
         }
-		Varien_Profiler::start(__CLASS__.__METHOD__);
+       Varien_Profiler::start(__CLASS__.__METHOD__);
         $docs = array();
         foreach ($docData as $productId => $productIndexData) {
             $doc = new $this->_clientDocObjectName;
-			$productIndexData = $this->_prepareIndexProductData($productIndexData, $productId, $storeId);
+          $productIndexData = $this->_prepareIndexProductData($productIndexData, $productId, $storeId);
 
             if (!$productIndexData) {
                 continue;
@@ -99,9 +101,9 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
             $doc->setData($productIndexData);
             $docs[] = $doc;
-			unset($docData[$productId]);
+          unset($docData[$productId]);
         }
-		Varien_Profiler::stop(__CLASS__.__METHOD__);
+       Varien_Profiler::stop(__CLASS__.__METHOD__);
         return $docs;
     }
 
@@ -133,20 +135,20 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         return $this;
     }
 
-	/**
-	 * Prepare index data for using in search engine metadata.
-	 * Prepare fields for advanced search, navigation, sorting and fulltext fields for each search weight for
-	 * quick search and spell.
-	 *
-	 * @param array $productIndexData
-	 * @param int $productId
-	 * @param int $storeId
-	 *
-	 * @return  array|bool
-	 */
+    /**
+     * Prepare index data for using in search engine metadata.
+     * Prepare fields for advanced search, navigation, sorting and fulltext fields for each search weight for
+     * quick search and spell.
+     *
+     * @param array $productIndexData
+     * @param int $productId
+     * @param int $storeId
+     *
+     * @return  array|bool
+     */
     protected function _prepareIndexProductData($productIndexData, $productId, $storeId)
     {
-		Varien_Profiler::start(__CLASS__.__METHOD__);
+        Varien_Profiler::start(__CLASS__.__METHOD__);
         $searchperienceHelper = Mage::helper('aoe_searchperience');
 
         if (!$this->isAvailableInIndex($productIndexData, $productId)) {
@@ -159,18 +161,18 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             'in_stock' => (!empty($productIndexData['in_stock']) ? $productIndexData['in_stock'] : ''),
         );
 
-		/** @var $product Mage_Catalog_Model_Product */
+        /** @var $product Mage_Catalog_Model_Product */
         $product = Mage::getModel('catalog/product')->setStoreId($storeId)->load($productId);
         // fetch review data for requested product
         Mage::getModel('review/review')->getEntitySummary($product, $storeId);
 
-		$returnData['productData']['id']     = $productId;
-		$returnData['productData']['sku']    = $productIndexData['sku'];
-		$returnData['productData']['url']    = $product->getProductUrl();
-		$returnData['productData']['unique'] = $searchperienceHelper->getProductUniqueId($productId, $storeId);
-		$returnData['productData']['rating'] = $product->getRatingSummary()->getRatingSummary();
+        $returnData['productData']['id']     = $productId;
+        $returnData['productData']['sku']    = $productIndexData['sku'];
+        $returnData['productData']['url']    = $product->getProductUrl();
+        $returnData['productData']['unique'] = $searchperienceHelper->getProductUniqueId($productId, $storeId);
+        $returnData['productData']['rating'] = $product->getRatingSummary()->getRatingSummary();
 
-		$this->_usedFields   = array_merge($this->_usedFields, array('id', 'description', 'short_description', 'price', 'name', 'tax_class_id'));
+        $this->_usedFields   = array_merge($this->_usedFields, array('id', 'description', 'short_description', 'price', 'name', 'tax_class_id'));
 
         // fetch price information
         $returnData = $this->_getProductPriceInformation($product, $returnData);
@@ -178,21 +180,21 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         // fetch image information
        $returnData = $this->_getProductImageInformation($product, $returnData);
 
-		$returnData = $this->fillProductCategoryInformation($product, $returnData);
+        $returnData = $this->fillProductCategoryInformation($product, $returnData);
 
         // fetch related products
-		foreach ($this->getLinkedProductIds($productId) as $relatedProduct) {
-			$returnData['productData']['related'][] = $relatedProduct;
-		}
+        foreach ($this->getLinkedProductIds($productId) as $relatedProduct) {
+            $returnData['productData']['related'][] = $relatedProduct;
+        }
 
         // fetch upsell products
         foreach ($this->getLinkedProductIds($productId, Mage_Catalog_Model_Product_Link::LINK_TYPE_UPSELL) as $upsellProduct) {
-			$returnData['productData']['upsell'][] = $upsellProduct;
+            $returnData['productData']['upsell'][] = $upsellProduct;
         }
 
         // fetch crosssell products
         foreach ($this->getLinkedProductIds($productId, Mage_Catalog_Model_Product_Link::LINK_TYPE_CROSSSELL) as $crossProduct) {
-			$returnData['productData']['cross'][] = $crossProduct;
+            $returnData['productData']['cross'][] = $crossProduct;
         }
 
         foreach ($productIndexData as $attributeCode => $value) {
@@ -201,67 +203,70 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             }
 
             if (is_array($value)) {
-				$returnData['productData'][$attributeCode] = $value[$productId];
+                $returnData['productData'][$attributeCode] = $value[$productId];
             }
             else {
-				$returnData[$attributeCode] = $value;
+                $returnData[$attributeCode] = $value;
             }
         }
 
         // fetch additional product information
-		list($dynamicFields, $usedForSorting, $usedForFiltering, $attributeTypes) = $this->_getAdditionalProductData($productIndexData, $productId, $storeId);
+        list($dynamicFields, $usedForSorting, $usedForFiltering, $attributeTypes) = $this->_getAdditionalProductData($productIndexData, $productId, $storeId);
 
-		$returnData['productData']['additionalData'] = $dynamicFields;
-		$returnData['attributesUsedForSorting'] = $usedForSorting;
-		$returnData['attributesUsedForFiltering'] = $usedForFiltering;
-		$returnData['attributeTypes'] = $attributeTypes;
+        $returnData['productData']['additionalData'] = $dynamicFields;
+        $returnData['attributesUsedForSorting'] = $usedForSorting;
+        $returnData['attributesUsedForFiltering'] = $usedForFiltering;
+        $returnData['attributeTypes'] = $attributeTypes;
 
-		$options = new Varien_Object();
-		$options->setIndexData($returnData);
-		$options->setProduct($product);
+        $options = new Varien_Object();
+        $options->setIndexData($returnData);
+        $options->setProduct($product);
 
-		Mage::dispatchEvent(
-			'aoe_searchperience_prepareIndexProductData_after',
-			array('adapter' => $this, 'options' => $options)
-		);
-		Varien_Profiler::stop(__CLASS__.__METHOD__);
-		$returnData = $options->getIndexData();
-		unset($product, $options, $productIndexData, $dynamicFields, $usedForSorting, $usedForFiltering, $attributeTypes);
+        Mage::dispatchEvent(
+            'aoe_searchperience_prepareIndexProductData_after',
+            array('adapter' => $this, 'options' => $options)
+        );
+        Varien_Profiler::stop(__CLASS__.__METHOD__);
+        $returnData = $options->getIndexData();
+        unset($product, $options, $productIndexData, $dynamicFields, $usedForSorting, $usedForFiltering, $attributeTypes);
         return $returnData;
     }
 
-	/**
-	 * Returns array of related products ids
-	 * @param $productId
-	 * @param int $relationType
-	 * @param int $limit
-	 * @return mixed
-	 */
-	protected function getLinkedProductIds($productId, $relationType=Mage_Catalog_Model_Product_Link::LINK_TYPE_RELATED, $limit=10) {
-		Varien_Profiler::start(__CLASS__.__METHOD__.$relationType);
-		/** @var $linkModel Mage_Catalog_Model_Product_Link */
-		$linkModel = Mage::getSingleton('catalog/product_link');
-		$collection = $linkModel->setLinkTypeId($relationType)->getLinkCollection();
-		$collection->addFieldToFilter('product_id',  array('eq' => $productId))
-			->addLinkTypeIdFilter()
-			->addFieldToSelect('linked_product_id')
-			->setPageSize($limit)->setCurPage(1);
-		$linkedProductIds = $collection->getColumnValues('linked_product_id');
-		Varien_Profiler::stop(__CLASS__.__METHOD__.$relationType);
-		return $linkedProductIds;
-	}
+    /**
+     * Returns array of related products ids
+     * @param $productId
+     * @param int $relationType
+     * @param int $limit
+     * @return mixed
+     */
+    protected function getLinkedProductIds($productId, $relationType=Mage_Catalog_Model_Product_Link::LINK_TYPE_RELATED, $limit=10) {
+        Varien_Profiler::start(__CLASS__.__METHOD__.$relationType);
+        /** @var $linkModel Mage_Catalog_Model_Product_Link */
+        $linkModel = Mage::getSingleton('catalog/product_link');
+        $collection = $linkModel->setLinkTypeId($relationType)->getLinkCollection();
+        $collection->addFieldToFilter('product_id',  array('eq' => $productId))
+            ->addLinkTypeIdFilter()
+            ->addFieldToSelect('linked_product_id')
+            ->setPageSize($limit)->setCurPage(1);
+        $linkedProductIds = $collection->getColumnValues('linked_product_id');
+        Varien_Profiler::stop(__CLASS__.__METHOD__.$relationType);
+        return $linkedProductIds;
+    }
 
     /**
      * Get additional product data
      *
-     * @param $product Mage_Catalog_Model_Product
+     * @param array $productIndexData
+     * @param $productId
+     * @param $storeId
+     * @return array
      */
     protected function _getAdditionalProductData($productIndexData, $productId, $storeId)
     {
-		Varien_Profiler::start(__CLASS__.__METHOD__);
+        Varien_Profiler::start(__CLASS__.__METHOD__);
         $usedForSorting   = array();
         $usedForFiltering = array();
-		$attributeTypes = array();
+        $attributeTypes = array();
 
         foreach ($productIndexData as $attributeCode => $attributeValue) {
 
@@ -281,7 +286,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             // Prepare values for required fields
             if (in_array($attributeCode, $this->_usedFields)) {
                 unset($productIndexData[$attributeCode]);
-				continue;
+                continue;
             }
 
             if (!$attribute || $attributeCode == 'price' || empty($attributeValue)) {
@@ -344,7 +349,6 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                         }
                     }
                 }
-
             }
 
             if ($attribute->getUsedForSortBy()) {
@@ -355,126 +359,127 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                 $usedForFiltering[$attributeCode] = 1;
             }
 
-			$attributeTypes[$attributeCode]   = $this->getAttributeSearchType($attribute);
-			$productIndexData[$attributeCode] = $preparedValue;
-            
+            $attributeTypes[$attributeCode]   = $this->getAttributeSearchType($attribute);
+            $productIndexData[$attributeCode] = $preparedValue;
+
             unset($preparedNavValue, $preparedValue, $fieldName, $attribute);
         }
-		Varien_Profiler::stop(__CLASS__.__METHOD__);
+        Varien_Profiler::stop(__CLASS__.__METHOD__);
         return array($productIndexData, $usedForSorting, $usedForFiltering, $attributeTypes);
     }
 
-	/**
-	 * @param Mage_Catalog_Model_Resource_Eav_Attribute|string $attribute
-	 */
-	private function getAttributeSearchType($attribute)
-	{
-		if (is_string($attribute)) {
-			if ($attribute == 'price') {
-				return 'float';
-			}
+    /**
+     * @param Mage_Catalog_Model_Resource_Eav_Attribute|string $attribute
+     * @return string
+     */
+    private function getAttributeSearchType($attribute)
+    {
+        if (is_string($attribute)) {
+            if ($attribute == 'price') {
+                return 'float';
+            }
 
-			$eavConfig  = Mage::getSingleton('eav/config');
-			$entityType = $eavConfig->getEntityType('catalog_product');
-			$attribute  = $eavConfig->getAttribute($entityType, $attribute);
-		}
-		$attributeCode = $attribute->getAttributeCode();
-		if ($attributeCode == 'price') {
-			return $this->getPriceFieldName();
-		}
+            $eavConfig  = Mage::getSingleton('eav/config');
+            $entityType = $eavConfig->getEntityType('catalog_product');
+            $attribute  = $eavConfig->getAttribute($entityType, $attribute);
+        }
+        $attributeCode = $attribute->getAttributeCode();
+        if ($attributeCode == 'price') {
+            return $this->getPriceFieldName();
+        }
 
-		$backendType    = $attribute->getBackendType();
-		$frontendInput  = $attribute->getFrontendInput();
+        $backendType    = $attribute->getBackendType();
+        $frontendInput  = $attribute->getFrontendInput();
 
-		if ($frontendInput == 'multiselect') {
-			$fieldType = 'string';
-		} elseif ($frontendInput == 'select') {
-			$fieldType = 'string';
-		} elseif ($frontendInput == 'boolean') {
-			$fieldType = 'string';
-		} elseif ($backendType == 'decimal') {
-			$fieldType = 'float';
-		} elseif ($backendType == 'varchar') {
-			$fieldType = 'string';
-		} elseif ($backendType == 'datetime') {
-			$fieldType = 'date';
-		} else {
-			$fieldType = 'text';
-		}
+        if ($frontendInput == 'multiselect') {
+            $fieldType = 'string';
+        } elseif ($frontendInput == 'select') {
+            $fieldType = 'string';
+        } elseif ($frontendInput == 'boolean') {
+            $fieldType = 'string';
+        } elseif ($backendType == 'decimal') {
+            $fieldType = 'float';
+        } elseif ($backendType == 'varchar') {
+            $fieldType = 'string';
+        } elseif ($backendType == 'datetime') {
+            $fieldType = 'date';
+        } else {
+            $fieldType = 'text';
+        }
 
-		return $fieldType;
-	}
-
-	/**
-	 * Fetches all categories to local cache
-	 * @param $storeId
-	 */
-	protected function fetchCategories($storeId) {
-		if(!isset($this->categories[$storeId])) {
-			$this->categories[$storeId] = array();
-		}
-
-		/** @var $categoryCollection Mage_Catalog_Model_Resource_Category_Collection */
-		$categoryCollection = Mage::getResourceModel('catalog/category_collection');
-		$categoryCollection->setStoreId($storeId)
-			->addNameToResult()
-			->addIsActiveFilter()
-			->setLoadProductCount(FALSE);
-		$categories = $categoryCollection->load()->toArray(array('path','level','name'));
-		unset($categoryCollection);
-
-		$this->categories[$storeId] = $categories;
-	}
+        return $fieldType;
+    }
 
     /**
-	 * @param Mage_Catalog_Model_Product $product
-	 * @param array $data
-	 * @return mixed
-	 */
-	protected function fillProductCategoryInformation($product, $data) {
-		$skippableCategories = array();
-		if (($skipCategories = Mage::getStoreConfig('searchperience/searchperience/skipCategories'))) {
-			$skippableCategories = array_map('trim', explode(',', $skipCategories));
-		}
-		$storeId = $product->getStoreId();
-		$this->fetchCategories($storeId);
+     * Fetches all categories to local cache
+     * @param $storeId
+     */
+    protected function fetchCategories($storeId) {
+        if(!isset($this->categories[$storeId])) {
+            $this->categories[$storeId] = array();
+        }
 
-		// fetch category information
-		foreach ($product->getCategoryIds() as $categoryId) {
-			if (!isset($returnData['categories'][$categoryId]) && isset($this->categories[$storeId][$categoryId])) {
-				$category = $this->categories[$storeId][$categoryId];
-				$data['categories'][$categoryId]['name'] = $category['name'];
+        /** @var $categoryCollection Mage_Catalog_Model_Resource_Category_Collection */
+        $categoryCollection = Mage::getResourceModel('catalog/category_collection');
+        $categoryCollection->setStoreId($storeId)
+            ->addNameToResult()
+            ->addIsActiveFilter()
+            ->setLoadProductCount(FALSE);
+        $categories = $categoryCollection->load()->toArray(array('path','level','name'));
+        unset($categoryCollection);
 
-				$pathCategories = explode('/', $category['path']);
-				$path = array();
-				//don't need root category
-				array_shift($pathCategories);
-				foreach($pathCategories as $pathCategoryId) {
-					// do not include skippable categories in list
-					if (in_array($pathCategoryId, $skippableCategories)) {
-						unset($data['categories'][$categoryId]);
-						continue 2;
-					}
-					$cat = $this->categories[$storeId][$pathCategoryId];
-					if ($cat['level'] > 1) {
-						$pathPart = $cat['name'];
-						$pathPart = str_replace('/','&#47;', $pathPart);
-						$path[] = $pathPart;
-					}
-				}
-				$data['categories'][$categoryId]['path'] = implode('/', $path);
-			}
-		}
-		return $data;
-	}
+        $this->categories[$storeId] = $categories;
+    }
 
-	/**
-	 * Get price information for product
-	 *
-	 * @param $product Mage_Catalog_Model_Product
-	 * @param array $data
-	 * @return array
-	 */
+    /**
+     * @param Mage_Catalog_Model_Product $product
+     * @param array $data
+     * @return mixed
+     */
+    protected function fillProductCategoryInformation($product, $data) {
+        $skippableCategories = array();
+        if (($skipCategories = Mage::getStoreConfig('searchperience/searchperience/skipCategories'))) {
+            $skippableCategories = array_map('trim', explode(',', $skipCategories));
+        }
+        $storeId = $product->getStoreId();
+        $this->fetchCategories($storeId);
+
+        // fetch category information
+        foreach ($product->getCategoryIds() as $categoryId) {
+            if (!isset($returnData['categories'][$categoryId]) && isset($this->categories[$storeId][$categoryId])) {
+                $category = $this->categories[$storeId][$categoryId];
+                $data['categories'][$categoryId]['name'] = $category['name'];
+
+                $pathCategories = explode('/', $category['path']);
+                $path = array();
+                //don't need root category
+                array_shift($pathCategories);
+                foreach($pathCategories as $pathCategoryId) {
+                    // do not include skippable categories in list
+                    if (in_array($pathCategoryId, $skippableCategories)) {
+                        unset($data['categories'][$categoryId]);
+                        continue 2;
+                    }
+                    $cat = $this->categories[$storeId][$pathCategoryId];
+                    if ($cat['level'] > 1) {
+                        $pathPart = $cat['name'];
+                        $pathPart = str_replace('/','&#47;', $pathPart);
+                        $path[] = $pathPart;
+                    }
+                }
+                $data['categories'][$categoryId]['path'] = implode('/', $path);
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * Get price information for product
+     *
+     * @param $product Mage_Catalog_Model_Product
+     * @param array $data
+     * @return array
+     */
     protected function _getProductPriceInformation($product, $data)
     {
         // define attributes and get methods
@@ -485,21 +490,21 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         );
         foreach ($attributes as $attributeCode => $getMethod) {
             if (!empty($this->_indexableAttributeParams[$attributeCode])) {
-				$value = $product->$getMethod();
-				if($value) {
-					$data['productData'][$attributeCode] = $value;
-				}
+                $value = $product->$getMethod();
+                if($value) {
+                    $data['productData'][$attributeCode] = $value;
+                }
             }
         }
-		return $data;
+        return $data;
     }
 
     /**
      * Get product image information
      *
      * @param $product Mage_Catalog_Model_Product
-	 * @param array $data
-	 * @return array
+     * @param array $data
+     * @return array
      */
     protected function _getProductImageInformation($product, $data)
     {
@@ -514,16 +519,16 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         );
 
         foreach ($attributes as $attributeCode => $getMethod) {
-			$data['productData']['images'][$attributeCode] = $product->$getMethod($width, $height);
+          $data['productData']['images'][$attributeCode] = $product->$getMethod($width, $height);
         }
-		return $data;
+       return $data;
     }
 
     /**
      * Checks, if given attribute shall be skipped for indexing
      *
      * @param $attributeCode
-	 * @return boolean
+     * @return boolean
      */
     protected function _skipAttribute($attributeCode)
     {

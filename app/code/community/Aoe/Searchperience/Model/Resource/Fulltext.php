@@ -12,7 +12,7 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
     protected function _rebuildStoreIndex($storeId, $productIds = null)
     {
 //        xhprof_enable(XHPROF_FLAGS_CPU + XHPROF_FLAGS_MEMORY);
-		Varien_Profiler::start(__CLASS__.__METHOD__);
+        Varien_Profiler::start(__CLASS__.__METHOD__);
         // prepare searchable attributes
         $staticFields = array();
         foreach ($this->_getSearchableAttributes('static') as $attribute) {
@@ -109,23 +109,22 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
         if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
             Mage::log('statistics: ' . var_export(Aoe_Searchperience_Model_Client_Searchperience::$statistics, true));
         }
-		
         return $this;
     }
 
-	/**
-	 * Retrieve attribute source value for search
-	 *
-	 * @param int $attributeId
-	 * @param mixed $value
-	 * @param int $storeId
-	 * @return mixed
-	 */
-	protected function _getAttributeValue($attributeId, $value, $storeId)
-	{
-		if (is_string($value)) {
-			$value = preg_replace('#<\s*br\s*/?\s*>#', ' ', $value);
-		}
-		return parent::_getAttributeValue($attributeId, $value, $storeId);
-	}
+    /**
+     * Retrieve attribute source value for search
+     *
+     * @param int $attributeId
+     * @param mixed $value
+     * @param int $storeId
+     * @return mixed
+     */
+    protected function _getAttributeValue($attributeId, $value, $storeId)
+    {
+        if (is_string($value)) {
+            $value = preg_replace('#<\s*br\s*/?\s*>#', ' ', $value);
+        }
+        return parent::_getAttributeValue($attributeId, $value, $storeId);
+    }
 }
