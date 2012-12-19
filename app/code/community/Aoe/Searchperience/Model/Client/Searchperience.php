@@ -53,10 +53,10 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
      */
     public static $statistics = array();
 
-	/**
-	 * @param array $options
-	 */
-	public  function __construct($options)
+    /**
+     * @param array $options
+     */
+    public  function __construct($options)
     {
         // fetching settings from magento backend
         $this->_customerKey    = Mage::getStoreConfig('searchperience/searchperience/customer_key', 'default');
@@ -74,7 +74,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
         );
 
         return $this;
-	}
+    }
 
     /**
      * Create a delete document based on a multiple queries and submit it
@@ -92,30 +92,30 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
         return true;
     }
 
-	/*
-	* @param float $timeout maximum time to wait for ping in seconds, -1 for unlimited (default is 2)
-	* @return float Actual time taken to ping the server, FALSE if timeout or HTTP error status occurs
-	*/
-	public function ping($timeout = 2)
+    /*
+    * @param float $timeout maximum time to wait for ping in seconds, -1 for unlimited (default is 2)
+    * @return float Actual time taken to ping the server, FALSE if timeout or HTTP error status occurs
+    */
+    public function ping($timeout = 2)
     {
-		return 0.1;
-	}
+        return 0.1;
+    }
 
-	/**
-	 * Send a commit command.  Will be synchronous unless both wait parameters are set to false.
-	 *
-	 * @param boolean $optimize Defaults to true
-	 * @param boolean $waitFlush Defaults to true
-	 * @param boolean $waitSearcher Defaults to true
-	 * @param float $timeout Maximum expected duration (in seconds) of the commit operation on the server (otherwise, will throw a communication exception). Defaults to 1 hour
-	 * @return Apache_Solr_Response
-	 *
-	 * @throws Exception If an error occurs during the service call
-	 */
-	public function commit($optimize = true, $waitFlush = true, $waitSearcher = true, $timeout = 3600)
-	{
-		return true;
-	}
+    /**
+     * Send a commit command.  Will be synchronous unless both wait parameters are set to false.
+     *
+     * @param boolean $optimize Defaults to true
+     * @param boolean $waitFlush Defaults to true
+     * @param boolean $waitSearcher Defaults to true
+     * @param float $timeout Maximum expected duration (in seconds) of the commit operation on the server (otherwise, will throw a communication exception). Defaults to 1 hour
+     * @return Apache_Solr_Response
+     *
+     * @throws Exception If an error occurs during the service call
+     */
+    public function commit($optimize = true, $waitFlush = true, $waitSearcher = true, $timeout = 3600)
+    {
+        return true;
+    }
 
     /**
      * @return bool
@@ -134,15 +134,14 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
      * @param boolean $overwriteCommitted
      * @return void|false
      */
-	public function addDocuments($documentList, $allowDups = false, $overwritePending = true, $overwriteCommitted = true)
-	{
+    public function addDocuments($documentList, $allowDups = false, $overwritePending = true, $overwriteCommitted = true) {
         if (in_array(null, array($this->_customerKey, $this->_username, $this->_password, $this->_documentSource, $this->_baseUrl))) {
             Mage::getSingleton('core/session')->addError(
                 Mage::helper('core')->__('No valid connection settings for searchperience connection found!')
             );
             return false;
         }
-		Varien_Profiler::start(__CLASS__.__METHOD__);
+        Varien_Profiler::start(__CLASS__.__METHOD__);
         foreach ($documentList as $index => $rawDocument) {
             $documentData = $rawDocument->getData();
             $productData  = ((isset($documentData['productData']) ? $documentData['productData'] : array()));
@@ -155,9 +154,9 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             $document->setUrl($this->_getValueFromArray('url', $productData));
 
             try {
-				Varien_Profiler::start(__CLASS__.__METHOD__." DocumentRepositoryAdd");
+                Varien_Profiler::start(__CLASS__.__METHOD__." DocumentRepositoryAdd");
                 $result = $this->documentRepository->add($document);
-				Varien_Profiler::stop(__CLASS__.__METHOD__." DocumentRepositoryAdd");
+                Varien_Profiler::stop(__CLASS__.__METHOD__." DocumentRepositoryAdd");
                 if (!isset(self::$statistics[$result])) {
                     self::$statistics[$result] = 0;
                 }
@@ -177,8 +176,8 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             unset($document, $rawDocument, $documentList[$index]);
         }
         unset($documentList);
-		Varien_Profiler::stop(__CLASS__.__METHOD__);
-	}
+        Varien_Profiler::stop(__CLASS__.__METHOD__);
+    }
 
     /**
      * Returns API document repository
@@ -197,7 +196,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
      */
     protected function _documentToXmlFragment(Apache_Solr_Document $document)
     {
-		Varien_Profiler::start(__CLASS__.__METHOD__);
+        Varien_Profiler::start(__CLASS__.__METHOD__);
         $writer = new XMLWriter();
         $writer->openMemory();
         $writer->startDocument('1.0', 'UTF-8');
@@ -244,25 +243,25 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             $writer->startElement('attribute');
             $writer->writeAttribute('name', $key);
             $writer->writeAttribute('type', $this->_getValueFromArray($key, $documentData['attributeTypes'], 'string') );
-			if (isset($documentData['attributesUsedForSorting'][$key])) {
-				$writer->writeAttribute('forsorting', $documentData['attributesUsedForSorting'][$key]);
-			}
-			if (isset($documentData['attributesUsedForFiltering'][$key])) {
-				$writer->writeAttribute('forfiltering', $documentData['attributesUsedForFiltering'][$key]);
-			}
+            if (isset($documentData['attributesUsedForSorting'][$key])) {
+                $writer->writeAttribute('forsorting', $documentData['attributesUsedForSorting'][$key]);
+            }
+            if (isset($documentData['attributesUsedForFiltering'][$key])) {
+                $writer->writeAttribute('forfiltering', $documentData['attributesUsedForFiltering'][$key]);
+            }
 //            if (isset($documentData['attributeTypes'][$key]) && ($documentData['attributeTypes'][$key] != 'date')) {
 //                $writer->writeAttribute('forsearching', 1);
 //            }
 
-			if (!is_array($value)) {
-				$value = (array)$value;
-			}
-			$value = array_unique($value);
-			foreach ($value as $key => $attributeValue) {
+            if (!is_array($value)) {
+                $value = (array)$value;
+            }
+            $value = array_unique($value);
+            foreach ($value as $key => $attributeValue) {
                 if ($attributeValue) {
                     $writer->writeElement('value', $attributeValue);
                 }
-			}
+            }
 
             $writer->endElement();
         }
@@ -292,7 +291,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             Mage::log($return);
         }
 
-		Varien_Profiler::stop(__CLASS__.__METHOD__);
+        Varien_Profiler::stop(__CLASS__.__METHOD__);
         return $return;
     }
 
