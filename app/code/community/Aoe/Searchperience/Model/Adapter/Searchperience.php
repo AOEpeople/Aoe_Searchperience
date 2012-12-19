@@ -3,18 +3,16 @@
 class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_Model_Adapter_Solr_Abstract
 {
     /**
-     * Object name used to create solr document object
+     * Api document class name
      *
      * @var string
      */
     protected $_clientDocObjectName = 'Aoe_Searchperience_Model_Api_Document';
 
     /**
-     * Holds data for indexing product
-     *
-     * @var array
+	 * @var array of categories $categories[store][categoryId]=>category data
      */
-    protected $_indexData = array();
+	protected $categories = array();
 
     /**
      * Constructor
@@ -66,7 +64,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         if (!is_array($docData) || empty($docData)) {
             return array();
         }
-
+		Varien_Profiler::start(__CLASS__.__METHOD__);
         $docs = array();
         foreach ($docData as $productId => $productIndexData) {
             $doc = new $this->_clientDocObjectName;
@@ -78,8 +76,9 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
             $doc->setData($productIndexData);
             $docs[] = $doc;
+			unset($docData[$productId]);
         }
-
+		Varien_Profiler::stop(__CLASS__.__METHOD__);
         return $docs;
     }
 
@@ -124,13 +123,14 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 	 */
     protected function _prepareIndexProductData($productIndexData, $productId, $storeId)
     {
+		Varien_Profiler::start(__CLASS__.__METHOD__);
         $searchperienceHelper = Mage::helper('aoe_searchperience');
 
         if (!$this->isAvailableInIndex($productIndexData, $productId)) {
             return false;
         }
 
-        $this->_indexData  = array(
+        $returnData  = array(
             'storeid'  => $storeId,
             'language' => Mage::getStoreConfig('general/locale/code', $storeId),
             'in_stock' => (!empty($productIndexData['in_stock']) ? $productIndexData['in_stock'] : ''),
@@ -141,66 +141,35 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         // fetch review data for requested product
         Mage::getModel('review/review')->getEntitySummary($product, $storeId);
 
-        $this->_indexData['productData']['id']     = $productId;
-        $this->_indexData['productData']['sku']    = $productIndexData['sku'];
-        $this->_indexData['productData']['url']    = $product->getProductUrl();
-        $this->_indexData['productData']['unique'] = $searchperienceHelper->getProductUniqueId($productId, $storeId);
-        $this->_indexData['productData']['rating'] = $product->getRatingSummary()->getRatingSummary();
+		$returnData['productData']['id']     = $productId;
+		$returnData['productData']['sku']    = $productIndexData['sku'];
+		$returnData['productData']['url']    = $product->getProductUrl();
+		$returnData['productData']['unique'] = $searchperienceHelper->getProductUniqueId($productId, $storeId);
+		$returnData['productData']['rating'] = $product->getRatingSummary()->getRatingSummary();
 
 		$this->_usedFields   = array_merge($this->_usedFields, array('id', 'description', 'short_description', 'price', 'name', 'tax_class_id'));
 
         // fetch price information
-        $this->_getProductPriceInformation($product);
+        $returnData = $this->_getProductPriceInformation($product, $returnData);
 
         // fetch image information
-        $this->_getProductImageInformation($product);
+       $returnData = $this->_getProductImageInformation($product, $returnData);
 
-        $skippableCategories = array();
-        if (($skipCategories = Mage::getStoreConfig('searchperience/searchperience/skipCategories'))) {
-            $skippableCategories = array_map('trim', explode(',', $skipCategories));
-        }
-
-        // fetch category information
-        foreach ($product->getCategoryIds() as $categoryId) {
-            if (!isset($this->_indexData['categories'][$categoryId])) {
-                $category = Mage::getModel('catalog/category')->load($categoryId);
-                $this->_indexData['categories'][$categoryId]['name'] = $category->getName();
-
-                $pathCategories = explode('/', $category->getPath());
-                $path = array();
-
-                foreach($pathCategories as $pathCategory) {
-                    $cat = Mage::getModel('catalog/category')->load($pathCategory);
-
-                    // do not include skippable categories in list
-                    if (in_array($cat->getId(), $skippableCategories)) {
-                        unset($this->_indexData['categories'][$categoryId]);
-                        continue 2;
-                    }
-
-                    if ($cat->getLevel() > 1) {
-                        $pathPart = $cat->getName();
-                        $pathPart = str_replace('/','&#47;', $pathPart);
-                        $path[] = $pathPart;
-                    }
-                }
-                $this->_indexData['categories'][$categoryId]['path'] = implode('/', $path);
-            }
-        }
+		$returnData = $this->fillProductCategoryInformation($product, $returnData);
 
         // fetch related products
 		foreach ($this->getLinkedProductIds($productId) as $relatedProduct) {
-			$this->_indexData['productData']['related'][] = $relatedProduct;
+			$returnData['productData']['related'][] = $relatedProduct;
 		}
 
         // fetch upsell products
         foreach ($this->getLinkedProductIds($productId, Mage_Catalog_Model_Product_Link::LINK_TYPE_UPSELL) as $upsellProduct) {
-            $this->_indexData['productData']['upsell'][] = $upsellProduct;
+			$returnData['productData']['upsell'][] = $upsellProduct;
         }
 
         // fetch crosssell products
         foreach ($this->getLinkedProductIds($productId, Mage_Catalog_Model_Product_Link::LINK_TYPE_CROSSSELL) as $crossProduct) {
-            $this->_indexData['productData']['cross'][] = $crossProduct;
+			$returnData['productData']['cross'][] = $crossProduct;
         }
 
         foreach ($productIndexData as $attributeCode => $value) {
@@ -209,32 +178,33 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             }
 
             if (is_array($value)) {
-                $this->_indexData['productData'][$attributeCode] = $value[$productId];
+				$returnData['productData'][$attributeCode] = $value[$productId];
             }
             else {
-                $this->_indexData[$attributeCode] = $value;
+				$returnData[$attributeCode] = $value;
             }
         }
 
         // fetch additional product information
 		list($dynamicFields, $usedForSorting, $usedForFiltering, $attributeTypes) = $this->_getAdditionalProductData($productIndexData, $productId, $storeId);
 
-		$this->_indexData['productData']['additionalData'] = $dynamicFields;
-		$this->_indexData['attributesUsedForSorting'] = $usedForSorting;
-		$this->_indexData['attributesUsedForFiltering'] = $usedForFiltering;
-		$this->_indexData['attributeTypes'] = $attributeTypes;
+		$returnData['productData']['additionalData'] = $dynamicFields;
+		$returnData['attributesUsedForSorting'] = $usedForSorting;
+		$returnData['attributesUsedForFiltering'] = $usedForFiltering;
+		$returnData['attributeTypes'] = $attributeTypes;
 
 		$options = new Varien_Object();
-		$options->setIndexData($this->_indexData);
-		$options->indexData = $this->_indexData;
+		$options->setIndexData($returnData);
 		$options->setProduct($product);
 
 		Mage::dispatchEvent(
 			'aoe_searchperience_prepareIndexProductData_after',
-			array('adapter' => $this, 'options' => $options, 'someData' => $this->_indexData)
+			array('adapter' => $this, 'options' => $options)
 		);
-
-        return $options->getIndexData();
+		Varien_Profiler::stop(__CLASS__.__METHOD__);
+		$returnData = $options->getIndexData();
+		unset($product, $options, $productIndexData, $dynamicFields, $usedForSorting, $usedForFiltering, $attributeTypes);
+        return $returnData;
     }
 
 	/**
@@ -244,8 +214,8 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 	 * @param int $limit
 	 * @return mixed
 	 */
-	protected function getLinkedProductIds($productId, $relationType=Mage_Catalog_Model_Product_Link::LINK_TYPE_RELATED, $limit=10)
-    {
+	protected function getLinkedProductIds($productId, $relationType=Mage_Catalog_Model_Product_Link::LINK_TYPE_RELATED, $limit=10) {
+		Varien_Profiler::start(__CLASS__.__METHOD__.$relationType);
 		/** @var $linkModel Mage_Catalog_Model_Product_Link */
 		$linkModel = Mage::getSingleton('catalog/product_link');
 		$collection = $linkModel->setLinkTypeId($relationType)->getLinkCollection();
@@ -253,7 +223,9 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 			->addLinkTypeIdFilter()
 			->addFieldToSelect('linked_product_id')
 			->setPageSize($limit)->setCurPage(1);
-		return $collection->getColumnValues('linked_product_id');
+		$linkedProductIds = $collection->getColumnValues('linked_product_id');
+		Varien_Profiler::stop(__CLASS__.__METHOD__.$relationType);
+		return $linkedProductIds;
 	}
 
     /**
@@ -263,6 +235,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
      */
     protected function _getAdditionalProductData($productIndexData, $productId, $storeId)
     {
+		Varien_Profiler::start(__CLASS__.__METHOD__);
         $usedForSorting   = array();
         $usedForFiltering = array();
 		$attributeTypes = array();
@@ -364,7 +337,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             
             unset($preparedNavValue, $preparedValue, $fieldName, $attribute);
         }
-
+		Varien_Profiler::stop(__CLASS__.__METHOD__);
         return array($productIndexData, $usedForSorting, $usedForFiltering, $attributeTypes);
     }
 
@@ -409,13 +382,77 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 		return $fieldType;
 	}
 
+	/**
+	 * Fetches all categories to local cache
+	 * @param $storeId
+	 */
+	protected function fetchCategories($storeId) {
+		if(!isset($this->categories[$storeId])) {
+			$this->categories[$storeId] = array();
+		}
+
+		/** @var $categoryCollection Mage_Catalog_Model_Resource_Category_Collection */
+		$categoryCollection = Mage::getResourceModel('catalog/category_collection');
+		$categoryCollection->setStoreId($storeId)
+			->addNameToResult()
+			->addIsActiveFilter()
+			->setLoadProductCount(FALSE);
+		$categories = $categoryCollection->load()->toArray(array('path','level','name'));
+		unset($categoryCollection);
+
+		$this->categories[$storeId] = $categories;
+	}
 
     /**
-     * Get price information for product
-     *
-     * @param $product Mage_Catalog_Model_Product
-     */
-    protected function _getProductPriceInformation($product)
+	 * @param Mage_Catalog_Model_Product $product
+	 * @param array $data
+	 * @return mixed
+	 */
+	protected function fillProductCategoryInformation($product, $data) {
+		$skippableCategories = array();
+		if (($skipCategories = Mage::getStoreConfig('searchperience/searchperience/skipCategories'))) {
+			$skippableCategories = array_map('trim', explode(',', $skipCategories));
+		}
+		$storeId = $product->getStoreId();
+		$this->fetchCategories($storeId);
+
+		// fetch category information
+		foreach ($product->getCategoryIds() as $categoryId) {
+			if (!isset($returnData['categories'][$categoryId]) && isset($this->categories[$storeId][$categoryId])) {
+				$category = $this->categories[$storeId][$categoryId];
+				$data['categories'][$categoryId]['name'] = $category['name'];
+
+				$pathCategories = explode('/', $category['path']);
+				$path = array();
+				//don't need root category
+				array_shift($pathCategories);
+				foreach($pathCategories as $pathCategoryId) {
+					// do not include skippable categories in list
+					if (in_array($pathCategoryId, $skippableCategories)) {
+						unset($data['categories'][$categoryId]);
+						continue 2;
+					}
+					$cat = $this->categories[$storeId][$pathCategoryId];
+					if ($cat['level'] > 1) {
+						$pathPart = $cat['name'];
+						$pathPart = str_replace('/','&#47;', $pathPart);
+						$path[] = $pathPart;
+					}
+				}
+				$data['categories'][$categoryId]['path'] = implode('/', $path);
+			}
+		}
+		return $data;
+	}
+
+	/**
+	 * Get price information for product
+	 *
+	 * @param $product Mage_Catalog_Model_Product
+	 * @param array $data
+	 * @return array
+	 */
+    protected function _getProductPriceInformation($product, $data)
     {
         // define attributes and get methods
         $attributes = array(
@@ -423,23 +460,25 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             // @TODO: make group prices work!
             'group_price'   => 'getGroupPrice',
         );
-
         foreach ($attributes as $attributeCode => $getMethod) {
             if (!empty($this->_indexableAttributeParams[$attributeCode])) {
 				$value = $product->$getMethod();
 				if($value) {
-					$this->_indexData['productData'][$attributeCode] = $value;
+					$data['productData'][$attributeCode] = $value;
 				}
             }
         }
+		return $data;
     }
 
     /**
      * Get product image information
      *
      * @param $product Mage_Catalog_Model_Product
+	 * @param array $data
+	 * @return array
      */
-    protected function _getProductImageInformation($product)
+    protected function _getProductImageInformation($product, $data)
     {
         $width  = Mage::getStoreConfig('searchperience/searchperience/listViewImageWidth');
         $height = Mage::getStoreConfig('searchperience/searchperience/listViewImageHeight');
@@ -452,14 +491,16 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         );
 
         foreach ($attributes as $attributeCode => $getMethod) {
-            $this->_indexData['productData']['images'][$attributeCode] = $product->$getMethod($width, $height);
+			$data['productData']['images'][$attributeCode] = $product->$getMethod($width, $height);
         }
+		return $data;
     }
 
     /**
      * Checks, if given attribute shall be skipped for indexing
      *
      * @param $attributeCode
+	 * @return boolean
      */
     protected function _skipAttribute($attributeCode)
     {
