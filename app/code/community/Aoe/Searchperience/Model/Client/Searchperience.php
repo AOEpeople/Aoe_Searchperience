@@ -1,8 +1,6 @@
 <?php
 
-$path = dirname( __FILE__ ).'/../../../../../../../vendor/autoload.php';
-require $path;
-
+require realpath(dirname( __FILE__ ).'/../../../../../../../vendor/autoload.php');
 
 class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 {
@@ -141,7 +139,6 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             );
             return false;
         }
-        Varien_Profiler::start(__CLASS__.__METHOD__);
         foreach ($documentList as $index => $rawDocument) {
             $documentData = $rawDocument->getData();
             $productData  = ((isset($documentData['productData']) ? $documentData['productData'] : array()));
@@ -154,9 +151,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             $document->setUrl($this->_getValueFromArray('url', $productData));
 
             try {
-                Varien_Profiler::start(__CLASS__.__METHOD__." DocumentRepositoryAdd");
                 $result = $this->documentRepository->add($document);
-                Varien_Profiler::stop(__CLASS__.__METHOD__." DocumentRepositoryAdd");
                 if (!isset(self::$statistics[$result])) {
                     self::$statistics[$result] = 0;
                 }
@@ -176,7 +171,6 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             unset($document, $rawDocument, $documentList[$index]);
         }
         unset($documentList);
-        Varien_Profiler::stop(__CLASS__.__METHOD__);
     }
 
     /**
@@ -196,7 +190,6 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
      */
     protected function _documentToXmlFragment(Apache_Solr_Document $document)
     {
-        Varien_Profiler::start(__CLASS__.__METHOD__);
         $writer = new XMLWriter();
         $writer->openMemory();
         $writer->startDocument('1.0', 'UTF-8');
@@ -291,7 +284,6 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             Mage::log($return);
         }
 
-        Varien_Profiler::stop(__CLASS__.__METHOD__);
         return $return;
     }
 
