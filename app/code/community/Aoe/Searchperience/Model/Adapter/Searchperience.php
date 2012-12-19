@@ -17,6 +17,29 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     protected $_indexData = array();
 
     /**
+     * Special cases for attribute times
+     *
+     * @var array
+     */
+    protected $_attributeTimes = array(
+        'special_from_date' => array(
+            'hour'   => '00',
+            'minute' => '00',
+            'second' => '01',
+        ),
+        'special_to_date' => array(
+            'hour'   => '23',
+            'minute' => '59',
+            'second' => '59',
+        ),
+        'default' => array(
+            'hour'   => '00',
+            'minute' => '00',
+            'second' => '01',
+        ),
+    );
+
+    /**
      * Constructor
      *
      * @param array $options
@@ -336,7 +359,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                     if ($backendType == 'datetime') {
                         if (is_array($attributeValue)) {
                             foreach ($attributeValue as &$val) {
-                                $val = $this->_getSolrDate($storeId, $val);
+                                $val = $this->_getSolrDate($storeId, $val, $attributeCode);
                                 if (!empty($val)) {
                                     $preparedValue[] = $val;
                                 }
@@ -344,7 +367,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                             unset($val); //clear link to value
                             $preparedValue = array_unique($preparedValue);
                         } else {
-                            $preparedValue = $this->_getSolrDate($storeId, $attributeValue);
+                            $preparedValue = $this->_getSolrDate($storeId, $attributeValue, $attributeCode);
                         }
                     }
                 }
@@ -486,10 +509,11 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
      *
      * @param int $storeId
      * @param string $date
+     * @param string $attributeName
      *
      * @return string|null
      */
-    protected function _getSolrDate($storeId, $date = null)
+    protected function _getSolrDate($storeId, $date = null, $attributeName)
     {
         if (!isset($this->_dateFormats[$storeId])) {
             $timezone = Mage::getStoreConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_TIMEZONE, $storeId);
@@ -499,7 +523,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             $dateObj  = new Zend_Date(null, null, $locale);
             $dateObj->setTimezone($timezone);
             $this->_dateFormats[$storeId] = array($dateObj, $locale->getTranslation(null, 'date', $locale));
-}
+        }
 
         if (is_empty_date($date)) {
             return null;
@@ -507,6 +531,12 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
         list($dateObj, $localeDateFormat) = $this->_dateFormats[$storeId];
         $dateObj->setDate($date, $localeDateFormat);
+
+        // set special times as defined in class variable
+        $attributeTimesKey = (isset($this->_attributeTimes[$attributeName]) ? $attributeName : 'default');
+        $dateObj->set($this->_attributeTimes[$attributeTimesKey]['hour'],   Zend_Date::HOUR);
+        $dateObj->set($this->_attributeTimes[$attributeTimesKey]['minute'], Zend_Date::MINUTE);
+        $dateObj->set($this->_attributeTimes[$attributeTimesKey]['second'], Zend_Date::SECOND);
 
         return $dateObj->getTimestamp();
     }
