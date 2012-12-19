@@ -12,7 +12,7 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
     protected function _rebuildStoreIndex($storeId, $productIds = null)
     {
 //        xhprof_enable(XHPROF_FLAGS_CPU + XHPROF_FLAGS_MEMORY);
-
+		Varien_Profiler::start(__CLASS__.__METHOD__);
         // prepare searchable attributes
         $staticFields = array();
         foreach ($this->_getSearchableAttributes('static') as $attribute) {
@@ -105,10 +105,11 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
 //        $profiler_url = sprintf('http://qvc.vbox/xhprof_html/index.php?run=%s&source=%s', $run_id, $profiler_namespace);
 //
 //        Mage::log($profiler_url);
+        Varien_Profiler::stop(__CLASS__.__METHOD__);
         if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
             Mage::log('statistics: ' . var_export(Aoe_Searchperience_Model_Client_Searchperience::$statistics, true));
         }
-
+		
         return $this;
     }
 

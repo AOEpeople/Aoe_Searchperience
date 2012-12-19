@@ -17,6 +17,6 @@ class Aoe_Searchperience_Model_Indexer_Indexer
             $indexProcess->reindexAll();
         }
 
-        return $this;
+        return "Documents processed, by status code: " . PHP_EOL . var_export(Aoe_Searchperience_Model_Client_Searchperience::$statistics, true);
     }
 }
