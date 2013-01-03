@@ -140,12 +140,10 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
      * @return string
      */
     protected function getAvailabilitySpeakingName($availability) {
-        if($availability === ''){
-            return $availability;
-        }
-        switch(intval($availability)) {
+        switch(filter_var($availability, FILTER_VALIDATE_INT)) {
             case 0: return 'out_of_stock';
             case 1: return 'in_stock';
+            default: return $availability;
         }
     }
 
@@ -168,11 +166,11 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         if (!$this->isAvailableInIndex($productIndexData, $productId)) {
             return false;
         }
-
+        Mage::log("productId: ".$productId." ".var_export($productIndexData['in_stock'], true));
         $returnData  = array(
             'storeid'  => $storeId,
             'language' => Mage::getStoreConfig('general/locale/code', $storeId),
-            'in_stock' => $this->getAvailabilitySpeakingName(!empty($productIndexData['in_stock']) ? $productIndexData['in_stock'] : ''),
+            'in_stock' => $this->getAvailabilitySpeakingName(isset($productIndexData['in_stock']) ? $productIndexData['in_stock'] : ''),
         );
 
         /** @var $product Mage_Catalog_Model_Product */
