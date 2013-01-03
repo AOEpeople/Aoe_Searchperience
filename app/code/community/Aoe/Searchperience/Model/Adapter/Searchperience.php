@@ -166,7 +166,6 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         if (!$this->isAvailableInIndex($productIndexData, $productId)) {
             return false;
         }
-        Mage::log("productId: ".$productId." ".var_export($productIndexData['in_stock'], true));
         $returnData  = array(
             'storeid'  => $storeId,
             'language' => Mage::getStoreConfig('general/locale/code', $storeId),
