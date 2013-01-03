@@ -89,11 +89,11 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         if (!is_array($docData) || empty($docData)) {
             return array();
         }
-       Varien_Profiler::start(__CLASS__.__METHOD__);
+        Varien_Profiler::start(__CLASS__.__METHOD__);
         $docs = array();
         foreach ($docData as $productId => $productIndexData) {
             $doc = new $this->_clientDocObjectName;
-          $productIndexData = $this->_prepareIndexProductData($productIndexData, $productId, $storeId);
+            $productIndexData = $this->_prepareIndexProductData($productIndexData, $productId, $storeId);
 
             if (!$productIndexData) {
                 continue;
@@ -103,7 +103,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             $docs[] = $doc;
           unset($docData[$productId]);
         }
-       Varien_Profiler::stop(__CLASS__.__METHOD__);
+        Varien_Profiler::stop(__CLASS__.__METHOD__);
         return $docs;
     }
 
@@ -136,6 +136,20 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     }
 
     /**
+     * @param $availability
+     * @return string
+     */
+    protected function getAvailabilitySpeakingName($availability) {
+        if($availability === ''){
+            return $availability;
+        }
+        switch(intval($availability)) {
+            case 0: return 'out_of_stock';
+            case 1: return 'in_stock';
+        }
+    }
+
+    /**
      * Prepare index data for using in search engine metadata.
      * Prepare fields for advanced search, navigation, sorting and fulltext fields for each search weight for
      * quick search and spell.
@@ -158,7 +172,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         $returnData  = array(
             'storeid'  => $storeId,
             'language' => Mage::getStoreConfig('general/locale/code', $storeId),
-            'in_stock' => (!empty($productIndexData['in_stock']) ? $productIndexData['in_stock'] : ''),
+            'in_stock' => $this->getAvailabilitySpeakingName(!empty($productIndexData['in_stock']) ? $productIndexData['in_stock'] : ''),
         );
 
         /** @var $product Mage_Catalog_Model_Product */
