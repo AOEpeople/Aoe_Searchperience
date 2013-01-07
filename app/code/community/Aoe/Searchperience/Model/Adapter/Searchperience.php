@@ -116,6 +116,11 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
      */
     public function deleteDocs($docIDs = array(), $queries = null)
     {
+        // check if deletion of documents is allowed
+        if (!Mage::helper('aoe_searchperience')->isDeletionEnabled()) {
+            return $this;
+        }
+
         foreach ($queries as $query) {
             try {
                 $this->_client->getDocumentRepository()->deleteByForeignId($query);
@@ -568,32 +573,42 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
      * @param string $date
      * @param string $attributeName
      *
-     * @return string|null
+     * @return string|false
      */
     protected function _getSolrDate($storeId, $date = null, $attributeName)
     {
-        if (!isset($this->_dateFormats[$storeId])) {
-            $locale   = Mage::getStoreConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_LOCALE, $storeId);
-            $locale   = new Zend_Locale($locale);
+        $locale = Mage::getStoreConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_LOCALE, $storeId);
+        $locale = new Zend_Locale($locale);
 
-            $dateObj  = new Zend_Date(null, null, $locale);
-            $this->_dateFormats[$storeId] = array($dateObj, $locale->getTranslation(null, 'date', $locale));
+        try {
+            $parsedDate = Zend_Locale_Format::getDate(
+                $date,
+                array(
+                    'date_format' => $locale->getTranslation(
+                        null,
+                        'date',
+                        $locale
+                    ),
+                    'locale' => $locale,
+                    'format_type' => 'iso'
+                )
+            );
+        } catch (Exception $e) {
+            Mage::logException($e);
+            return false;
         }
-
-        if (is_empty_date($date)) {
-            return null;
-        }
-
-        list($dateObj, $localeDateFormat) = $this->_dateFormats[$storeId];
-        $dateObj->setDate($date, $localeDateFormat);
 
         // set special times as defined in class variable
         $attributeTimesKey = (isset($this->_attributeTimes[$attributeName]) ? $attributeName : 'default');
-        $dateObj->set($this->_attributeTimes[$attributeTimesKey]['hour'],   Zend_Date::HOUR);
-        $dateObj->set($this->_attributeTimes[$attributeTimesKey]['minute'], Zend_Date::MINUTE);
-        $dateObj->set($this->_attributeTimes[$attributeTimesKey]['second'], Zend_Date::SECOND);
 
-        return $dateObj->getTimestamp();
+        return mktime(
+            $this->_attributeTimes[$attributeTimesKey]['hour'],
+            $this->_attributeTimes[$attributeTimesKey]['minute'],
+            $this->_attributeTimes[$attributeTimesKey]['second'],
+            $parsedDate['month'],
+            $parsedDate['day'],
+            $parsedDate['year']
+        );
     }
 
 }

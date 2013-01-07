@@ -16,6 +16,13 @@ class Aoe_Searchperience_Helper_Data extends Mage_Core_Helper_Abstract
      */
     protected $_loggingEnabled = null;
 
+    /**
+     * Holds result for checking if deletion is enabled
+     *
+     * @var boolean
+     */
+    protected $_deletionEnabled = null;
+
     public function isEnterprise()
     {
         return $this->isModuleEnabled('Enterprise_Search');
@@ -34,7 +41,7 @@ class Aoe_Searchperience_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Returns boolean value if login of this module is enabled
+     * Returns boolean value if logging of this module is enabled
      *
      * @return bool
      */
@@ -45,5 +52,19 @@ class Aoe_Searchperience_Helper_Data extends Mage_Core_Helper_Abstract
             $this->_loggingEnabled = ((null === $valueFromSettings) ? 0 : $valueFromSettings);
         }
         return $this->_loggingEnabled;
+    }
+
+    /**
+     * Returns boolean value if deletion of documents of this module is enabled
+     *
+     * @return bool
+     */
+    public function isDeletionEnabled()
+    {
+        if (null === $this->_deletionEnabled) {
+            $valueFromSettings = Mage::getStoreConfig('searchperience/searchperience/enableDocumentDeletion');
+            $this->_deletionEnabled = ((null === $valueFromSettings) ? 0 : $valueFromSettings);
+        }
+        return $this->_deletionEnabled;
     }
 }

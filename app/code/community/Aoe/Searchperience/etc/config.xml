@@ -121,6 +121,7 @@
                 <source>magento</source>
                 <listViewImageWidth>201</listViewImageWidth>
                 <listViewImageHeight>201</listViewImageHeight>
+                <enableDocumentDeletion>0</enableDocumentDeletion>
             </searchperience>
         </searchperience>
     </default>
