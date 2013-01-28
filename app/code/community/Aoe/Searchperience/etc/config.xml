@@ -133,4 +133,11 @@
             </searchperience_eventprocessing>
         </jobs>
     </crontab>
+    <phpunit>
+        <suite>
+            <modules>
+                <aoe_searchperience />
+            </modules>
+        </suite>
+    </phpunit>
 </config>
