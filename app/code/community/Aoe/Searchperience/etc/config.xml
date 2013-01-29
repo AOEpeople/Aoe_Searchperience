@@ -39,11 +39,6 @@
             </aoe_searchperience>
             <aoe_searchperience_resource>
                 <class>Aoe_Searchperience_Model_Resource</class>
-                <entities>
-                    <queue_item>
-                        <table>aoesearchperience_queue_item</table>
-                    </queue_item>
-                </entities>
             </aoe_searchperience_resource>
             <enterprise_search>
                 <rewrite>
@@ -136,7 +131,7 @@
     <phpunit>
         <suite>
             <modules>
-                <aoe_searchperience />
+                <Aoe_Searchperience/>
             </modules>
         </suite>
     </phpunit>
