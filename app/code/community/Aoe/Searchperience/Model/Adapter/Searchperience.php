@@ -130,11 +130,6 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                 }
             } catch (Exception $e) {
                 Mage::logException($e);
-                Mage::getSingleton('core/session')->addError(
-                    Mage::helper('core')->__(
-                        sprintf('Errors occured while trying to delete a document from repository: %s', $e->getMessage())
-                    )
-                );
             }
         }
         return $this;

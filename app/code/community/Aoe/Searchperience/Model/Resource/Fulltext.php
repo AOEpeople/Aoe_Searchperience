@@ -24,12 +24,6 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
             'datetime'  => array_keys($this->_getSearchableAttributes('datetime')),
         );
 
-        // status and visibility filter
-        $visibility     = $this->_getSearchableAttribute('visibility');
-        $status         = $this->_getSearchableAttribute('status');
-        $statusVals     = Mage::getSingleton('catalog/product_status')->getVisibleStatusIds();
-        $allowedVisibilityValues = $this->_engine->getAllowedVisibility();
-
         $lastProductId = 0;
         while (true) {
             $products = $this->_getSearchableProducts($storeId, $staticFields, $productIds, $lastProductId);
@@ -59,14 +53,25 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
                 }
 
                 $productAttr = $productAttributes[$productData['entity_id']];
-                if (!isset($productAttr[$visibility->getId()])
-                    || !in_array($productAttr[$visibility->getId()], $allowedVisibilityValues)
+                $hasParent   = true;
+
+                // determine has parent status and product id to process
+                if (false == ($productId = $this->_getParentProduct($productRelations, $productData['entity_id']))) {
+                    $productId = $productData['entity_id'];
+                    $hasParent = false;
+                }
+
+                // only clean index, if (parent) product is visible and enabled
+                if (
+                    !$this->_isProductVisible($productId, $productAttributes) ||
+                    !$this->_isProductEnabled($productId, $productAttributes)
                 ) {
                     $this->cleanIndex($storeId, $productIds);
                     continue;
                 }
-                if (!isset($productAttr[$status->getId()]) || !in_array($productAttr[$status->getId()], $statusVals)) {
-                    $this->cleanIndex($storeId, $productIds);
+
+                // only process products, which are parent products
+                if (false !== $hasParent) {
                     continue;
                 }
 
@@ -111,5 +116,70 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
             $value = preg_replace('#<\s*br\s*/?\s*>#', ' ', $value);
         }
         return parent::_getAttributeValue($attributeId, $value, $storeId);
+    }
+
+    /**
+     * Checks if product is visible
+     *
+     * @param   int     $productId
+     * @param   array   $productAttributes
+     * @return bool
+     */
+    protected function _isProductVisible($productId, $productAttributes)
+    {
+        $visibility              = $this->_getSearchableAttribute('visibility');
+        $allowedVisibilityValues = $this->_engine->getAllowedVisibility();
+        $productAttr             = $productAttributes[$productId];
+
+        if (!isset($productAttr[$visibility->getId()])
+            || !in_array($productAttr[$visibility->getId()], $allowedVisibilityValues)
+        ) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Checks if product is enabled
+     *
+     * @param $productId
+     * @param $productAttributes
+     * @return bool
+     */
+    protected function _isProductEnabled($productId, $productAttributes)
+    {
+        $status      = $this->_getSearchableAttribute('status');
+        $statusVals  = Mage::getSingleton('catalog/product_status')->getVisibleStatusIds();
+        $productAttr = $productAttributes[$productId];
+
+        if (!isset($productAttr[$status->getId()]) || !in_array($productAttr[$status->getId()], $statusVals)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks, if given product is the child product of
+     * determined relation structure and returns parent id
+     *
+     * @param $productRelations
+     * @param $productId
+     * @return int|bool
+     */
+    protected function _getParentProduct($productRelations, $productId)
+    {
+        // check if product is a parent product
+        if (isset($productRelations[$productId])) {
+            return false;
+        }
+
+        // no parent product, check if it is a child
+        foreach ($productRelations as $parent => $listOfChildren) {
+            if (is_array($listOfChildren) && in_array($productId, $listOfChildren)) {
+                return $parent;
+            }
+        }
+        return false;
     }
 }
