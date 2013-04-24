@@ -23,6 +23,13 @@ class Aoe_Searchperience_Helper_Data extends Mage_Core_Helper_Abstract
      */
     protected $_deletionEnabled = null;
 
+    /**
+     * Holds result for checking if recommendation tracking is enabled
+     *
+     * @var boolean
+     */
+    protected $_recommendationTrackingEnabled = null;
+
     public function isEnterprise()
     {
         return $this->isModuleEnabled('Enterprise_Search');
@@ -66,5 +73,19 @@ class Aoe_Searchperience_Helper_Data extends Mage_Core_Helper_Abstract
             $this->_deletionEnabled = ((null === $valueFromSettings) ? 0 : $valueFromSettings);
         }
         return $this->_deletionEnabled;
+    }
+
+    /**
+     * Returns boolean value if recommendation tracking is enabled
+     *
+     * @return bool
+     */
+    public function isRecommendationTrackingEnabled()
+    {
+        if (null === $this->_recommendationTrackingEnabled) {
+            $valueFromSettings = Mage::getStoreConfig('searchperience/searchperience/enableRecommendationTracking');
+            $this->_recommendationTrackingEnabled = ((null === $valueFromSettings) ? 0 : $valueFromSettings);
+        }
+        return $this->_recommendationTrackingEnabled;
     }
 }

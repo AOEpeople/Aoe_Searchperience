@@ -1,0 +1,12 @@
+<?php if (Mage::helper('aoe_searchperience')->isRecommendationTrackingEnabled()): ?>
+<script type="text/javascript">
+    // FINDME
+    var ____tu = '<?php echo Mage::getStoreConfig('searchperience/searchperience/recommendationTrackingScriptUrl') ?>';
+    var ____td = ____td || [];
+    var ____tq = ____tq || [];
+    (function() {
+        var tr = document.createElement('script'); tr.type = 'text/javascript'; tr.async = true; tr.src = ____tu + 't.min.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(tr, s);
+    })();
+</script>
+<?php endif; ?>

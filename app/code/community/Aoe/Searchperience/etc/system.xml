@@ -121,6 +121,24 @@
                             <show_in_store>1</show_in_store>
                             <sort_order>100</sort_order>
                         </enableDocumentDeletion>
+                        <enableRecommendationTracking translate="label" module="aoe_searchperience">
+                            <label>Enable recommendation tracking</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>110</sort_order>
+                        </enableRecommendationTracking>
+                        <recommendationTrackingScriptUrl translate="label" module="aoe_searchperience">
+                            <label>Recommendation Tracking Script URL</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>120</sort_order>
+                            <depends><enableRecommendationTracking>1</enableRecommendationTracking></depends>
+                        </recommendationTrackingScriptUrl>
                     </fields>
                 </searchperience>
                 <searchperience_config_js translate="label" module="aoe_searchperience">

@@ -117,6 +117,7 @@
                 <listViewImageWidth>201</listViewImageWidth>
                 <listViewImageHeight>201</listViewImageHeight>
                 <enableDocumentDeletion>0</enableDocumentDeletion>
+                <enableRecommendationTracking>0</enableRecommendationTracking>
             </searchperience>
         </searchperience>
     </default>
