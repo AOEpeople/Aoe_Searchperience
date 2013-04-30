@@ -24,5 +24,6 @@ app/etc/modules/*                                                           app/
 shell/*   		                                                            shell/
 
 #install searchperience api client
-@shell if ! [ -e $MODULE/composer.phar ]; then  (curl -s http://getcomposer.org/installer | php); fi
-@shell if ! [ -e $MODULE/composer.lock ]; then  ($MODULE/composer.phar install --no-interaction); else ($MODULE/composer.phar update --no-interaction); fi
+@shell if ! [ -e $MODULE/composer.phar ]; then (curl -s http://getcomposer.org/installer | php); fi
+@shell if   [ -e $MODULE/composer.phar ]; then ($MODULE/composer.phar self-update); fi
+@shell if ! [ -e $MODULE/composer.lock ]; then ($MODULE/composer.phar install --no-interaction); else ($MODULE/composer.phar update --no-interaction); fi
