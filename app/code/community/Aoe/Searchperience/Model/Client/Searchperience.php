@@ -132,7 +132,8 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
      * @param boolean $overwriteCommitted
      * @return void|false
      */
-    public function addDocuments($documentList, $allowDups = false, $overwritePending = true, $overwriteCommitted = true) {
+    public function addDocuments($documentList, $allowDups = false, $overwritePending = true, $overwriteCommitted = true)
+    {
         if (in_array(null, array($this->_customerKey, $this->_username, $this->_password, $this->_documentSource, $this->_baseUrl))) {
             Mage::getSingleton('core/session')->addError(
                 Mage::helper('core')->__('No valid connection settings for searchperience connection found!')
@@ -149,6 +150,10 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             $document->setSource($this->_documentSource);
             $document->setMimeType('application/searchperience+xml');
             $document->setUrl($this->_getValueFromArray('url', $productData));
+
+            if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+                Mage::log('document url: ' . $this->_getValueFromArray('url', $productData));
+            }
 
             try {
                 $result = $this->documentRepository->add($document);
