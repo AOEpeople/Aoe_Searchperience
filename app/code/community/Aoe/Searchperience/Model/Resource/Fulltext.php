@@ -3,6 +3,14 @@
 class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Model_Resource_Fulltext
 {
     /**
+     * Holds datetime attribute values
+     * before and after modification
+     *
+     * @var array
+     */
+    public static $dateTimeAttributeValues = array();
+
+    /**
      * Regenerate search index for specific store
      *
      * @param int $storeId Store View Id
@@ -92,6 +100,9 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
             }
 
             $this->_saveProductIndexes($storeId, $productIndexes);
+
+            // cleanup
+            self::$dateTimeAttributeValues = array();
         }
 
         $this->resetSearchResults();
@@ -99,7 +110,31 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
         if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
             Mage::log('statistics: ' . var_export(Aoe_Searchperience_Model_Client_Searchperience::$statistics, true));
         }
+
         return $this;
+    }
+
+    /**
+     * Prepare Fulltext index value for product
+     *
+     * @param array $indexData
+     * @param array $productData
+     * @param int $storeId
+     * @return string
+     */
+    protected function _prepareProductIndex($indexData, $productData, $storeId)
+    {
+        // store original values for later usage
+        foreach ($indexData as $entityId => $attributeData) {
+            foreach ($attributeData as $attributeId => $attributeValue) {
+                $attribute = $this->_getSearchableAttribute($attributeId);
+                if ($attribute->getBackendType() == 'datetime') {
+                    self::$dateTimeAttributeValues[$entityId][$attributeId] = $attributeValue;
+                }
+            }
+        }
+
+        return parent::_prepareProductIndex($indexData, $productData, $storeId);
     }
 
     /**
@@ -115,6 +150,7 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
         if (is_string($value)) {
             $value = preg_replace('#<\s*br\s*/?\s*>#', ' ', $value);
         }
+
         return parent::_getAttributeValue($attributeId, $value, $storeId);
     }
 
@@ -136,6 +172,7 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
         ) {
             return false;
         }
+
         return true;
     }
 
@@ -180,6 +217,7 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
                 return $parent;
             }
         }
+
         return false;
     }
 }

@@ -10,6 +10,29 @@ class Aoe_Searchperience_Helper_Data extends Mage_Core_Helper_Abstract
 {
 
     /**
+     * Special cases for attribute times
+     *
+     * @var array
+     */
+    protected $_attributeTimes = array(
+        'special_from_date' => array(
+            'hour'   => '00',
+            'minute' => '00',
+            'second' => '01',
+        ),
+        'special_to_date' => array(
+            'hour'   => '23',
+            'minute' => '59',
+            'second' => '59',
+        ),
+        'default' => array(
+            'hour'   => '00',
+            'minute' => '00',
+            'second' => '01',
+        ),
+    );
+
+    /**
      * Holds result for checking if logging is enabled
      *
      * @var boolean
@@ -87,5 +110,55 @@ class Aoe_Searchperience_Helper_Data extends Mage_Core_Helper_Abstract
             $this->_recommendationTrackingEnabled = ((null === $valueFromSettings) ? 0 : $valueFromSettings);
         }
         return $this->_recommendationTrackingEnabled;
+    }
+
+    /**
+     * Retrieve date value as timestamp
+     *
+     * @param int $storeId
+     * @param string $date
+     * @param string $attributeName
+     * @param array  $time
+     *
+     * @return string|false
+     */
+    public function getTimestampForAttribute($storeId, $date = null, $attributeName)
+    {
+        if (empty($date)) {
+            return false;
+        }
+
+        $locale = Mage::getStoreConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_LOCALE, $storeId);
+        $locale = new Zend_Locale($locale);
+
+        try {
+            $parsedDate = Zend_Locale_Format::getDate(
+                $date,
+                array(
+                    'date_format' => $locale->getTranslation(
+                        null,
+                        'date',
+                        $locale
+                    ),
+                    'locale' => $locale,
+                    'format_type' => 'iso'
+                )
+            );
+        } catch (Exception $e) {
+            Mage::logException($e);
+            return false;
+        }
+
+        // set special times as defined in class variable
+        $attributeTimesKey = (isset($this->_attributeTimes[$attributeName]) ? $attributeName : 'default');
+
+        return mktime(
+            $this->_attributeTimes[$attributeTimesKey]['hour'],
+            $this->_attributeTimes[$attributeTimesKey]['minute'],
+            $this->_attributeTimes[$attributeTimesKey]['second'],
+            $parsedDate['month'],
+            $parsedDate['day'],
+            $parsedDate['year']
+        );
     }
 }
