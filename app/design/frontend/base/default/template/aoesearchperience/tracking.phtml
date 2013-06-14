@@ -1,6 +1,6 @@
 <?php if (Mage::helper('aoe_searchperience')->isRecommendationTrackingEnabled()): ?>
 <script type="text/javascript">
-    var ____tu = '<?php echo Mage::getStoreConfig('searchperience/searchperience/recommendationTrackingScriptUrl') ?>';
+    var ____tu = '<?php echo rtrim(Mage::getStoreConfig('searchperience/searchperience/recommendationTrackingScriptUrl'), '/') . '/' ?>';
     var ____td = ____td || [];
     var ____tq = ____tq || [];
     (function() {
