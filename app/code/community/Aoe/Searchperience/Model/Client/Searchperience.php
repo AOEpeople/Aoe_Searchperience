@@ -57,11 +57,11 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
     public  function __construct($options)
     {
         // fetching settings from magento backend
-        $this->_customerKey    = Mage::getStoreConfig('searchperience/searchperience/customer_key', 'default');
-        $this->_username       = Mage::getStoreConfig('searchperience/searchperience/username',     'default');
-        $this->_password       = Mage::getStoreConfig('searchperience/searchperience/password',     'default');
-        $this->_baseUrl        = Mage::getStoreConfig('searchperience/searchperience/api',          'default');
-        $this->_documentSource = Mage::getStoreConfig('searchperience/searchperience/source',       'default');
+        $this->_customerKey    = Mage::getStoreConfig('searchperience/searchperience/customer_key');
+        $this->_username       = Mage::getStoreConfig('searchperience/searchperience/username');
+        $this->_password       = Mage::getStoreConfig('searchperience/searchperience/password');
+        $this->_baseUrl        = Mage::getStoreConfig('searchperience/searchperience/api');
+        $this->_documentSource = Mage::getStoreConfig('searchperience/searchperience/source');
 
         //\Searchperience\Common\Factory::$HTTP_DEBUG = true;
         $this->documentRepository = \Searchperience\Common\Factory::getDocumentRepository(
