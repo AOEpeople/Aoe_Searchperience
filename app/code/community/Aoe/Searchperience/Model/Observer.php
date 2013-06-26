@@ -6,6 +6,8 @@ class Aoe_Searchperience_Model_Observer{
 	/**
 	 * Store searchable attributes at adapter to avoid new collection load there
 	 *
+     * @event catelogsearch_searchable_attributes_load_after
+     *
 	 * @param Varien_Event_Observer $observer
 	 */
 	public function storeSearchableAttributes(Varien_Event_Observer $observer)

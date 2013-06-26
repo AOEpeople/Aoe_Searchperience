@@ -197,7 +197,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                 continue;
             }
 
-            if (is_array($value)) {
+            if (is_array($value) && isset($value[$productId])) {
                 $returnData['productData'][$attributeCode] = $value[$productId];
             }
             else {
@@ -463,11 +463,14 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                         unset($data['categories'][$categoryId]);
                         continue 2;
                     }
-                    $cat = $this->categories[$storeId][$pathCategoryId];
-                    if ($cat['level'] > 1) {
-                        $pathPart = $cat['name'];
-                        $pathPart = str_replace('/','&#47;', $pathPart);
-                        $path[] = $pathPart;
+
+                    if (isset($this->categories[$storeId]) && isset($this->categories[$storeId][$pathCategoryId])) {
+                        $cat = $this->categories[$storeId][$pathCategoryId];
+                        if ($cat['level'] > 1) {
+                            $pathPart = $cat['name'];
+                            $pathPart = str_replace('/','&#47;', $pathPart);
+                            $path[] = $pathPart;
+                        }
                     }
                 }
                 $data['categories'][$categoryId]['path'] = implode('/', $path);
@@ -522,7 +525,8 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         );
 
         foreach ($attributes as $attributeCode => $getMethod) {
-          $data['productData']['images'][$attributeCode] = $product->$getMethod($width, $height);
+
+         // $data['productData']['images'][$attributeCode] = $product->$getMethod($width, $height);
         }
        return $data;
     }
