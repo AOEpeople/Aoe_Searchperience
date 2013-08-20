@@ -161,11 +161,43 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         // fetch review data for requested product
         Mage::getModel('review/review')->getEntitySummary($product, $storeId);
 
+        // Set store as product store to avoid url param additions
+        $currentStore = Mage::app()->getStore();
+        Mage::app()->setCurrentStore($storeId);
+
         $returnData['productData']['id']     = $productId;
         $returnData['productData']['sku']    = $productIndexData['sku'];
         $returnData['productData']['url']    = $product->getProductUrl();
         $returnData['productData']['unique'] = $searchperienceHelper->getProductUniqueId($productId, $storeId);
         $returnData['productData']['rating'] = $product->getRatingSummary()->getRatingSummary();
+
+        // Generate the single product listing html
+        $block = Mage::app()->getLayout()->createBlock('heath_catalog/product_list_singleBlock'); /* @var $_block Heath_Catalog_Block_Product_List_SingleBlock */
+        $block->setProduct($product);
+        $block->setArea('frontend');
+
+        // override admin store design settings via stores section
+        // TODO move to method/find better way
+        Mage::getDesign()
+            ->setArea('frontend')
+            ->setPackageName('heath')
+            ->setTheme('heath')
+        ;
+
+        $returnData['productData']['content']= $block->toHtml();
+
+        // reset admin design package data
+        // TODO find a better way
+        Mage::getDesign()
+            ->setArea('adminhtml')
+            ->setPackageName((string)Mage::getConfig()->getNode('stores/admin/design/package/name'))
+            ->setTheme((string)Mage::getConfig()->getNode('stores/admin/design/theme/default'))
+        ;
+        foreach (array('layout', 'template', 'skin', 'locale') as $type) {
+            if ($value = (string)Mage::getConfig()->getNode("stores/admin/design/theme/{$type}")) {
+                Mage::getDesign()->setTheme($type, $value);
+            }
+        }
 
         $this->_usedFields   = array_merge($this->_usedFields, array('id', 'description', 'short_description', 'price', 'name', 'tax_class_id'));
 
@@ -216,6 +248,9 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         $options = new Varien_Object();
         $options->setIndexData($returnData);
         $options->setProduct($product);
+
+        // Reset store
+        Mage::app()->setCurrentStore($currentStore);
 
         Mage::dispatchEvent(
             'aoe_searchperience_prepareIndexProductData_after',
@@ -519,16 +554,23 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
         // define attributes and get methods
         $attributes = array(
-            'thumbnail'   => 'getThumbnailUrl',
-            'image'       => 'getImageUrl',
-            'small_image' => 'getSmallImageUrl',
+            'thumbnail',
+            'image',
+            'small_image',
         );
 
-        foreach ($attributes as $attributeCode => $getMethod) {
+        $imageHelper = Mage::helper('catalog/image'); /* @var $imageHelper Mage_Catalog_Helper_Image */
 
-         // $data['productData']['images'][$attributeCode] = $product->$getMethod($width, $height);
+        foreach ($attributes as $attributeCode) {
+            try {
+                $data['productData']['images'][$attributeCode] = $imageHelper->init($product, $attributeCode)->resize($width, $height);
+            } catch (Exception $e) {
+                Mage::logException($e);
+            }
+
         }
-       return $data;
+
+        return $data;
     }
 
     /**

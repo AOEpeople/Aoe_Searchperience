@@ -148,7 +148,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             $document->setContent($this->_documentToXmlFragment($rawDocument));
             $document->setForeignId($this->_getValueFromArray('unique', $productData));
             $document->setSource($this->_documentSource);
-            $document->setMimeType('application/searchperience+xml');
+            $document->setMimeType('text/xml');
             $document->setUrl($this->_getValueFromArray('url', $productData));
 
             if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
@@ -208,6 +208,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             'special_price'     => 'special_price',
             'group_price'       => 'group_price',
             'rating'            => 'rating',
+            'content'           => 'content',
         );
         $documentData = $document->getData();
         $productData  = ((isset($documentData['productData']) ? $documentData['productData'] : array()));
@@ -221,7 +222,9 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 
         // add product data to xml
         foreach ($documentFields as $elementName => $productDataName) {
-            $writer->writeElement($elementName, $this->_getValueFromArray($productDataName, $productData));
+            $writer->startElement($elementName);
+            $writer->writeCData($this->_getValueFromArray($productDataName, $productData));
+            $writer->endElement();
         }
 
         // add category information to xml
