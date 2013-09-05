@@ -35,13 +35,16 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
         $lastProductId = 0;
         while (true) {
             $products = $this->_getSearchableProducts($storeId, $staticFields, $productIds, $lastProductId);
+            if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+                Mage::log('[Aoe_Searchperience] Number of searchable products found: ' . count($products));
+            }
             if (!$products) {
                 break;
             }
 
             $productAttributes = array();
             $productRelations  = array();
-            foreach ($products as $productData) {
+            foreach ($products as $productData) { /* @var $productData array */
                 $lastProductId = $productData['entity_id'];
                 $productAttributes[$productData['entity_id']] = $productData['entity_id'];
                 $productChildren = $this->_getProductChildIds($productData['entity_id'], $productData['type_id']);

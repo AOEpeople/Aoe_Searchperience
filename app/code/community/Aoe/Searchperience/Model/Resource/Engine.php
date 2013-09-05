@@ -1,7 +1,7 @@
 <?php
 //Strict Notice: Declaration of Aoe_Searchperience_Model_Resource_Engine::_getAdapterModel()
 //    should be compatible with that of Enterprise_Search_Model_Resource_Engine::_getAdapterModel()
-//    in /var/www/qvc/dev/.modman/Aoe_Searchperience/app/code/community/Aoe/Searchperience/Model/Resource/Engine.php on line 4
+//    in .modman/Aoe_Searchperience/app/code/community/Aoe/Searchperience/Model/Resource/Engine.php on line 4
 class Aoe_Searchperience_Model_Resource_Engine extends Enterprise_Search_Model_Resource_Engine
 {
     /**
