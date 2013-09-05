@@ -171,34 +171,6 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         $returnData['productData']['unique'] = $searchperienceHelper->getProductUniqueId($productId, $storeId);
         $returnData['productData']['rating'] = $product->getRatingSummary()->getRatingSummary();
 
-        // Generate the single product listing html
-        $block = Mage::app()->getLayout()->createBlock('heath_catalog/product_list_singleBlock'); /* @var $_block Heath_Catalog_Block_Product_List_SingleBlock */
-        $block->setProduct($product);
-        $block->setArea('frontend');
-
-        // override admin store design settings via stores section
-        // TODO move to method/find better way
-        Mage::getDesign()
-            ->setArea('frontend')
-            ->setPackageName('heath')
-            ->setTheme('heath')
-        ;
-
-        $returnData['productData']['content']= $block->toHtml();
-
-        // reset admin design package data
-        // TODO find a better way
-        Mage::getDesign()
-            ->setArea('adminhtml')
-            ->setPackageName((string)Mage::getConfig()->getNode('stores/admin/design/package/name'))
-            ->setTheme((string)Mage::getConfig()->getNode('stores/admin/design/theme/default'))
-        ;
-        foreach (array('layout', 'template', 'skin', 'locale') as $type) {
-            if ($value = (string)Mage::getConfig()->getNode("stores/admin/design/theme/{$type}")) {
-                Mage::getDesign()->setTheme($type, $value);
-            }
-        }
-
         $this->_usedFields   = array_merge($this->_usedFields, array('id', 'description', 'short_description', 'price', 'name', 'tax_class_id'));
 
         // fetch price information
