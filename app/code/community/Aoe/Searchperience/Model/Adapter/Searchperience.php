@@ -220,6 +220,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         $options = new Varien_Object();
         $options->setIndexData($returnData);
         $options->setProduct($product);
+        $options->setStoreId($storeId);
 
         // Reset store
         Mage::app()->setCurrentStore($currentStore);
