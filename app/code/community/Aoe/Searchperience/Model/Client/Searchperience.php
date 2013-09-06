@@ -149,10 +149,12 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             $document->setForeignId($this->_getValueFromArray('unique', $productData));
             $document->setSource($this->_documentSource);
             $document->setMimeType('text/xml');
-            $document->setUrl($this->_getValueFromArray('url', $productData));
+
+            $url = $this->_getValueFromArray('url', $productData);
+            $document->setUrl($url);
 
             if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                Mage::log('document url: ' . $this->_getValueFromArray('url', $productData));
+                Mage::log('[Aoe_Searchperience] Document url: ' . $url);
             }
 
             try {
