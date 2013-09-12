@@ -9,40 +9,40 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
      *
      * @var string
      */
-    private $_customerKey;
+    protected $_customerKey;
 
     /**
      * Searchperience API username
      *
      * @var string
      */
-    private $_username;
+    protected $_username;
 
     /**
      * Searchperience API password
      *
      * @var string
      */
-    private $_password;
+    protected $_password;
 
     /**
      * Searchperience API base URL
      *
      * @var string
      */
-    private $_baseUrl;
+    protected $_baseUrl;
 
     /**
      * Searchperience API document source
      *
      * @var string
      */
-    private $_documentSource;
+    protected $_documentSource;
 
     /**
      * @var Searchperience\Api\Client\Domain\DocumentRepository
      */
-    private $documentRepository;
+    protected $documentRepository;
 
     /**
      * Some statistics about transactions with API
@@ -149,12 +149,10 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             $document->setForeignId($this->_getValueFromArray('unique', $productData));
             $document->setSource($this->_documentSource);
             $document->setMimeType('text/xml');
-
-            $url = $this->_getValueFromArray('url', $productData);
-            $document->setUrl($url);
+            $document->setUrl($this->_getValueFromArray('url', $productData));
 
             if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                Mage::log('[Aoe_Searchperience] Document url: ' . $url);
+                Mage::log('document url: ' . $this->_getValueFromArray('url', $productData));
             }
 
             try {
