@@ -5,7 +5,7 @@
             <label>
                 <![CDATA[<img class="sp_logo" src="/skin/adminhtml/default/default/images/searchperience/searchperience-logo.png" alt="Searchperience" />]]></label>
             <tab>general</tab>
-            <sort_order>1</sort_order>
+            <sort_order>10000</sort_order>
             <show_in_default>1</show_in_default>
             <show_in_website>1</show_in_website>
             <show_in_store>1</show_in_store>
