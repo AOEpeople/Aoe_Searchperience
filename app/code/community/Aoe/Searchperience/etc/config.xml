@@ -93,8 +93,8 @@
     <default>
         <searchperience>
             <searchperience_config_js>
-                <enableInnerShiv>false</enableInnerShiv>
-                <doWidgetInit>false</doWidgetInit>
+                <enableInnerShiv>0</enableInnerShiv>
+                <doWidgetInit>0</doWidgetInit>
                 <aoeSolrDataTypeSuggest>jsonp</aoeSolrDataTypeSuggest>
                 <aoeSolrDataTypeLivesearch>jsonp</aoeSolrDataTypeLivesearch>
                 <aoeSolrDataTypeSearch>jsonp</aoeSolrDataTypeSearch>
