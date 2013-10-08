@@ -536,7 +536,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
         foreach ($attributes as $attributeCode) {
             try {
-                $data['productData']['images'][$attributeCode] = $imageHelper->init($product, $attributeCode)->resize($width, $height);
+                $data['productData']['images'][$attributeCode] = $imageHelper->init($product, $attributeCode)->resize($width, $height)->__toString();
             } catch (Exception $e) {
                 Mage::logException($e);
             }
