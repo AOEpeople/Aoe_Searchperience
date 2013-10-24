@@ -80,10 +80,8 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
      * @param array $rawQueries Expected to be utf-8 encoded
      * @param boolean $fromPending
      * @param boolean $fromCommitted
-     * @param float $timeout Maximum expected duration of the delete operation on the server (otherwise, will throw a communication exception)
+     * @param int $timeout Maximum expected duration of the delete operation on the server (otherwise, will throw a communication exception)
      * @return Apache_Solr_Response
-     *
-     * @throws Exception If an error occurs during the service call
      */
     public function deleteByQueries($rawQueries, $fromPending = true, $fromCommitted = true, $timeout = 3600)
     {
@@ -105,10 +103,8 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
      * @param boolean $optimize Defaults to true
      * @param boolean $waitFlush Defaults to true
      * @param boolean $waitSearcher Defaults to true
-     * @param float $timeout Maximum expected duration (in seconds) of the commit operation on the server (otherwise, will throw a communication exception). Defaults to 1 hour
+     * @param int $timeout Maximum expected duration (in seconds) of the commit operation on the server (otherwise, will throw a communication exception). Defaults to 1 hour
      * @return Apache_Solr_Response
-     *
-     * @throws Exception If an error occurs during the service call
      */
     public function commit($optimize = true, $waitFlush = true, $waitSearcher = true, $timeout = 3600)
     {
@@ -191,12 +187,15 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
     /**
      * Create an XML fragment from a {@link Apache_Solr_Document} instance appropriate for use inside a Solr add call
      *
+     * @param Apache_Solr_Document $document
      * @return string
      */
     protected function _documentToXmlFragment(Apache_Solr_Document $document)
     {
         $writer = new XMLWriter();
         $writer->openMemory();
+        $writer->setIndent(true);
+        $writer->setIndentString("\t");
         $writer->startDocument('1.0', 'UTF-8');
         $writer->startElement('product');
         $documentFields = array(
@@ -298,9 +297,10 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
     /**
      * Used for extracting values from arrays
      *
-     * @param $key      Key of data to extract
-     * @param $array    Array with data to extract from
-     * @param $default  Default return value if key not found in array
+     * @param string $key      Key of data to extract
+     * @param array $array    Array with data to extract from
+     * @param string $default  Default return value if key not found in array
+     * @return string
      */
     private function _getValueFromArray($key, array $array, $default = '')
     {
