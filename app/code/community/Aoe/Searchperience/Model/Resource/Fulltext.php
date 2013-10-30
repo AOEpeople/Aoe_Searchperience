@@ -28,6 +28,8 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
      */
     protected $threadCounter = 0;
 
+    protected $threadBatchSize = 100;
+
 
 
     /**
@@ -58,7 +60,7 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
 
         $lastProductId = 0;
         while (true) {
-            $products = $this->_getSearchableProducts($storeId, $staticFields, $productIds, $lastProductId, 100);
+            $products = $this->_getSearchableProducts($storeId, $staticFields, $productIds, $lastProductId, $this->threadBatchSize);
             if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
                 Mage::log('[Aoe_Searchperience] Number of searchable products found: ' . count($products));
             }
@@ -78,6 +80,10 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
                         $productAttributes[$productChildId] = $productChildId;
                     }
                 }
+            }
+
+            if (class_exists('Enterprise_Index_Model_Lock')) {
+                Enterprise_Index_Model_Lock::getInstance()->shutdownReleaseLocks();
             }
 
             Mage::getSingleton('core/resource')->getConnection('core_write')->closeConnection();
@@ -232,7 +238,6 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
      */
     public function processBatch($storeId, $productIds, array $productAttributes, array $dynamicFields, array $products, array $productRelations)
     {
-        Mage::log('[Aoe_Searchperience] Memory: ' . memory_get_usage());
         $productIndexes = array();
         $productAttributes = $this->_getProductAttributes($storeId, $productAttributes, $dynamicFields);
         foreach ($products as $productData) {
