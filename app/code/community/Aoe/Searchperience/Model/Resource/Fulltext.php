@@ -10,6 +10,26 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
      */
     public static $dateTimeAttributeValues = array();
 
+
+    /**
+     * Thread pool size
+     *
+     * @var int
+     */
+    protected $threadPoolSize = 10;
+
+    /**
+     * @var Threadi_Pool
+     */
+    protected $threadPool;
+
+    /**
+     * @var int thread counter
+     */
+    protected $threadCounter = 0;
+
+
+
     /**
      * Regenerate search index for specific store
      *
@@ -32,9 +52,13 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
             'datetime'  => array_keys($this->_getSearchableAttributes('datetime')),
         );
 
+        require_once 'Threadi/Loader.php';
+
+        $this->threadPool = new Threadi_Pool($this->threadPoolSize);
+
         $lastProductId = 0;
         while (true) {
-            $products = $this->_getSearchableProducts($storeId, $staticFields, $productIds, $lastProductId);
+            $products = $this->_getSearchableProducts($storeId, $staticFields, $productIds, $lastProductId, 100);
             if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
                 Mage::log('[Aoe_Searchperience] Number of searchable products found: ' . count($products));
             }
@@ -56,57 +80,30 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
                 }
             }
 
-            $productIndexes    = array();
-            $productAttributes = $this->_getProductAttributes($storeId, $productAttributes, $dynamicFields);
-            foreach ($products as $productData) {
-                if (!isset($productAttributes[$productData['entity_id']])) {
-                    continue;
-                }
+            Mage::getSingleton('core/resource')->getConnection('core_write')->closeConnection();
+            $this->_connections = array(); // delete cached connections
 
-                $productAttr = $productAttributes[$productData['entity_id']];
-                $hasParent   = true;
 
-                // determine has parent status and product id to process
-                if (false == ($productId = $this->_getParentProduct($productRelations, $productData['entity_id']))) {
-                    $productId = $productData['entity_id'];
-                    $hasParent = false;
-                }
+            // Wait until there is a free slot in the pool
+            $this->threadPool->waitTillReady();
 
-                // only clean index, if (parent) product is visible and enabled
-                if (
-                    !$this->_isProductVisible($productId, $productAttributes) ||
-                    !$this->_isProductEnabled($productId, $productAttributes)
-                ) {
-                    $this->cleanIndex($storeId, $productIds);
-                    continue;
-                }
+            // create new thread
+            $this->threadCounter++;
+            $thread = new Threadi_Thread_PHPThread(array($this, 'processBatch'));
+            $thread->start($storeId, $productIds, $productAttributes, $dynamicFields, $products, $productRelations);
 
-                // only process products, which are parent products
-                if (false !== $hasParent) {
-                    continue;
-                }
+            // append it to the pool
+            $this->threadPool->add($thread);
 
-                $productIndex = array(
-                    $productData['entity_id'] => $productAttr
-                );
+            Mage::log('[Aoe_Searchperience] Starting a new thread: ' . $this->threadCounter);
 
-                if ($productChildren = $productRelations[$productData['entity_id']]) {
-                    foreach ($productChildren as $productChildId) {
-                        if (isset($productAttributes[$productChildId])) {
-                            $productIndex[$productChildId] = $productAttributes[$productChildId];
-                        }
-                    }
-                }
-                $index = $this->_prepareProductIndex($productIndex, $productData, $storeId);
-
-                $productIndexes[$productData['entity_id']] = $index;
-            }
-
-            $this->_saveProductIndexes($storeId, $productIndexes);
+            // $this->processBatch($storeId, $productIds, $productAttributes, $dynamicFields, $products, $productRelations);
 
             // cleanup
             self::$dateTimeAttributeValues = array();
         }
+
+        $this->threadPool->waitTillAllReady();
 
         $this->resetSearchResults();
 
@@ -222,5 +219,66 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
         }
 
         return false;
+    }
+
+    /**
+     * @param $storeId
+     * @param $productIds
+     * @param array $productAttributes
+     * @param array $dynamicFields
+     * @param array $products
+     * @param array $productRelations
+     * @return array
+     */
+    public function processBatch($storeId, $productIds, array $productAttributes, array $dynamicFields, array $products, array $productRelations)
+    {
+        Mage::log('[Aoe_Searchperience] Memory: ' . memory_get_usage());
+        $productIndexes = array();
+        $productAttributes = $this->_getProductAttributes($storeId, $productAttributes, $dynamicFields);
+        foreach ($products as $productData) {
+            if (!isset($productAttributes[$productData['entity_id']])) {
+                continue;
+            }
+
+            $productAttr = $productAttributes[$productData['entity_id']];
+            $hasParent = true;
+
+            // determine has parent status and product id to process
+            if (false == ($productId = $this->_getParentProduct($productRelations, $productData['entity_id']))) {
+                $productId = $productData['entity_id'];
+                $hasParent = false;
+            }
+
+            // only clean index, if (parent) product is visible and enabled
+            if (
+                !$this->_isProductVisible($productId, $productAttributes) ||
+                !$this->_isProductEnabled($productId, $productAttributes)
+            ) {
+                $this->cleanIndex($storeId, $productIds);
+                continue;
+            }
+
+            // only process products, which are parent products
+            if (false !== $hasParent) {
+                continue;
+            }
+
+            $productIndex = array(
+                $productData['entity_id'] => $productAttr
+            );
+
+            if ($productChildren = $productRelations[$productData['entity_id']]) {
+                foreach ($productChildren as $productChildId) {
+                    if (isset($productAttributes[$productChildId])) {
+                        $productIndex[$productChildId] = $productAttributes[$productChildId];
+                    }
+                }
+            }
+            $index = $this->_prepareProductIndex($productIndex, $productData, $storeId);
+
+            $productIndexes[$productData['entity_id']] = $index;
+        }
+
+        $this->_saveProductIndexes($storeId, $productIndexes);
     }
 }
