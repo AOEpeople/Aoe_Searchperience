@@ -223,6 +223,9 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
         foreach ($documentFields as $elementName => $productDataName) {
             $writer->startElement($elementName);
             $writer->writeCData($this->_getValueFromArray($productDataName, $productData));
+            if (isset($documentData['attributesUsedForSearching'][$elementName])) {
+                $writer->writeAttribute('forsearching', $documentData['attributesUsedForSearching'][$elementName]);
+            }
             $writer->endElement();
         }
 
@@ -248,6 +251,9 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             }
             if (isset($documentData['attributesUsedForFiltering'][$key])) {
                 $writer->writeAttribute('forfaceting', $documentData['attributesUsedForFiltering'][$key]);
+            }
+            if (isset($documentData['attributesUsedForSearching'][$key])) {
+                $writer->writeAttribute('forsearching', $documentData['attributesUsedForSearching'][$key]);
             }
 //            if (isset($documentData['attributeTypes'][$key]) && ($documentData['attributeTypes'][$key] != 'date')) {
 //                $writer->writeAttribute('forsearching', 1);
