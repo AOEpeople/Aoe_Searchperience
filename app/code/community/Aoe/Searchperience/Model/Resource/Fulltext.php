@@ -62,7 +62,11 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
         while (true) {
             $products = $this->_getSearchableProducts($storeId, $staticFields, $productIds, $lastProductId, $this->threadBatchSize);
             if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                Mage::log('[Aoe_Searchperience] Number of searchable products found: ' . count($products));
+                $message = sprintf('[Aoe_Searchperience] Found "%s" searchable products in store "%s".', count($products), $storeId);
+                if (!is_null($productIds)) {
+                    $message .= ' (productIds: ' . implode(', ',$productIds) . ')';
+                }
+                Mage::log($message);
             }
             if (!$products) {
                 break;
