@@ -95,7 +95,7 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
 
             // create new thread
             $this->threadCounter++;
-            $thread = new Threadi_Thread_PHPThread(array($this, 'processBatch'));
+            $thread = Threadi_ThreadFactory::getThread(array($this, 'processBatch'));
             $thread->start($storeId, $productIds, $productAttributes, $dynamicFields, $products, $productRelations);
 
             // append it to the pool
