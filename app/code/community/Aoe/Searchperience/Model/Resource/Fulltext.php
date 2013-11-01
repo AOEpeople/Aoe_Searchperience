@@ -41,6 +41,11 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
      */
     protected function _rebuildStoreIndex($storeId, $productIds = null)
     {
+
+        if (!Mage::getStoreConfigFlag('searchperience/searchperience/enablePushingDocumentsToSearchperience')) {
+            return;
+        }
+
         // prepare searchable attributes
         $staticFields = array();
         foreach ($this->_getSearchableAttributes('static') as $attribute) {

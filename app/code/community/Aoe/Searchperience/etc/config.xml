@@ -118,6 +118,7 @@
                 <listViewImageHeight>201</listViewImageHeight>
                 <enableDocumentDeletion>0</enableDocumentDeletion>
                 <enableRecommendationTracking>0</enableRecommendationTracking>
+                <enablePushingDocumentsToSearchperience>1</enablePushingDocumentsToSearchperience>
             </searchperience>
         </searchperience>
     </default>

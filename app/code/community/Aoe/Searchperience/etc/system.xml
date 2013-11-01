@@ -139,6 +139,16 @@
                             <sort_order>120</sort_order>
                             <depends><enableRecommendationTracking>1</enableRecommendationTracking></depends>
                         </recommendationTrackingScriptUrl>
+                        <enablePushingDocumentsToSearchperience translate="label" module="aoe_searchperience">
+                            <label>Enable pushing documents to Searchperience</label>
+                            <frontend_type>select</frontend_type>
+                            <comment><![CDATA[Disable pushing documents globally or for specific stores here (e.g. for development environments)]]></comment>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>100</sort_order>
+                        </enablePushingDocumentsToSearchperience>
                     </fields>
                 </searchperience>
                 <searchperience_config_js translate="label" module="aoe_searchperience">
