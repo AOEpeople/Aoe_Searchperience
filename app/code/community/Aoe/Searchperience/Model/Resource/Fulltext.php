@@ -42,7 +42,10 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
     protected function _rebuildStoreIndex($storeId, $productIds = null)
     {
 
-        if (!Mage::getStoreConfigFlag('searchperience/searchperience/enablePushingDocumentsToSearchperience')) {
+        if (!Mage::getStoreConfigFlag('searchperience/searchperience/enablePushingDocumentsToSearchperience', $storeId)) {
+            if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+                Mage::log(sprintf('[Aoe_Searchperience] Skipping indexing for store "%s" because of enablePushingDocumentsToSearchperience', $storeId));
+            }
             return;
         }
 
