@@ -163,9 +163,13 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
                 }
             } catch (Exception $e) {
                 Mage::logException($e);
+                $message = $e->getMessage();
+                if (strlen($message) > 200) {
+                    $message = substr($message, 0, 200) . ' ... (find full message in var/log/exception.log)';
+                }
                 Mage::getSingleton('core/session')->addError(
                     Mage::helper('core')->__(
-                        sprintf('Errors occured while trying to add document to repository: %s', $e->getMessage())
+                        sprintf('Errors occured while trying to add document to repository: %s', $message)
                     )
                 );
             }
