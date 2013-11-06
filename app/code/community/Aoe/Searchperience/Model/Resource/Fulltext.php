@@ -16,7 +16,7 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
      *
      * @var int
      */
-    protected $threadPoolSize = 10;
+    protected $threadPoolSize = 1;
 
     /**
      * @var Threadi_Pool
@@ -28,7 +28,7 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
      */
     protected $threadCounter = 0;
 
-    protected $threadBatchSize = 100;
+    protected $threadBatchSize = 5;
 
 
 
@@ -94,20 +94,22 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
                 }
             }
 
-            if (class_exists('Enterprise_Index_Model_Lock')) {
-                Enterprise_Index_Model_Lock::getInstance()->shutdownReleaseLocks();
-            }
-
-            Mage::getSingleton('core/resource')->getConnection('core_write')->closeConnection();
-            $this->_connections = array(); // delete cached connections
-
-
             // Wait until there is a free slot in the pool
             $this->threadPool->waitTillReady();
 
             // create new thread
             $this->threadCounter++;
             $thread = Threadi_ThreadFactory::getThread(array($this, 'processBatch'));
+
+            if (!$thread instanceof Threadi_Thread_NonThread) {
+                Mage::getSingleton('core/resource')->getConnection('core_write')->closeConnection();
+                $this->_connections = array(); // delete cached connections
+
+                if (class_exists('Enterprise_Index_Model_Lock')) {
+                    Enterprise_Index_Model_Lock::getInstance()->shutdownReleaseLocks();
+                }
+            }
+
             $thread->start($storeId, $productIds, $productAttributes, $dynamicFields, $products, $productRelations);
 
             // append it to the pool
