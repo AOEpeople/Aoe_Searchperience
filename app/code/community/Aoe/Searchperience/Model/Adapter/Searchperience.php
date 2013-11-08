@@ -154,7 +154,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         $product = Mage::registry('product');
 
         // product not found in registry or is not equal to given productId, load from database
-        if ((null === $product) || ($product->getId() != $productId)) {
+        if ((null === $product) || ($product->getId() != $productId) || ($product->getStoreId() != $storeId)) {
             $product = Mage::getModel('catalog/product')->setStoreId($storeId)->load($productId);
         }
 
@@ -177,7 +177,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         $returnData = $this->_getProductPriceInformation($product, $returnData);
 
         // fetch image information
-       $returnData = $this->_getProductImageInformation($product, $returnData);
+        $returnData = $this->_getProductImageInformation($product, $returnData);
 
         $returnData = $this->fillProductCategoryInformation($product, $returnData);
 
