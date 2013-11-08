@@ -6,7 +6,6 @@
             <codePool>community</codePool>
             <depends>
                 <Mage_CatalogSearch/>
-                <Aoe_Index/>
                 <Aoe_Threadi/>
             </depends>
         </Aoe_Searchperience>
