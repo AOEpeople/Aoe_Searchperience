@@ -26,6 +26,11 @@
             <aoe_searchperience>
                 <class>Aoe_Searchperience_Helper</class>
             </aoe_searchperience>
+            <enterprise_catalogsearch>
+                <rewrite>
+                    <data>Aoe_Searchperience_Helper_Enterprise</data>
+                </rewrite>
+            </enterprise_catalogsearch>
         </helpers>
         <models>
             <catalogsearch_resource>
