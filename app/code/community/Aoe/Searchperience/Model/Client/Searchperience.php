@@ -148,7 +148,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             $document->setUrl($this->_getValueFromArray('url', $productData));
 
             if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                Mage::log('document url: ' . $this->_getValueFromArray('url', $productData));
+                Mage::log('[Aoe_Searchperience] Document url: ' . $document->getUrl());
             }
 
             try {
@@ -159,7 +159,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
                 self::$statistics[$result]++;
 
                 if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                    Mage::log('Searchperience API log result: ' . $result);
+                    Mage::log('[Aoe_Searchperience] API HTTP Response status code: ' . $result);
                 }
             } catch (Exception $e) {
                 Mage::logException($e);
@@ -298,7 +298,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
         $return = $this->_stripCtrlChars($writer->outputMemory(true));
 
         if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-            Mage::log($return);
+            Mage::log('[Aoe_Searchperience] Generated XML Document: ' . $return);
         }
 
         return $return;
