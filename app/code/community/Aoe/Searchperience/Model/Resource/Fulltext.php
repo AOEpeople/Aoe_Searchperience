@@ -28,7 +28,7 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
      */
     protected $threadCounter = 0;
 
-    protected $threadBatchSize = 5;
+    protected $threadBatchSize = 100;
 
 
 
@@ -69,15 +69,17 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
         $lastProductId = 0;
         while (true) {
             $products = $this->_getSearchableProducts($storeId, $staticFields, $productIds, $lastProductId, $this->threadBatchSize);
+
+            if (!$products) {
+                break;
+            }
+
             if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
                 $message = sprintf('[Aoe_Searchperience] Found "%s" searchable products in store "%s".', count($products), $storeId);
                 if (!is_null($productIds)) {
                     $message .= ' (productIds: ' . implode(', ',$productIds) . ')';
                 }
                 Mage::log($message);
-            }
-            if (!$products) {
-                break;
             }
 
             $productAttributes = array();
