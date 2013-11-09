@@ -26,11 +26,6 @@
             <aoe_searchperience>
                 <class>Aoe_Searchperience_Helper</class>
             </aoe_searchperience>
-            <enterprise_catalogsearch>
-                <rewrite>
-                    <data>Aoe_Searchperience_Helper_Enterprise</data>
-                </rewrite>
-            </enterprise_catalogsearch>
         </helpers>
         <models>
             <catalogsearch_resource>
@@ -51,6 +46,11 @@
                     <adminhtml_system_config_backend_engine>Aoe_Searchperience_Model_Adminhtml_System_Config_Backend_Engine</adminhtml_system_config_backend_engine>
                 </rewrite>
             </enterprise_search>
+            <!--<enterprise_catalogsearch>
+                <rewrite>
+                    <indexer_fulltext>Aoe_Searchperience_Model_Indexer_Fulltext</indexer_fulltext>
+                </rewrite>
+            </enterprise_catalogsearch>-->
         </models>
         <resources>
             <aoe_searchperience_setup>
@@ -73,6 +73,21 @@
             </catelogsearch_searchable_attributes_load_after>
             <!--<aoe_searchperience_prepareIndexProductData_after/>-->
         </events>
+
+        <index>
+            <indexer>
+                <catalogsearch_fulltext>
+                    <model>aoe_searchperience/indexer_fulltext</model>
+                    <action_model>
+                        <changelog>aoe_searchperience/index_action_searchperience_refresh_changelog</changelog>
+                        <all>aoe_searchperience/index_action_searchperience_refresh</all>
+                    </action_model>
+                    <index_table>catalogsearch_fulltext</index_table>
+                    <sort_order>100</sort_order>
+                </catalogsearch_fulltext>
+            </indexer>
+        </index>
+
     </global>
 
     <frontend>
@@ -127,14 +142,6 @@
             </searchperience>
         </searchperience>
     </default>
-    <crontab>
-        <jobs>
-            <searchperience_eventprocessing>
-                <schedule><cron_expr>*/1 * * * *</cron_expr></schedule>
-                <run><model>aoe_searchperience/indexer_indexer::reindexAll</model></run>
-            </searchperience_eventprocessing>
-        </jobs>
-    </crontab>
     <phpunit>
         <suite>
             <modules>

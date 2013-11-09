@@ -7,6 +7,15 @@
             <depends>
                 <Mage_CatalogSearch/>
                 <Aoe_Threadi/>
+                <Enterprise_Mview/>
+                <Enterprise_CatalogSearch/>
+                <!--
+                    This isn't really a dependency, but we need to make sure that we get loaded after
+                    Enterprise_CatalogSearch because Enterprise_CatalogSearch also is messing around with the
+                    indexer introduced in Mage_CatalogSearch.
+                    But as we're relying on Enterprise_Mview anyways we're already on Magento EE and Enterprise_CatalogSearch
+                    should be there.
+                -->
             </depends>
         </Aoe_Searchperience>
     </modules>

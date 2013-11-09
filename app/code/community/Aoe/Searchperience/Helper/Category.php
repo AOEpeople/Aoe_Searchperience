@@ -38,6 +38,7 @@ class Aoe_Searchperience_Helper_Category extends Mage_Core_Helper_Abstract
     /**
      * @param $categoryId
      * @param $storeId
+     * @param bool $addCounter
      * @return mixed
      */
     public function getPathForCategory($categoryId, $storeId, $addCounter=false) {

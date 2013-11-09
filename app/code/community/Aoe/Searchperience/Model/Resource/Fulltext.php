@@ -11,24 +11,9 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
     public static $dateTimeAttributeValues = array();
 
 
-    /**
-     * Thread pool size
-     *
-     * @var int
-     */
-    protected $threadPoolSize = 1;
 
-    /**
-     * @var Threadi_Pool
-     */
-    protected $threadPool;
 
-    /**
-     * @var int thread counter
-     */
-    protected $threadCounter = 0;
-
-    protected $threadBatchSize = 100;
+    protected $_limit = 100;
 
 
 
@@ -41,6 +26,11 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
      */
     protected function _rebuildStoreIndex($storeId, $productIds = null)
     {
+
+        if ($productIds === array()) {
+            // $this->_getSearchableProducts() won't find anything anyways
+            return;
+        }
 
         if (!Mage::getStoreConfigFlag('searchperience/searchperience/enablePushingDocumentsToSearchperience', $storeId)) {
             if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
@@ -62,23 +52,30 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
             'datetime'  => array_keys($this->_getSearchableAttributes('datetime')),
         );
 
-        require_once 'Threadi/Loader.php';
-
-        $this->threadPool = new Threadi_Pool($this->threadPoolSize);
-
         $lastProductId = 0;
+
+        $productsFound = array();
+
         while (true) {
-            $products = $this->_getSearchableProducts($storeId, $staticFields, $productIds, $lastProductId, $this->threadBatchSize);
+            $products = $this->_getSearchableProducts($storeId, $staticFields, $productIds, $lastProductId, $this->_limit);
 
             if (!$products) {
                 break;
             }
 
             if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                $message = sprintf('[Aoe_Searchperience] Found "%s" searchable products in store "%s".', count($products), $storeId);
+                $message = sprintf('[Aoe_Searchperience] Found "%s" searchable product(s) in store "%s".', count($products), $storeId);
                 if (!is_null($productIds)) {
-                    $message .= ' (productIds: ' . implode(', ',$productIds) . ')';
+                    $message .= ' (requested productIds: ' . implode(', ',$productIds) . ')';
                 }
+
+                $i = 0; $tmp = array();
+                foreach ($products as $productData) {
+                    $tmp[] = $productData['entity_id'];
+                    if ($i++ > 5) {  $tmp[] = '...'; break; }
+                }
+                $message .= ' (found productIds: ' . implode(', ', $tmp) . ')';
+
                 Mage::log($message);
             }
 
@@ -86,6 +83,7 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
             $productRelations  = array();
             foreach ($products as $productData) { /* @var $productData array */
                 $lastProductId = $productData['entity_id'];
+                $productsFound[] = $productData['entity_id'];
                 $productAttributes[$productData['entity_id']] = $productData['entity_id'];
                 $productChildren = $this->_getProductChildIds($productData['entity_id'], $productData['type_id']);
                 $productRelations[$productData['entity_id']] = $productChildren;
@@ -96,36 +94,18 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
                 }
             }
 
-            // Wait until there is a free slot in the pool
-            $this->threadPool->waitTillReady();
-
-            // create new thread
-            $this->threadCounter++;
-            $thread = Threadi_ThreadFactory::getThread(array($this, 'processBatch'));
-
-            if (!$thread instanceof Threadi_Thread_NonThread) {
-                Mage::getSingleton('core/resource')->getConnection('core_write')->closeConnection();
-                $this->_connections = array(); // delete cached connections
-
-                if (class_exists('Enterprise_Index_Model_Lock')) {
-                    Enterprise_Index_Model_Lock::getInstance()->shutdownReleaseLocks();
-                }
-            }
-
-            $thread->start($storeId, $productIds, $productAttributes, $dynamicFields, $products, $productRelations);
-
-            // append it to the pool
-            $this->threadPool->add($thread);
-
-            Mage::log('[Aoe_Searchperience] Starting a new thread: ' . $this->threadCounter);
-
-            // $this->processBatch($storeId, $productIds, $productAttributes, $dynamicFields, $products, $productRelations);
+            $this->processBatch($storeId, $productIds, $productAttributes, $dynamicFields, $products, $productRelations);
 
             // cleanup
             self::$dateTimeAttributeValues = array();
         }
 
-        $this->threadPool->waitTillAllReady();
+        if (!is_null($productIds)) {
+            $missingProducts = array_diff($productIds, $productsFound);
+            $this->cleanIndex($storeId, $missingProducts);
+        }
+
+        $this->finishProcessing();
 
         $this->resetSearchResults();
 
@@ -244,6 +224,16 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
     }
 
     /**
+     * Template method that will be called after everything is done (required in inheriting class using threadi)
+     */
+    protected function finishProcessing()
+    {
+        // NOOP
+    }
+
+    /**
+     * Wrapper method for actual processBatch (required in inheriting class using threadi)
+     *
      * @param $storeId
      * @param $productIds
      * @param array $productAttributes
@@ -253,6 +243,20 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
      * @return array
      */
     public function processBatch($storeId, $productIds, array $productAttributes, array $dynamicFields, array $products, array $productRelations)
+    {
+        return $this->_processBatch($storeId, $productIds, $productAttributes, $dynamicFields, $products, $productRelations);
+    }
+
+    /**
+     * @param $storeId
+     * @param $productIds
+     * @param array $productAttributes
+     * @param array $dynamicFields
+     * @param array $products
+     * @param array $productRelations
+     * @return array
+     */
+    public function _processBatch($storeId, $productIds, array $productAttributes, array $dynamicFields, array $products, array $productRelations)
     {
         $productIndexes = array();
         $productAttributes = $this->_getProductAttributes($storeId, $productAttributes, $dynamicFields);
