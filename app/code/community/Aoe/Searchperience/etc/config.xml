@@ -30,7 +30,8 @@
         <models>
             <catalogsearch_resource>
                 <rewrite>
-                    <fulltext>Aoe_Searchperience_Model_Resource_Fulltext</fulltext>
+                    <!--<fulltext>Aoe_Searchperience_Model_Resource_Fulltext</fulltext>-->
+                    <fulltext>Aoe_Searchperience_Model_Resource_Fulltext_Threadi</fulltext>
                 </rewrite>
             </catalogsearch_resource>
             <aoe_searchperience>
