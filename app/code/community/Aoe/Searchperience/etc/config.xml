@@ -72,15 +72,6 @@
                 </observers>
             </catelogsearch_searchable_attributes_load_after>
 
-            <!-- This event triggers reindexing while saving a product, but the changelog takes care anyways. -->
-            <catalog_category_product_partial_reindex>
-                <observers>
-                    <enterprise_search>
-                        <type>disabled</type>
-                    </enterprise_search>
-                </observers>
-            </catalog_category_product_partial_reindex>
-
             <!--<aoe_searchperience_prepareIndexProductData_after/>-->
         </events>
 
