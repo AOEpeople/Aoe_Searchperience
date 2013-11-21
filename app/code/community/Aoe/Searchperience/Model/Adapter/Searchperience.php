@@ -540,7 +540,10 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             try {
                 $data['productData']['images'][$attributeCode] = $imageHelper->init($product, $attributeCode)->resize($width, $height)->__toString();
             } catch (Exception $e) {
-                Mage::logException($e);
+                // Mage::logException($e);
+                if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+                    Mage::log(sprintf('[Aoe_Searchperience] Error while resizing "%s" image: %s', $attributeCode, $e->getMessage()));
+                }
             }
 
         }
