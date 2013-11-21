@@ -527,6 +527,10 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         $width  = Mage::getStoreConfig('searchperience/searchperience/listViewImageWidth');
         $height = Mage::getStoreConfig('searchperience/searchperience/listViewImageHeight');
 
+        if (empty($width) || empty($height)) {
+            return $data;
+        }
+
         // define attributes and get methods
         $attributes = array(
             'thumbnail',
