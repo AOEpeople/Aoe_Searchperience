@@ -9,6 +9,8 @@
 class Aoe_Searchperience_Helper_Data extends Mage_Core_Helper_Abstract
 {
 
+    CONST LOGFILE = 'searchperience.log';
+
     /**
      * Special cases for attribute times
      *
@@ -38,6 +40,13 @@ class Aoe_Searchperience_Helper_Data extends Mage_Core_Helper_Abstract
      * @var boolean
      */
     protected $_loggingEnabled = null;
+
+    /**
+     * Holds results for checking if full documents should be logged
+     *
+     * @var boolean
+     */
+    protected $_logFullDocuments = null;
 
     /**
      * Holds result for checking if deletion is enabled
@@ -82,6 +91,20 @@ class Aoe_Searchperience_Helper_Data extends Mage_Core_Helper_Abstract
             $this->_loggingEnabled = ((null === $valueFromSettings) ? 0 : $valueFromSettings);
         }
         return $this->_loggingEnabled;
+    }
+
+    /**
+     * Returns boolean value if logging of this module is enabled
+     *
+     * @return bool
+     */
+    public function isLogFullDocumentsEnabled()
+    {
+        if (null === $this->_logFullDocuments) {
+            $valueFromSettings = Mage::getStoreConfig('searchperience/searchperience/logFullDocuments');
+            $this->_logFullDocuments = ((null === $valueFromSettings) ? 0 : $valueFromSettings);
+        }
+        return $this->_logFullDocuments;
     }
 
     /**

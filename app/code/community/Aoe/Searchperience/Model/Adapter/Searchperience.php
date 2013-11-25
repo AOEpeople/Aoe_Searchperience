@@ -103,10 +103,14 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                 $this->_client->getDocumentRepository()->deleteByForeignId($query);
 
                 if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                    Mage::log(sprintf('[Aoe_Searchperience] Successfully deleted document with foreign id %s from repository', $query));
+                    Mage::log(sprintf('Successfully deleted document with foreign id %s from repository', $query), Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
                 }
             } catch (Exception $e) {
                 Mage::logException($e);
+
+                if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+                    Mage::log(sprintf('Error while deleting document with foreign id %s from repository', $query), Zend_Log::ERR, Aoe_Searchperience_Helper_Data::LOGFILE);
+                }
             }
         }
         return $this;
@@ -546,7 +550,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             } catch (Exception $e) {
                 // Mage::logException($e);
                 if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                    Mage::log(sprintf('[Aoe_Searchperience] Error while resizing "%s" image: %s', $attributeCode, $e->getMessage()));
+                    Mage::log(sprintf('Error while resizing "%s" image: %s', $attributeCode, $e->getMessage()), Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
                 }
             }
 

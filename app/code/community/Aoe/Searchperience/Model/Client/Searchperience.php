@@ -148,7 +148,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             $document->setUrl($this->_getValueFromArray('url', $productData));
 
             if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                Mage::log('[Aoe_Searchperience] Document url: ' . $document->getUrl());
+                Mage::log('Document url: ' . $document->getUrl(), Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
             }
 
             try {
@@ -159,7 +159,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
                 self::$statistics[$result]++;
 
                 if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                    Mage::log('[Aoe_Searchperience] API HTTP Response status code: ' . $result);
+                    Mage::log('API HTTP Response status code: ' . $result, Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
                 }
             } catch (Exception $e) {
                 Mage::logException($e);
@@ -173,7 +173,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
                     )
                 );
                 if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                    Mage::log(sprintf('[Aoe_Searchperience] Errors occured while trying to add document to repository: %s', $message));
+                    Mage::log(sprintf('Errors occured while trying to add document to repository: %s', $message), Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
                 }
             }
             unset($document, $rawDocument, $documentList[$index]);
@@ -300,8 +300,8 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
         // replace any control characters to avoid Solr XML parser exception
         $return = $this->_stripCtrlChars($writer->outputMemory(true));
 
-        if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-            Mage::log('[Aoe_Searchperience] Generated XML Document: ' . $return);
+        if (Mage::helper('aoe_searchperience')->isLoggingEnabled() && Mage::helper('aoe_searchperience')->isLogFullDocumentsEnabled()) {
+            Mage::log('Generated XML Document: ' . $return, Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
         }
 
         return $return;

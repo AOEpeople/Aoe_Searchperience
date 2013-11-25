@@ -34,7 +34,7 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
 
         if (!Mage::getStoreConfigFlag('searchperience/searchperience/enablePushingDocumentsToSearchperience', $storeId)) {
             if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                Mage::log(sprintf('[Aoe_Searchperience] Skipping indexing for store "%s" because of enablePushingDocumentsToSearchperience', $storeId));
+                Mage::log(sprintf('Skipping indexing for store "%s" because of enablePushingDocumentsToSearchperience', $storeId), Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
             }
             return;
         }
@@ -64,7 +64,7 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
             }
 
             if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                $message = sprintf('[Aoe_Searchperience] Found "%s" searchable product(s) in store "%s".', count($products), $storeId);
+                $message = sprintf('Found "%s" searchable product(s) in store "%s".', count($products), $storeId);
                 if (!is_null($productIds)) {
                     $message .= ' (requested productIds: ' . implode(', ',$productIds) . ')';
                 }
@@ -76,7 +76,7 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
                 }
                 $message .= ' (found productIds: ' . implode(', ', $tmp) . ')';
 
-                Mage::log($message);
+                Mage::log($message, Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
             }
 
             $productAttributes = array();
@@ -110,7 +110,7 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
         $this->resetSearchResults();
 
         if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-            Mage::log('statistics: ' . var_export(Aoe_Searchperience_Model_Client_Searchperience::$statistics, true));
+            Mage::log('statistics: ' . var_export(Aoe_Searchperience_Model_Client_Searchperience::$statistics, true), Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
         }
 
         return $this;

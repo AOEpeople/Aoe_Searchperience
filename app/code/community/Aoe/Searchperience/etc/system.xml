@@ -106,12 +106,23 @@
                         <enableDebuggingMode translate="label" module="aoe_searchperience">
                             <label>Enable debugging mode</label>
                             <frontend_type>select</frontend_type>
+                            <comment>Log will be written to var/log/searchperience.log</comment>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>90</sort_order>
                         </enableDebuggingMode>
+                        <logFullDocuments translate="label" module="aoe_searchperience">
+                            <label>Log full documents</label>
+                            <frontend_type>select</frontend_type>
+                            <comment>(Only if debug mode is enabled). Caution: This is very verbose!</comment>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>91</sort_order>
+                        </logFullDocuments>
                         <enableDocumentDeletion translate="label" module="aoe_searchperience">
                             <label>Enable document deletion</label>
                             <frontend_type>select</frontend_type>
