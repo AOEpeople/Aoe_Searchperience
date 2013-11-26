@@ -87,4 +87,15 @@ class Aoe_Searchperience_Model_Resource_Engine extends Enterprise_Search_Model_R
 
         return $this;
     }
+
+    /**
+     * Retrieve allowed visibility values for current engine
+     *
+     * @return array
+     */
+    public function getAllowedVisibility()
+    {
+        // return Mage::getSingleton('catalog/product_visibility')->getVisibleInSiteIds();
+        return Mage::getSingleton('catalog/product_visibility')->getVisibleInSearchIds();
+    }
 }

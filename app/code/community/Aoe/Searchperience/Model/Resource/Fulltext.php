@@ -102,7 +102,9 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
 
         if (!is_null($productIds)) {
             $missingProducts = array_diff($productIds, $productsFound);
-            $this->cleanIndex($storeId, $missingProducts);
+            if (count($missingProducts)) {
+                $this->cleanIndex($storeId, $missingProducts);
+            }
         }
 
         $this->finishProcessing();
@@ -224,6 +226,23 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
     }
 
     /**
+     * Delete search index data for store
+     *
+     * @param int $storeId Store View Id
+     * @param int $productId Product Entity Id
+     * @return Mage_CatalogSearch_Model_Resource_Fulltext
+     */
+    public function cleanIndex($storeId = null, $productId = null)
+    {
+        if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+            $stores = is_array($storeId) ? $storeId : array($storeId);
+            $products = is_array($productId) ? $productId : array($productId);
+            Mage::log(sprintf('[CLEAN] Product: "%s", Store "%s"', implode(', ', $products), implode(', ', $stores)), Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
+        }
+        return parent::cleanIndex($storeId, $productId);
+    }
+
+    /**
      * Template method that will be called after everything is done (required in inheriting class using threadi)
      */
     protected function finishProcessing()
@@ -279,7 +298,7 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
                 !$this->_isProductVisible($productId, $productAttributes) ||
                 !$this->_isProductEnabled($productId, $productAttributes)
             ) {
-                $this->cleanIndex($storeId, $productIds);
+                $this->cleanIndex($storeId, $productId);
                 continue;
             }
 
