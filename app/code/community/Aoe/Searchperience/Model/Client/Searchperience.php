@@ -147,10 +147,6 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             $document->setMimeType('text/xml');
             $document->setUrl($this->_getValueFromArray('url', $productData));
 
-            if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                Mage::log('Document url: ' . $document->getUrl(), Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
-            }
-
             try {
                 $result = $this->documentRepository->add($document);
                 if (!isset(self::$statistics[$result])) {
@@ -159,7 +155,14 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
                 self::$statistics[$result]++;
 
                 if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                    Mage::log('API HTTP Response status code: ' . $result, Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
+                    if ($result == 200) {
+                        $status = '[NEW]';
+                    } elseif ($result == 201) {
+                        $status = '[UPDATED]';
+                    } else {
+                        $status = '[STATUS: '.$result.']';
+                    }
+                    Mage::log($status .' ' . $document->getUrl(), Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
                 }
             } catch (Exception $e) {
                 Mage::logException($e);
@@ -173,7 +176,8 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
                     )
                 );
                 if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                    Mage::log(sprintf('Errors occured while trying to add document to repository: %s', $message), Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
+                    Mage::log('[ERROR] ' . $document->getUrl(), Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
+                    Mage::log($message, Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
                 }
             }
             unset($document, $rawDocument, $documentList[$index]);
