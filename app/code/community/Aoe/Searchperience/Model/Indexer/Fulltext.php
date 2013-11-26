@@ -34,4 +34,15 @@ class Aoe_Searchperience_Model_Indexer_Fulltext extends Mage_CatalogSearch_Model
         return Mage::helper('catalogsearch')->__('Pushes product updates to Searchperience');
     }
 
+    /**
+     * Rebuild all index data
+     * (but we don't need to do this in a transaction)
+     *
+     * @see parent method
+     */
+    public function reindexAll()
+    {
+        $this->_getIndexer()->rebuildIndex();
+    }
+
 }
