@@ -47,6 +47,11 @@
                     <adminhtml_system_config_backend_engine>Aoe_Searchperience_Model_Adminhtml_System_Config_Backend_Engine</adminhtml_system_config_backend_engine>
                 </rewrite>
             </enterprise_search>
+            <enterprise_index>
+                <rewrite>
+                    <resource_lock_resource>Aoe_Searchperience_Model_Resource_Lock_Resource</resource_lock_resource>
+                </rewrite>
+            </enterprise_index>
             <!--<enterprise_catalogsearch>
                 <rewrite>
                     <indexer_fulltext>Aoe_Searchperience_Model_Indexer_Fulltext</indexer_fulltext>
