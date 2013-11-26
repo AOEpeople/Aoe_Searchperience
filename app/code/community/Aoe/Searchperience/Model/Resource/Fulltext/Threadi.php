@@ -22,6 +22,11 @@ class Aoe_Searchperience_Model_Resource_Fulltext_Threadi extends Aoe_Searchperie
      */
     protected $threadCounter = 0;
 
+    /**
+     * @var bool
+     */
+    protected $realThreading;
+
 
     protected function _construct() {
         $this->threadPool = new Threadi_Pool($this->threadPoolSize);
@@ -49,7 +54,28 @@ class Aoe_Searchperience_Model_Resource_Fulltext_Threadi extends Aoe_Searchperie
         $this->threadCounter++;
         $thread = Threadi_ThreadFactory::getThread(array($this, '_processBatch'));
 
-        if (!$thread instanceof Threadi_Thread_NonThread) {
+        $this->realThreading = !($thread instanceof Threadi_Thread_NonThread);
+
+        $thread->start($storeId, $productIds, $productAttributes, $dynamicFields, $products, $productRelations);
+
+        // append it to the pool
+        $this->threadPool->add($thread);
+
+        // the main thread's connection also doesn't work anymore...
+        Mage::getSingleton('core/resource')->getConnection('core_write')->closeConnection();
+    }
+
+    /**
+     * @param $storeId
+     * @param $productIds
+     * @param array $productAttributes
+     * @param array $dynamicFields
+     * @param array $products
+     * @param array $productRelations
+     * @return array
+     */
+    public function _processBatch($storeId, $productIds, array $productAttributes, array $dynamicFields, array $products, array $productRelations) {
+        if ($this->realThreading) {
             Mage::getSingleton('core/resource')->getConnection('core_write')->closeConnection();
             $this->_connections = array(); // delete cached connections
 
@@ -57,17 +83,18 @@ class Aoe_Searchperience_Model_Resource_Fulltext_Threadi extends Aoe_Searchperie
                 Enterprise_Index_Model_Lock::getInstance()->shutdownReleaseLocks();
             }
         }
-
-        $thread->start($storeId, $productIds, $productAttributes, $dynamicFields, $products, $productRelations);
-
-        // append it to the pool
-        $this->threadPool->add($thread);
+        return parent::_processBatch($storeId, $productIds, $productAttributes, $dynamicFields, $products, $productRelations);
     }
 
 
     protected function finishProcessing()
     {
         $this->threadPool->waitTillAllReady();
+
+        $res = Mage::getSingleton('enterprise_index/resource_lock_resource'); /* @var $res Aoe_Searchperience_Model_Resource_Lock_Resource */
+        if (is_object($res) && $res instanceof Aoe_Searchperience_Model_Resource_Lock_Resource) {
+            $res->closeConnections();
+        }
     }
 
 }
