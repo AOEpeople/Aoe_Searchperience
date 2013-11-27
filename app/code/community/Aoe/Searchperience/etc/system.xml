@@ -160,6 +160,14 @@
                             <show_in_store>1</show_in_store>
                             <sort_order>100</sort_order>
                         </enablePushingDocumentsToSearchperience>
+                        <changelogIndexBatchSize translate="label" module="aoe_searchperience">
+                            <label>Number of items processed in a batch in changelog indexer</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <sort_order>150</sort_order>
+                        </changelogIndexBatchSize>
                     </fields>
                 </searchperience>
                 <searchperience_config_js translate="label" module="aoe_searchperience">

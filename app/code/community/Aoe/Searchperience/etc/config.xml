@@ -146,6 +146,7 @@
                 <enableDocumentDeletion>0</enableDocumentDeletion>
                 <enableRecommendationTracking>0</enableRecommendationTracking>
                 <enablePushingDocumentsToSearchperience>1</enablePushingDocumentsToSearchperience>
+                <changelogIndexBatchSize>1000</changelogIndexBatchSize>
             </searchperience>
         </searchperience>
     </default>

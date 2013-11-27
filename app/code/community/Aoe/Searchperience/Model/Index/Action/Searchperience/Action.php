@@ -144,15 +144,16 @@ abstract class Aoe_Searchperience_Model_Index_Action_Searchperience_Action imple
     protected function getChangeIds()
     {
         if (is_null($this->_changedIds)) {
-            /* @var $changelog Enterprise_Index_Model_Changelog */
+            /* @var $changelog Aoe_Searchperience_Model_Changelog */
             $changelog = $this->_factory->getModel(
-                'enterprise_index/changelog',
+                'aoe_searchperience/changelog',
                 array(
                     'connection' => $this->_connection,
                     'metadata' => $this->_metadata
                 )
             );
             $this->_changedIds = $changelog->loadByMetadata($this->_getLastVersionId());
+            $this->_lastVersionId = $changelog->getLastProcessedVersionId();
             $this->_changedIds = array_unique($this->_changedIds);
         }
         return $this->_changedIds;
