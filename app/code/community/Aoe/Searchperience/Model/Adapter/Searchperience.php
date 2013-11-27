@@ -105,6 +105,10 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                 if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
                     Mage::log(sprintf('Successfully deleted document with foreign id %s from repository', $query), Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
                 }
+            } catch (Searchperience\Common\Http\Exception\DocumentNotFoundException $e) {
+                if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+                    Mage::log(sprintf('Document with foreign id %s not found', $query), Zend_Log::INFO, Aoe_Searchperience_Helper_Data::LOGFILE);
+                }
             } catch (Exception $e) {
                 Mage::logException($e);
 
