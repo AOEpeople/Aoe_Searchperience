@@ -105,9 +105,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                 if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
                     Mage::log(sprintf('successfully deleted document with foreign id %s from repository', $query));
                 }
-            } catch (Exception $e) {
-                Mage::logException($e);
-            }
+            } catch (Exception $e) {}
         }
         return $this;
     }
