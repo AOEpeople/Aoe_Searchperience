@@ -465,6 +465,8 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         $storeId = $product->getStoreId();
         $this->fetchCategories($storeId);
 
+        // TODO: refactor using Aoe_Searchperience_Helper_Category
+        
         // fetch category information
         foreach ($product->getCategoryIds() as $categoryId) {
             if (!isset($returnData['categories'][$categoryId]) && isset($this->categories[$storeId][$categoryId])) {
@@ -486,7 +488,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                         $cat = $this->categories[$storeId][$pathCategoryId];
                         if ($cat['level'] > 1) {
                             $pathPart = $cat['name'];
-                            $pathPart = str_replace('/','&#47;', $pathPart);
+                            $pathPart = str_replace('/','\/', $pathPart);
                             $path[] = $pathPart;
                         }
                     }

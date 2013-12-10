@@ -59,7 +59,7 @@ class Aoe_Searchperience_Helper_Category extends Mage_Core_Helper_Abstract
                 $cat = $categories[$pathCategoryId]; /* @var $cat array */
                 if ($cat['level'] > 1) {
                     $pathPart = $cat['name'];
-                    $pathPart = str_replace('/','&#47;', $pathPart);
+                    $pathPart = str_replace('/','\/', $pathPart);
                     $path[] = $pathPart;
                 }
             }
