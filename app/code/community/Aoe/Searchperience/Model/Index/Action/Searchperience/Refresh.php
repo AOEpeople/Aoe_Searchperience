@@ -17,8 +17,17 @@ class Aoe_Searchperience_Model_Index_Action_Searchperience_Refresh extends Aoe_S
 
     protected function _execute()
     {
+
+        if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+            Mage::log('Full reindex started (refresh)', Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
+        }
+
         // Reindex all products
         $this->getFulltextResource()->rebuildIndex();
+
+        if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+            Mage::log('Full reindex finished (refresh)', Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
+        }
     }
 
     /**

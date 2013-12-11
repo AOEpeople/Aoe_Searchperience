@@ -42,7 +42,16 @@ class Aoe_Searchperience_Model_Indexer_Fulltext extends Mage_CatalogSearch_Model
      */
     public function reindexAll()
     {
+
+        if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+            Mage::log('Full reindex started', Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
+        }
+
         $this->_getIndexer()->rebuildIndex();
+
+        if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+            Mage::log('Full reindex finished', Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
+        }
     }
 
 }
