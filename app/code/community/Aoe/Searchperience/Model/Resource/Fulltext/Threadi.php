@@ -80,7 +80,11 @@ class Aoe_Searchperience_Model_Resource_Fulltext_Threadi extends Aoe_Searchperie
             $this->_connections = array(); // delete cached connections
 
             if (class_exists('Enterprise_Index_Model_Lock')) {
-                Enterprise_Index_Model_Lock::getInstance()->shutdownReleaseLocks();
+                try {
+                    Enterprise_Index_Model_Lock::getInstance()->shutdownReleaseLocks();
+                } catch (Exception $e) {
+                    // we don't care
+                }
             }
         }
         return parent::_processBatch($storeId, $productIds, $productAttributes, $dynamicFields, $products, $productRelations);
