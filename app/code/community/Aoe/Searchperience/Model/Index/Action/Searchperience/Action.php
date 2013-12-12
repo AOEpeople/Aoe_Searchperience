@@ -114,6 +114,10 @@ abstract class Aoe_Searchperience_Model_Index_Action_Searchperience_Action imple
 
             $this->_updateMetadata();
         } catch (Exception $e) {
+            Mage::logException($e);
+            if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+                Mage::log(sprintf('Setting invalid status because of exception "%s"', $e->getMessage()), Zend_Log::ERR, Aoe_Searchperience_Helper_Data::LOGFILE);
+            }
             $this->_metadata->setInvalidStatus()->save();
             throw new Enterprise_Index_Model_Action_Exception($e->getMessage(), $e->getCode());
         }
