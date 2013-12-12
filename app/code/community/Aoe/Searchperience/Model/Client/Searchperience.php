@@ -155,9 +155,9 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
                 self::$statistics[$result]++;
 
                 if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                    if ($result == 200) {
+                    if ($result == 201) {
                         $status = '[NEW]';
-                    } elseif ($result == 201) {
+                    } elseif ($result == 200) {
                         $status = '[UPDATED]';
                     } else {
                         $status = '[STATUS: '.$result.']';
