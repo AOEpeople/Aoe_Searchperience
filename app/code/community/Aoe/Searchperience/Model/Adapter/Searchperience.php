@@ -98,22 +98,41 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             return $this;
         }
 
-        foreach ($queries as $query) {
+        $documentRepository = $this->_client->getDocumentRepository(); /* @var $documentRepository Searchperience\Api\Client\Domain\DocumentRepository */
+
+        if ($queries === 'all' && count($docIDs) == 0) {
+
             try {
-                $this->_client->getDocumentRepository()->deleteByForeignId($query);
+                $documentRepository->deleteBySource(Mage::getStoreConfig('default/searchperience/source'));
 
                 if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                    Mage::log(sprintf('Successfully deleted document with foreign id %s from repository', $query), Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
-                }
-            } catch (Searchperience\Common\Http\Exception\DocumentNotFoundException $e) {
-                if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                    Mage::log(sprintf('Document with foreign id %s not found', $query), Zend_Log::INFO, Aoe_Searchperience_Helper_Data::LOGFILE);
+                    Mage::log('Successfully deleted all documents from repository', Zend_Log::INFO, Aoe_Searchperience_Helper_Data::LOGFILE);
                 }
             } catch (Exception $e) {
                 Mage::logException($e);
 
                 if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                    Mage::log(sprintf('Error while deleting document with foreign id %s from repository', $query), Zend_Log::ERR, Aoe_Searchperience_Helper_Data::LOGFILE);
+                    Mage::log('Error while deleting all documents from repository', Zend_Log::ERR, Aoe_Searchperience_Helper_Data::LOGFILE);
+                }
+            }
+        } else {
+            foreach ($docIDs as $docId) {
+                try {
+                    $documentRepository->deleteByForeignId($docId);
+
+                    if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+                        Mage::log(sprintf('Successfully deleted document with foreign id %s from repository', $docId), Zend_Log::INFO, Aoe_Searchperience_Helper_Data::LOGFILE);
+                    }
+                } catch (Searchperience\Common\Http\Exception\DocumentNotFoundException $e) {
+                    if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+                        Mage::log(sprintf('Document with foreign id %s not found', $docId), Zend_Log::INFO, Aoe_Searchperience_Helper_Data::LOGFILE);
+                    }
+                } catch (Exception $e) {
+                    Mage::logException($e);
+
+                    if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+                        Mage::log(sprintf('Error while deleting document with foreign id %s from repository', $docId), Zend_Log::ERR, Aoe_Searchperience_Helper_Data::LOGFILE);
+                    }
                 }
             }
         }
@@ -587,5 +606,33 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         }
 
         return false;
+    }
+
+    /**
+     * Get document info
+     *
+     * @param $productId
+     * @param $storeId
+     * @return array
+     */
+    public function getDocumentInfo($productId, $storeId) {
+        $client = $this->_client; /* @var $client Aoe_Searchperience_Model_Client_Searchperience */
+        $document = $client->getDocumentRepository()->getByForeignId(Mage::helper('aoe_searchperience')->getProductUniqueId($productId, $storeId));
+        return array(
+            'LastProcessing' => $document->getLastProcessing(),
+            'BoostFactor' => $document->getBoostFactor(),
+            'Id' => $document->getId(),
+            'IsMarkedForProcessing' => $document->getIsMarkedForProcessing(),
+            'IsMarkedForDeletion' => $document->getIsMarkedForDeletion(),
+            'IsProminent' => $document->getIsProminent(),
+            'NoIndex' => $document->getNoIndex(),
+            'Content' => $document->getContent(),
+            'ForeignId' => $document->getForeignId(),
+            'GeneralPriority' => $document->getGeneralPriority(),
+            'MimeType' => $document->getMimeType(),
+            'Source' => $document->getSource(),
+            'TemporaryPriority' => $document->getTemporaryPriority(),
+            'Url' => $document->getUrl(),
+        );
     }
 }

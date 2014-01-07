@@ -73,17 +73,17 @@ class Aoe_Searchperience_Model_Resource_Engine extends Enterprise_Search_Model_R
             $storeIds = (array) $storeIds;
         }
 
-        $queries = array();
+        $docIds = array();
         if (!empty($entityIds)) {
             $entityIds = (array) $entityIds;
             foreach ($storeIds as $storeId) {
                 foreach ($entityIds as $entityId) {
-                    $queries[] = Mage::helper('aoe_searchperience')->getProductUniqueId($entityId, $storeId);
+                    $docIds[] = Mage::helper('aoe_searchperience')->getProductUniqueId($entityId, $storeId);
                 }
             }
         }
 
-        $this->_adapter->deleteDocs(array(), $queries);
+        $this->_adapter->deleteDocs($docIds);
 
         return $this;
     }
