@@ -35,6 +35,42 @@ class Aoe_Searchperience_Shell_Searchperience extends Mage_Shell_Abstract
         return ' -productIds <csl of product ids> [-storeIds <csl of store ids, defaults to all stores>]';
     }
 
+
+
+    public function deleteIndexAction() {
+        $adapter = Mage::getSingleton('aoe_searchperience/adapter_searchperience'); /* @var $adapter Aoe_Searchperience_Model_Adapter_Searchperience */
+        $adapter->deleteDocs(array(), 'all');
+    }
+
+    public function deleteIndexActionHelp() {
+        return '    [[CAUTION! This will flush all products from the Searchperience index!]]';
+    }
+
+
+    public function getProductInfoAction() {
+
+        $productId = $this->getArg('productId');
+        if (empty($productId)) {
+            echo "No productId given\n";
+            exit(1);
+        }
+
+        $storeId = $this->getArg('storeId');
+        if (empty($storeId)) {
+            echo "No storeId given\n";
+            exit(1);
+        }
+
+        $adapter = Mage::getSingleton('aoe_searchperience/adapter_searchperience'); /* @var $adapter Aoe_Searchperience_Model_Adapter_Searchperience */
+        $info = $adapter->getDocumentInfo($productId, $storeId);
+
+        var_dump($info);
+    }
+
+    public function getProductInfoActionHelp() {
+        return ' -productId <product ids> -storeId <store id>';
+    }
+
     /** ****************************************************************************************************************
      * SHELL DISPATCHER
      **************************************************************************************************************** */
