@@ -1,12 +1,12 @@
 {
-"name": "aoemedia/aoesearchperience",
-"description": "PHP LIbrary to communitcate with the searchperience API",
-"homepage": "http://www.searchperience.com/",
-"license": "MIT",
-"require": {
-	"aoemedia/searchperience-api-client":"1.0.1"
-},
-"require-dev": {
-    "guzzle/plugin-log": "*"
-}
+    "name": "aoemedia/aoesearchperience",
+    "description": "PHP LIbrary to communitcate with the searchperience API",
+    "homepage": "http://www.searchperience.com/",
+    "license": "MIT",
+    "require": {
+        "aoemedia/searchperience-api-client": "1.1.0"
+    },
+    "require-dev": {
+        "guzzle/plugin-log": "*"
+    }
 }
