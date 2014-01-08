@@ -103,16 +103,23 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         if ($queries === 'all' && count($docIDs) == 0) {
 
             try {
-                $documentRepository->deleteBySource(Mage::getStoreConfig('default/searchperience/source'));
+                $source = Mage::getStoreConfig('searchperience/searchperience/source');
+                $statusCode = $documentRepository->deleteBySource($source);
 
-                if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                    Mage::log('Successfully deleted all documents from repository', Zend_Log::INFO, Aoe_Searchperience_Helper_Data::LOGFILE);
+                if ($statusCode == 200) {
+                    if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+                        Mage::log(sprintf('Successfully deleted all documents from repository for source "%s"', $source), Zend_Log::INFO, Aoe_Searchperience_Helper_Data::LOGFILE);
+                    }
+                } else {
+                    if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+                        Mage::log(sprintf('Error while deleting all documents from repository for source "%s" (Status Code: "%s")', $source, $statusCode), Zend_Log::ERR, Aoe_Searchperience_Helper_Data::LOGFILE);
+                    }
                 }
             } catch (Exception $e) {
                 Mage::logException($e);
 
                 if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                    Mage::log('Error while deleting all documents from repository', Zend_Log::ERR, Aoe_Searchperience_Helper_Data::LOGFILE);
+                    Mage::log(sprintf('Error while deleting all documents from repository for source "%s" (Message: "%s")', $source, $e->getMessage()), Zend_Log::ERR, Aoe_Searchperience_Helper_Data::LOGFILE);
                 }
             }
         } else {
