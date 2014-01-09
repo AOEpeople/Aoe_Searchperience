@@ -40,6 +40,10 @@
             </aoe_searchperience>
             <aoe_searchperience_resource>
                 <class>Aoe_Searchperience_Model_Resource</class>
+                <rewrite>
+                    <!--<fulltext>Aoe_Searchperience_Model_Resource_Fulltext</fulltext>-->
+                    <fulltext>Aoe_Searchperience_Model_Resource_Fulltext_Threadi</fulltext>
+                </rewrite>
             </aoe_searchperience_resource>
             <enterprise_search>
                 <rewrite>
