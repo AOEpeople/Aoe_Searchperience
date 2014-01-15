@@ -148,7 +148,9 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             $document->setUrl($this->_getValueFromArray('url', $productData));
 
             try {
+                $start = microtime(true);
                 $result = $this->documentRepository->add($document);
+                $duration = round((microtime(true) - $start), 3); // in seconds
                 if (!isset(self::$statistics[$result])) {
                     self::$statistics[$result] = 0;
                 }
@@ -162,7 +164,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
                     } else {
                         $status = '[STATUS: '.$result.']';
                     }
-                    Mage::log($status .' ' . $document->getUrl(), Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
+                    Mage::log($status .' ' . $document->getUrl() . ' ('.$duration.' sec)', Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
                 }
             } catch (Exception $e) {
                 Mage::logException($e);
