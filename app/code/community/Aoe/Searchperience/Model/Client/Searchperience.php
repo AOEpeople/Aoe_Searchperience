@@ -209,6 +209,17 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
         $writer->setIndentString("\t");
         $writer->startDocument('1.0', 'UTF-8');
         $writer->startElement('product');
+
+        $documentData = $document->getData();
+        $productData  = ((isset($documentData['productData']) ? $documentData['productData'] : array()));
+        $productId    = $this->_getValueFromArray('id', $productData);
+
+        // fetch some default data
+        $writer->writeElement('id', $productId);
+        $writer->writeElement('storeid', $this->_getValueFromArray('storeid', $documentData));
+        $writer->writeElement('language', $this->_getValueFromArray('language', $documentData));
+        $writer->writeElement('availability', $this->_getValueFromArray('in_stock', $documentData));
+
         $documentFields = array(
             'sku'               => 'sku',
             'title'             => 'name',
@@ -220,15 +231,17 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             'rating'            => 'rating',
             'content'           => 'content',
         );
-        $documentData = $document->getData();
-        $productData  = ((isset($documentData['productData']) ? $documentData['productData'] : array()));
-        $productId    = $this->_getValueFromArray('id', $productData);
 
-        // fetch some default data
-        $writer->writeElement('id', $productId);
-        $writer->writeElement('storeid', $this->_getValueFromArray('storeid', $documentData));
-        $writer->writeElement('language', $this->_getValueFromArray('language', $documentData));
-        $writer->writeElement('availability', $this->_getValueFromArray('in_stock', $documentData));
+        /**
+         * Add additional fields to the document.
+         * Example (e.g. in the aoe_searchperience_prepareIndexProductData_after event)
+         *
+         * $documentData['additionalDocumentFields'] = array('priority' => 'priority'); // add field to the list
+         * $documentData['productData']['priority'] = 'high'; // add value for the field to the product data
+         */
+        if (isset($documentData['additionalDocumentFields']) && is_array($documentData['additionalDocumentFields'])) {
+            $documentFields = array_merge($documentFields, $documentData['additionalDocumentFields']);
+        }
 
         // add product data to xml
         foreach ($documentFields as $elementName => $productDataName) {
@@ -317,7 +330,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
      * @param string $key      Key of data to extract
      * @param array $array    Array with data to extract from
      * @param string $default  Default return value if key not found in array
-     * @return string
+     * @return string|array
      */
     private function _getValueFromArray($key, array $array, $default = '')
     {
