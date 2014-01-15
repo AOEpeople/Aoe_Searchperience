@@ -187,6 +187,15 @@
                 <indexerBatchSize>100</indexerBatchSize>
                 <threadPoolSize>1</threadPoolSize>
             </searchperience>
+            <include_data>
+                <rating>1</rating>
+                <prices>1</prices>
+                <images>1</images>
+                <categories>1</categories>
+                <related>1</related>
+                <upsell>1</upsell>
+                <cross>1</cross>
+            </include_data>
         </searchperience>
     </default>
     <phpunit>
