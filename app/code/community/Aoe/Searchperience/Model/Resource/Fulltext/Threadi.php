@@ -6,13 +6,6 @@ class Aoe_Searchperience_Model_Resource_Fulltext_Threadi extends Aoe_Searchperie
 {
 
     /**
-     * Thread pool size
-     *
-     * @var int
-     */
-    protected $threadPoolSize = 1;
-
-    /**
      * @var Threadi_Pool
      */
     protected $threadPool;
@@ -29,8 +22,13 @@ class Aoe_Searchperience_Model_Resource_Fulltext_Threadi extends Aoe_Searchperie
 
 
     protected function _construct() {
-        $this->threadPool = new Threadi_Pool($this->threadPoolSize);
-        // TODO: read $threadPoolSize and $limit from configuration
+
+        $threadPoolSize = Mage::getStoreConfig('searchperience/searchperience/threadPoolSize');
+        $threadPoolSize = max(1, $threadPoolSize);
+        $threadPoolSize = min(20, $threadPoolSize);
+
+        $this->threadPool = new Threadi_Pool($threadPoolSize);
+
         parent::_construct();
     }
 
@@ -102,3 +100,5 @@ class Aoe_Searchperience_Model_Resource_Fulltext_Threadi extends Aoe_Searchperie
     }
 
 }
+
+

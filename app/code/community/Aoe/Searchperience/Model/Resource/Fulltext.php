@@ -15,6 +15,19 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
 
     protected $_limit = 100;
 
+    /**
+     * Init resource model
+     *
+     */
+    protected function _construct()
+    {
+        $this->_limit = Mage::getStoreConfig('searchperience/searchperience/indexerBatchSize');
+        $this->_limit = max(1, $this->_limit);
+        $this->_limit = min(5000, $this->_limit);
+
+        return parent::_construct();
+    }
+
 
 
     /**

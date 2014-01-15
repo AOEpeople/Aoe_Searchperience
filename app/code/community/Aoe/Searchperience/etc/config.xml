@@ -184,6 +184,8 @@
                 <enableRecommendationTracking>0</enableRecommendationTracking>
                 <enablePushingDocumentsToSearchperience>1</enablePushingDocumentsToSearchperience>
                 <changelogIndexBatchSize>1000</changelogIndexBatchSize>
+                <indexerBatchSize>100</indexerBatchSize>
+                <threadPoolSize>1</threadPoolSize>
             </searchperience>
         </searchperience>
     </default>

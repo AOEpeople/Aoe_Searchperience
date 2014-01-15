@@ -161,13 +161,33 @@
                             <sort_order>100</sort_order>
                         </enablePushingDocumentsToSearchperience>
                         <changelogIndexBatchSize translate="label" module="aoe_searchperience">
-                            <label>Number of items processed in a batch in changelog indexer</label>
+                            <label>Number of changelog items processed per run</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
                             <sort_order>150</sort_order>
                         </changelogIndexBatchSize>
+
+                        <indexerBatchSize translate="label" module="aoe_searchperience">
+                            <label>Number of products loaded at once (in one process)r</label>
+                            <frontend_type>text</frontend_type>
+                            <comment><![CDATA[Make sure the number of product fit into the memory without hitting the memory_limit setting]]></comment>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <sort_order>160</sort_order>
+                        </indexerBatchSize>
+
+                        <threadPoolSize translate="label" module="aoe_searchperience">
+                            <label>Number of threads run in parallel</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <sort_order>170</sort_order>
+                        </threadPoolSize>
+
                     </fields>
                 </searchperience>
                 <searchperience_config_js translate="label" module="aoe_searchperience">
