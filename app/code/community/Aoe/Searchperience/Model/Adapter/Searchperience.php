@@ -201,7 +201,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         $returnData['productData']['url']    = $product->getProductUrl();
         $returnData['productData']['unique'] = $searchperienceHelper->getProductUniqueId($productId, $storeId);
 
-        if (Mage::getStoreConfigFlag('searperience/include_data/rating')) {
+        if (Mage::getStoreConfigFlag('searchperience/include_data/rating')) {
             // fetch review data for requested product
             Mage::getModel('review/review')->getEntitySummary($product, $storeId);
             $returnData['productData']['rating'] = $product->getRatingSummary()->getRatingSummary();
@@ -209,35 +209,35 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
         $this->_usedFields   = array_merge($this->_usedFields, array('id', 'description', 'short_description', 'price', 'name', 'tax_class_id'));
 
-        if (Mage::getStoreConfigFlag('searperience/include_data/prices')) {
+        if (Mage::getStoreConfigFlag('searchperience/include_data/prices')) {
             // fetch price information
             $returnData = $this->_getProductPriceInformation($product, $returnData);
         }
 
-        if (Mage::getStoreConfigFlag('searperience/include_data/images')) {
+        if (Mage::getStoreConfigFlag('searchperience/include_data/images')) {
             // fetch image information
             $returnData = $this->_getProductImageInformation($product, $returnData);
         }
 
-        if (Mage::getStoreConfigFlag('searperience/include_data/categories')) {
+        if (Mage::getStoreConfigFlag('searchperience/include_data/categories')) {
             $returnData = $this->fillProductCategoryInformation($product, $returnData);
         }
 
-        if (Mage::getStoreConfigFlag('searperience/include_data/related')) {
+        if (Mage::getStoreConfigFlag('searchperience/include_data/related')) {
             // fetch related products
             foreach ($this->getLinkedProductIds($productId) as $relatedProduct) {
                 $returnData['productData']['related'][] = $relatedProduct;
             }
         }
 
-        if (Mage::getStoreConfigFlag('searperience/include_data/upsell')) {
+        if (Mage::getStoreConfigFlag('searchperience/include_data/upsell')) {
             // fetch upsell products
             foreach ($this->getLinkedProductIds($productId, Mage_Catalog_Model_Product_Link::LINK_TYPE_UPSELL) as $upsellProduct) {
                 $returnData['productData']['upsell'][] = $upsellProduct;
             }
         }
 
-        if (Mage::getStoreConfigFlag('searperience/include_data/cross')) {
+        if (Mage::getStoreConfigFlag('searchperience/include_data/cross')) {
             // fetch crosssell products
             foreach ($this->getLinkedProductIds($productId, Mage_Catalog_Model_Product_Link::LINK_TYPE_CROSSSELL) as $crossProduct) {
                 $returnData['productData']['cross'][] = $crossProduct;
