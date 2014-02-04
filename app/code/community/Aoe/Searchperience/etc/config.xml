@@ -80,15 +80,15 @@
         </layout>
     </frontend>
 
-	<adminhtml>
-		<layout>
-			<updates>
-				<searchperienece>
-					<file>searchperience/searchperience.xml</file>
-				</searchperienece>
-			</updates>
-		</layout>
-	</adminhtml>
+    <adminhtml>
+        <layout>
+            <updates>
+                <searchperienece>
+                    <file>searchperience/searchperience.xml</file>
+                </searchperienece>
+            </updates>
+        </layout>
+    </adminhtml>
 
     <default>
         <searchperience>
@@ -118,6 +118,7 @@
                 <listViewImageHeight>201</listViewImageHeight>
                 <enableDocumentDeletion>0</enableDocumentDeletion>
                 <enableRecommendationTracking>0</enableRecommendationTracking>
+                <enableWidgets>0</enableWidgets>
             </searchperience>
         </searchperience>
     </default>

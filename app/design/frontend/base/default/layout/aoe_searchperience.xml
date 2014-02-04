@@ -11,6 +11,7 @@
         </reference>
         <reference name="footer">
             <block type="core/template" name="aoe_searchperience_recommendation_tracking" template="aoesearchperience/tracking.phtml"/>
+            <block type="core/template" name="aoe_searchperience_widgets" template="aoesearchperience/widgets.phtml"/>
         </reference>
     </default>
 </layout>

@@ -1,6 +1,10 @@
-<?php if (Mage::helper('aoe_searchperience')->isRecommendationTrackingEnabled()): ?>
+<?php
+/** @var Aoe_Searchperience_Helper_Data $aoeSearchperienceHelper */
+$aoeSearchperienceHelper = Mage::helper('aoe_searchperience');
+?>
+<?php if ($aoeSearchperienceHelper->isRecommendationTrackingEnabled()): ?>
 <script type="text/javascript">
-    var ____tu = '<?php echo rtrim(Mage::getStoreConfig('searchperience/searchperience/recommendationTrackingScriptUrl'), '/') . '/' ?>';
+    var ____tu = '<?php echo $aoeSearchperienceHelper->getRecommendationTrackingScriptUrl() ?>';
     var ____td = ____td || [];
     var ____tq = ____tq || [];
     (function() {

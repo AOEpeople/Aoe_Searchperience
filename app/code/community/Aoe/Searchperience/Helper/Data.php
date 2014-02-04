@@ -8,6 +8,18 @@
  */
 class Aoe_Searchperience_Helper_Data extends Mage_Core_Helper_Abstract
 {
+    /**@+
+     * Config paths to retrieve Aoe_Searchperience settings
+     *
+     * @var string
+     */
+    const XML_PATH_ENABLE_DEBUG_MODE        = 'searchperience/searchperience/enableDebuggingMode';
+    const XML_PATH_ENABLE_DOCUMENT_DELETION = 'searchperience/searchperience/enableDocumentDeletion';
+    const XML_PATH_ENABLE_TRACKING          = 'searchperience/searchperience/enableRecommendationTracking';
+    const XML_PATH_ENABLE_WIDGETS           = 'searchperience/searchperience/enableWidgets';
+    const XML_PATH_TRACKING_SCRIPT_URL      = 'searchperience/searchperience/recommendationTrackingScriptUrl';
+    const XML_PATH_WIDGETS_SCRIPT_URL       = 'searchperience/searchperience/widgetsScriptUrl';
+    /**@-*/
 
     /**
      * Special cases for attribute times
@@ -53,6 +65,32 @@ class Aoe_Searchperience_Helper_Data extends Mage_Core_Helper_Abstract
      */
     protected $_recommendationTrackingEnabled = null;
 
+    /**
+     * Holds recommendation tracking script url
+     *
+     * @var boolean
+     */
+    protected $_recommendationTrackingScriptUrl = null;
+
+    /**
+     * Holds result for checking if widgets are enabled
+     *
+     * @var boolean
+     */
+    protected $_widgetsEnabled = null;
+
+    /**
+     * Holds widgets script url
+     *
+     * @var boolean
+     */
+    protected $_widgetsScriptUrl = null;
+
+    /**
+     * Check whether current magento installation is EE
+     *
+     * @return bool
+     */
     public function isEnterprise()
     {
         return $this->isModuleEnabled('Enterprise_Search');
@@ -78,7 +116,7 @@ class Aoe_Searchperience_Helper_Data extends Mage_Core_Helper_Abstract
     public function isLoggingEnabled()
     {
         if (null === $this->_loggingEnabled) {
-            $valueFromSettings = Mage::getStoreConfig('searchperience/searchperience/enableDebuggingMode');
+            $valueFromSettings = Mage::getStoreConfig(self::XML_PATH_ENABLE_DEBUG_MODE);
             $this->_loggingEnabled = ((null === $valueFromSettings) ? 0 : $valueFromSettings);
         }
         return $this->_loggingEnabled;
@@ -92,8 +130,7 @@ class Aoe_Searchperience_Helper_Data extends Mage_Core_Helper_Abstract
     public function isDeletionEnabled()
     {
         if (null === $this->_deletionEnabled) {
-            $valueFromSettings = Mage::getStoreConfig('searchperience/searchperience/enableDocumentDeletion');
-            $this->_deletionEnabled = ((null === $valueFromSettings) ? 0 : $valueFromSettings);
+            $this->_deletionEnabled = Mage::getStoreConfigFlag(self::XML_PATH_ENABLE_DOCUMENT_DELETION);
         }
         return $this->_deletionEnabled;
     }
@@ -106,10 +143,49 @@ class Aoe_Searchperience_Helper_Data extends Mage_Core_Helper_Abstract
     public function isRecommendationTrackingEnabled()
     {
         if (null === $this->_recommendationTrackingEnabled) {
-            $valueFromSettings = Mage::getStoreConfig('searchperience/searchperience/enableRecommendationTracking');
-            $this->_recommendationTrackingEnabled = ((null === $valueFromSettings) ? 0 : $valueFromSettings);
+            $this->_recommendationTrackingEnabled = Mage::getStoreConfigFlag(self::XML_PATH_ENABLE_TRACKING);
         }
         return $this->_recommendationTrackingEnabled;
+    }
+
+    /**
+     * Get recommendation tracking script url
+     *
+     * @return string
+     */
+    public function getRecommendationTrackingScriptUrl()
+    {
+        if (null === $this->_recommendationTrackingScriptUrl) {
+            $this->_recommendationTrackingScriptUrl
+                = rtrim(Mage::getStoreConfig(self::XML_PATH_TRACKING_SCRIPT_URL), '/') . '/';
+        }
+        return $this->_recommendationTrackingScriptUrl;
+    }
+
+    /**
+     * Returns boolean value if widget feature enabled
+     *
+     * @return bool
+     */
+    public function isWidgetFeatureEnabled()
+    {
+        if (null === $this->_widgetsEnabled) {
+            $this->_widgetsEnabled = Mage::getStoreConfigFlag(self::XML_PATH_ENABLE_WIDGETS);
+        }
+        return $this->_widgetsEnabled;
+    }
+
+    /**
+     * Get widgets script url
+     *
+     * @return string
+     */
+    public function getWidgetsScriptUrl()
+    {
+        if (null === $this->_widgetsScriptUrl) {
+            $this->_widgetsScriptUrl = trim(Mage::getStoreConfig(self::XML_PATH_WIDGETS_SCRIPT_URL));
+        }
+        return $this->_widgetsScriptUrl;
     }
 
     /**
@@ -118,8 +194,6 @@ class Aoe_Searchperience_Helper_Data extends Mage_Core_Helper_Abstract
      * @param int $storeId
      * @param string $date
      * @param string $attributeName
-     * @param array  $time
-     *
      * @return string|false
      */
     public function getTimestampForAttribute($storeId, $date = null, $attributeName)
