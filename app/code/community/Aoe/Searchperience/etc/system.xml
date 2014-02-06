@@ -121,7 +121,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <sort_order>91</sort_order>
+                            <sort_order>100</sort_order>
                         </logFullDocuments>
                         <enableDocumentDeletion translate="label" module="aoe_searchperience">
                             <label>Enable document deletion</label>
@@ -130,7 +130,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <sort_order>100</sort_order>
+                            <sort_order>110</sort_order>
                         </enableDocumentDeletion>
                         <enableRecommendationTracking translate="label" module="aoe_searchperience">
                             <label>Enable recommendation tracking</label>
@@ -139,7 +139,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <sort_order>110</sort_order>
+                            <sort_order>120</sort_order>
                         </enableRecommendationTracking>
                         <recommendationTrackingScriptUrl translate="label" module="aoe_searchperience">
                             <label>Recommendation Tracking Script URL</label>
@@ -147,9 +147,27 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <sort_order>120</sort_order>
+                            <sort_order>130</sort_order>
                             <depends><enableRecommendationTracking>1</enableRecommendationTracking></depends>
                         </recommendationTrackingScriptUrl>
+                        <enableWidgets translate="label" module="aoe_searchperience">
+                            <label>Enable Searchperience Widgets</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>140</sort_order>
+                        </enableWidgets>
+                        <widgetsScriptUrl translate="label" module="aoe_searchperience">
+                            <label>Searchperience Widgets Script URL</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>150</sort_order>
+                            <depends><enableWidgets>1</enableWidgets></depends>
+                        </widgetsScriptUrl>
                         <enablePushingDocumentsToSearchperience translate="label" module="aoe_searchperience">
                             <label>Enable pushing documents to Searchperience</label>
                             <frontend_type>select</frontend_type>
@@ -158,7 +176,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <sort_order>100</sort_order>
+                            <sort_order>160</sort_order>
                         </enablePushingDocumentsToSearchperience>
                         <changelogIndexBatchSize translate="label" module="aoe_searchperience">
                             <label>Number of changelog items processed per run</label>
@@ -166,9 +184,8 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <sort_order>150</sort_order>
+                            <sort_order>170</sort_order>
                         </changelogIndexBatchSize>
-
                         <indexerBatchSize translate="label" module="aoe_searchperience">
                             <label>Number of products loaded at once (in one process)</label>
                             <frontend_type>text</frontend_type>
@@ -176,18 +193,16 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <sort_order>160</sort_order>
+                            <sort_order>180</sort_order>
                         </indexerBatchSize>
-
                         <threadPoolSize translate="label" module="aoe_searchperience">
                             <label>Number of threads run in parallel</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <sort_order>170</sort_order>
+                            <sort_order>190</sort_order>
                         </threadPoolSize>
-
                     </fields>
                 </searchperience>
                 <searchperience_config_js translate="label" module="aoe_searchperience">
@@ -240,7 +255,7 @@
                         <enableInnerShiv translate="label" module="aoe_searchperience">
                             <label>Enable InnerShiv</label>
                             <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <source_model>aoe_searchperience/adminhtml_system_config_source_Yesno</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -250,7 +265,7 @@
                         <doWidgetInit translate="label" module="aoe_searchperience">
                             <label>Widget Init</label>
                             <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <source_model>aoe_searchperience/adminhtml_system_config_source_Yesno</source_model>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>

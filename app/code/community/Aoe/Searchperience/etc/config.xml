@@ -144,15 +144,15 @@
         </layout>
     </frontend>
 
-	<adminhtml>
-		<layout>
-			<updates>
-				<searchperienece>
-					<file>searchperience/searchperience.xml</file>
-				</searchperienece>
-			</updates>
-		</layout>
-	</adminhtml>
+    <adminhtml>
+        <layout>
+            <updates>
+                <searchperienece>
+                    <file>searchperience/searchperience.xml</file>
+                </searchperienece>
+            </updates>
+        </layout>
+    </adminhtml>
 
     <default>
         <searchperience>
@@ -186,6 +186,7 @@
                 <changelogIndexBatchSize>1000</changelogIndexBatchSize>
                 <indexerBatchSize>100</indexerBatchSize>
                 <threadPoolSize>1</threadPoolSize>
+                <enableWidgets>0</enableWidgets>
             </searchperience>
             <include_data>
                 <rating>1</rating>
