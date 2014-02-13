@@ -2,7 +2,6 @@
 
 class Aoe_Searchperience_Test_Config_Main extends EcomDev_PHPUnit_Test_Case_Config
 {
-
     public function testClassAliases()
     {
         $this->assertModelAlias('aoe_searchperience/observer', 'Aoe_Searchperience_Model_Observer');
@@ -15,6 +14,6 @@ class Aoe_Searchperience_Test_Config_Main extends EcomDev_PHPUnit_Test_Case_Conf
     public function testRewritesAliases()
     {
         $this->assertModelAlias('enterprise_search/adminhtml_system_config_source_engine', 'Aoe_Searchperience_Model_Adminhtml_System_Config_Source_Engine');
-        $this->assertResourceModelAlias('catalogsearch/fulltext', 'Aoe_Searchperience_Model_Resource_Fulltext');
+        $this->assertResourceModelAlias('catalogsearch/fulltext', 'Aoe_Searchperience_Model_Resource_Fulltext_Threadi');
     }
 }

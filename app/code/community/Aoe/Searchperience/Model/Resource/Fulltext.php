@@ -10,14 +10,15 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
      */
     public static $dateTimeAttributeValues = array();
 
-
-
-
+    /**
+     * Number of products to process at once
+     *
+     * @var int
+     */
     protected $_limit = 100;
 
     /**
      * Init resource model
-     *
      */
     protected function _construct()
     {
@@ -25,10 +26,8 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
         $this->_limit = max(1, $this->_limit);
         $this->_limit = min(5000, $this->_limit);
 
-        return parent::_construct();
+        parent::_construct();
     }
-
-
 
     /**
      * Regenerate search index for specific store
@@ -39,17 +38,16 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
      */
     protected function _rebuildStoreIndex($storeId, $productIds = null)
     {
-
         if ($productIds === array()) {
             // $this->_getSearchableProducts() won't find anything anyways
-            return;
+            return $this;
         }
 
         if (!Mage::getStoreConfigFlag('searchperience/searchperience/enablePushingDocumentsToSearchperience', $storeId)) {
             if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
                 Mage::log(sprintf('Skipping indexing for store "%s" because of enablePushingDocumentsToSearchperience', $storeId), Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
             }
-            return;
+            return $this;
         }
 
         // prepare searchable attributes
@@ -66,9 +64,7 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
         );
 
         $lastProductId = 0;
-
         $productsFound = array();
-
         while (true) {
             $products = $this->_getSearchableProducts($storeId, $staticFields, $productIds, $lastProductId, $this->_limit);
 
@@ -107,7 +103,7 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
                 }
             }
 
-            $this->processBatch($storeId, $productIds, $productAttributes, $dynamicFields, $products, $productRelations);
+            $this->processBatch($storeId, $productAttributes, $dynamicFields, $products, $productRelations);
 
             // cleanup
             self::$dateTimeAttributeValues = array();
@@ -121,11 +117,12 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
         }
 
         $this->finishProcessing();
-
         $this->resetSearchResults();
 
         if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-            Mage::log('statistics: ' . var_export(Aoe_Searchperience_Model_Client_Searchperience::$statistics, true), Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
+            Mage::log('statistics: ' . var_export(Aoe_Searchperience_Model_Client_Searchperience::$statistics, true),
+                Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE
+            );
         }
 
         return $this;
@@ -242,7 +239,7 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
      * Delete search index data for store
      *
      * @param int $storeId Store View Id
-     * @param int $productId Product Entity Id
+     * @param array|int $productId Product Entity Id
      * @return Mage_CatalogSearch_Model_Resource_Fulltext
      */
     public function cleanIndex($storeId = null, $productId = null)
@@ -250,7 +247,9 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
         if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
             $stores = is_array($storeId) ? $storeId : array($storeId);
             $products = is_array($productId) ? $productId : array($productId);
-            Mage::log(sprintf('[CLEAN] Product: "%s", Store "%s"', implode(', ', $products), implode(', ', $stores)), Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
+            Mage::log(sprintf('[CLEAN] Product: "%s", Store "%s"', implode(', ', $products), implode(', ', $stores)),
+                Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE
+            );
         }
         return parent::cleanIndex($storeId, $productId);
     }
@@ -267,29 +266,31 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
      * Wrapper method for actual processBatch (required in inheriting class using threadi)
      *
      * @param $storeId
-     * @param $productIds
      * @param array $productAttributes
      * @param array $dynamicFields
      * @param array $products
      * @param array $productRelations
+     * @internal param $productIds
      * @return array
      */
-    public function processBatch($storeId, $productIds, array $productAttributes, array $dynamicFields, array $products, array $productRelations)
-    {
-        return $this->_processBatch($storeId, $productIds, $productAttributes, $dynamicFields, $products, $productRelations);
+    public function processBatch($storeId, array $productAttributes, array $dynamicFields, array $products,
+        array $productRelations
+    ) {
+        return $this->_processBatch($storeId, $productAttributes, $dynamicFields, $products, $productRelations);
     }
 
     /**
      * @param $storeId
-     * @param $productIds
      * @param array $productAttributes
      * @param array $dynamicFields
      * @param array $products
      * @param array $productRelations
+     * @internal param $productIds
      * @return array
      */
-    public function _processBatch($storeId, $productIds, array $productAttributes, array $dynamicFields, array $products, array $productRelations)
-    {
+    public function _processBatch($storeId, array $productAttributes, array $dynamicFields, array $products,
+        array $productRelations
+    ) {
         $productIndexes = array();
         $productAttributes = $this->_getProductAttributes($storeId, $productAttributes, $dynamicFields);
         foreach ($products as $productData) {
