@@ -270,7 +270,6 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
      * @param array $dynamicFields
      * @param array $products
      * @param array $productRelations
-     * @internal param $productIds
      * @return array
      */
     public function processBatch($storeId, array $productAttributes, array $dynamicFields, array $products,
@@ -285,7 +284,6 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
      * @param array $dynamicFields
      * @param array $products
      * @param array $productRelations
-     * @internal param $productIds
      * @return array
      */
     public function _processBatch($storeId, array $productAttributes, array $dynamicFields, array $products,
