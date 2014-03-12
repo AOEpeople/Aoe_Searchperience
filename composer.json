@@ -1,5 +1,5 @@
 {
-    "name": "aoemedia/aoesearchperience",
+    "name": "aoepeople/aoesearchperience",
     "description": "PHP LIbrary to communitcate with the searchperience API",
     "homepage": "http://www.searchperience.com/",
     "license": "MIT",
@@ -8,5 +8,8 @@
     },
     "require-dev": {
         "guzzle/plugin-log": "*"
+    },
+    "replace": {
+        "aoemedia/aoesearchperience": "*"
     }
 }
