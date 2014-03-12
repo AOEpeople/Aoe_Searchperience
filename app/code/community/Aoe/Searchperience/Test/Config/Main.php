@@ -15,6 +15,6 @@ class Aoe_Searchperience_Test_Config_Main extends EcomDev_PHPUnit_Test_Case_Conf
     {
         $this->assertModelAlias('enterprise_search/adminhtml_system_config_source_engine', 'Aoe_Searchperience_Model_Adminhtml_System_Config_Source_Engine');
         $this->assertResourceModelAlias('catalogsearch/fulltext', 'Aoe_Searchperience_Model_Resource_Fulltext_Threadi');
-        $this->assertResourceModelAlias('enterprise_index/lock_resource', 'Aoe_Searchperience_Model_Resource_Lock_Resource');
+        $this->assertModelAlias('enterprise_index/resource_lock_resource', 'Aoe_Searchperience_Model_Resource_Lock_Resource');
     }
 }
