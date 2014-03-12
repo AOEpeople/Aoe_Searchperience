@@ -13,5 +13,8 @@
     },
     "replace": {
         "aoemedia/aoesearchperience": "*"
+    },
+    "extra": {
+        "installer-name": "Aoe_Searchperience"
     }
 }
