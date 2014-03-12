@@ -57,8 +57,10 @@ class Aoe_Searchperience_Model_Resource_Fulltext_Threadi extends Aoe_Searchperie
         // append it to the pool
         $this->threadPool->add($thread);
 
-        // the main thread's connection also doesn't work anymore...
-        Mage::getSingleton('core/resource')->getConnection('core_write')->closeConnection();
+        if ($this->realThreading) {
+            // the main threads' connections also doesn't work anymore...
+            Mage::helper('aoe_searchperience/resource')->closeAllDbConnections();
+        }
     }
 
     /**
@@ -73,16 +75,7 @@ class Aoe_Searchperience_Model_Resource_Fulltext_Threadi extends Aoe_Searchperie
         array $productRelations
     ) {
         if ($this->realThreading) {
-            Mage::getSingleton('core/resource')->getConnection('core_write')->closeConnection();
-            $this->_connections = array(); // delete cached connections
-
-            if (class_exists('Enterprise_Index_Model_Lock')) {
-                try {
-                    Enterprise_Index_Model_Lock::getInstance()->shutdownReleaseLocks();
-                } catch (Exception $e) {
-                    // we don't care
-                }
-            }
+            Mage::helper('aoe_searchperience/resource')->closeAllDbConnections();
         }
 
         return parent::_processBatch($storeId, $productAttributes, $dynamicFields, $products, $productRelations);
@@ -91,11 +84,6 @@ class Aoe_Searchperience_Model_Resource_Fulltext_Threadi extends Aoe_Searchperie
     protected function finishProcessing()
     {
         $this->threadPool->waitTillAllReady();
-
-        /* @var $res Aoe_Searchperience_Model_Resource_Lock_Resource */
-        $res = Mage::getSingleton('enterprise_index/resource_lock_resource');
-        if (is_object($res) && $res instanceof Aoe_Searchperience_Model_Resource_Lock_Resource) {
-            $res->closeConnections();
-        }
+        $this->threadCounter = 0;
     }
 }

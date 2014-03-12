@@ -131,7 +131,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
     public function addDocuments($documentList, $allowDups = false, $overwritePending = true, $overwriteCommitted = true)
     {
         if (in_array(null, array($this->_customerKey, $this->_username, $this->_password, $this->_documentSource, $this->_baseUrl))) {
-            Mage::getSingleton('core/session')->addError(
+            Mage::helper('aoe_searchperience')->addError(
                 Mage::helper('core')->__('No valid connection settings for searchperience connection found!')
             );
             return false;
@@ -172,9 +172,9 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
                 if (strlen($message) > 200) {
                     $message = substr($message, 0, 200) . ' ... (find full message in var/log/exception.log)';
                 }
-                Mage::getSingleton('core/session')->addError(
+                Mage::helper('aoe_searchperience')->addError(
                     Mage::helper('core')->__(
-                        sprintf('[Aoe_Searchperience] Errors occured while trying to add document to repository: %s', $message)
+                        sprintf('[Aoe_Searchperience] Errors occurred while trying to add document to repository: %s', $message)
                     )
                 );
                 if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {

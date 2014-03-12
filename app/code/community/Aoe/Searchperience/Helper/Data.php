@@ -258,4 +258,15 @@ class Aoe_Searchperience_Helper_Data extends Mage_Core_Helper_Abstract
             $parsedDate['year']
         );
     }
+
+    /**
+     * @param string $errorMessage
+     */
+    public function addError($errorMessage)
+    {
+        // if we are not in cli script - add message to session
+        if (Mage::app()->getFrontController()->getRequest()->getActionName()) {
+            Mage::getSingleton('core/session')->addError($errorMessage);
+        }
+    }
 }
