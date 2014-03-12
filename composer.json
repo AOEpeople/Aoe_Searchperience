@@ -3,7 +3,9 @@
     "description": "PHP LIbrary to communitcate with the searchperience API",
     "homepage": "http://www.searchperience.com/",
     "license": "MIT",
+    "type": "magento-module",
     "require": {
+        "magento-hackathon/magento-composer-installer": "*",
         "aoemedia/searchperience-api-client": "1.1.0"
     },
     "require-dev": {
