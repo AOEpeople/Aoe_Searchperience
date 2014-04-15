@@ -25,7 +25,9 @@ class Aoe_Searchperience_Model_Resource_Fulltext_Threadi extends Aoe_Searchperie
         $threadPoolSize = max(1, $threadPoolSize);
         $threadPoolSize = min(20, $threadPoolSize);
 
-        $this->threadPool = new Threadi_Pool($threadPoolSize);
+        if ($threadPoolSize > 1) {
+            $this->threadPool = new Threadi_Pool($threadPoolSize);
+        }
 
         parent::_construct();
     }
@@ -43,23 +45,27 @@ class Aoe_Searchperience_Model_Resource_Fulltext_Threadi extends Aoe_Searchperie
     public function processBatch($storeId, array $productAttributes, array $dynamicFields, array $products,
         array $productRelations
     ) {
-        // Wait until there is a free slot in the pool
-        $this->threadPool->waitTillReady();
+        if ($this->threadPool instanceof Threadi_Pool) {
+            // Wait until there is a free slot in the pool
+            $this->threadPool->waitTillReady();
 
-        // create new thread
-        $this->threadCounter++;
-        $thread = Threadi_ThreadFactory::getThread(array($this, '_processBatch'));
+            // create new thread
+            $this->threadCounter++;
+            $thread = Threadi_ThreadFactory::getThread(array($this, '_processBatch'));
 
-        $this->realThreading = !($thread instanceof Threadi_Thread_NonThread);
+            $this->realThreading = !($thread instanceof Threadi_Thread_NonThread);
 
-        $thread->start($storeId, $productAttributes, $dynamicFields, $products, $productRelations);
+            $thread->start($storeId, $productAttributes, $dynamicFields, $products, $productRelations);
 
-        // append it to the pool
-        $this->threadPool->add($thread);
+            // append it to the pool
+            $this->threadPool->add($thread);
 
-        if ($this->realThreading) {
-            // the main threads' connections also doesn't work anymore...
-            Mage::helper('aoe_searchperience/resource')->closeAllDbConnections();
+            if ($this->realThreading) {
+                // the main threads' connections also doesn't work anymore...
+                Mage::helper('aoe_searchperience/resource')->closeAllDbConnections();
+            }
+        } else {
+            $this->_processBatch($storeId, $productAttributes, $dynamicFields, $products, $productRelations);
         }
     }
 
@@ -83,7 +89,9 @@ class Aoe_Searchperience_Model_Resource_Fulltext_Threadi extends Aoe_Searchperie
 
     protected function finishProcessing()
     {
-        $this->threadPool->waitTillAllReady();
-        $this->threadCounter = 0;
+        if ($this->threadPool instanceof Threadi_Pool) {
+            $this->threadPool->waitTillAllReady();
+            $this->threadCounter = 0;
+        }
     }
 }
