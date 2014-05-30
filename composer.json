@@ -5,7 +5,7 @@
     "license": "MIT",
     "type": "magento-module",
     "require": {
-        "magento-hackathon/magento-composer-installer": "*",
+        "magento-hackathon/magento-composer-installer": "*"
     },
     "replace": {
         "aoemedia/aoesearchperience": "*"
