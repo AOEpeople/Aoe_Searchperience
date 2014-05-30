@@ -10,7 +10,7 @@ app/design/adminhtml/default/default/template/searchperience/               app/
 
 # frontend skin
 skin/frontend/base/default/css/aoesearchperience/                           skin/frontend/base/default/css/aoesearchperience/
-skin/frontend/base/default/i/aoesearchperience/                                               skin/frontend/base/default/i/aoesearchperience/
+skin/frontend/base/default/i/aoesearchperience/                             skin/frontend/base/default/i/aoesearchperience/
 
 # backend skin
 skin/adminhtml/default/default/images/searchperience/                       skin/adminhtml/default/default/images/searchperience/
@@ -21,9 +21,9 @@ app/code/community/Aoe/Searchperience/                                      app/
 app/etc/modules/*                                                           app/etc/modules/
 
 #scripts
-shell/*   		                                                            shell/
+shell/*   		                                                    shell/
 
 #install searchperience api client
-@shell if ! [ -e $MODULE/composer.phar ]; then (curl -s http://getcomposer.org/installer | php); fi
-@shell if   [ -e $MODULE/composer.phar ]; then ($MODULE/composer.phar self-update); fi
-@shell if ! [ -e $MODULE/composer.lock ]; then ($MODULE/composer.phar install --no-interaction); else ($MODULE/composer.phar update --no-interaction); fi
+@shell cd $MODULE/lib && if ! [ -e composer.lock ]; then (./composer.phar install --no-interaction); else (./composer.phar update --no-interaction); fi
+
+lib/vendor                                                                  lib/searchperience

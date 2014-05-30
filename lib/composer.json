@@ -1,0 +1,9 @@
+{
+    "description": "Hack to be able to pull in dependencies via modman",
+    "require": {
+        "aoemedia/searchperience-api-client": "1.3.2"
+    },
+    "require-dev": {
+        "guzzle/plugin-log": "*"
+    }
+}

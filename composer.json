@@ -1,15 +1,11 @@
 {
     "name": "aoepeople/aoesearchperience",
-    "description": "PHP LIbrary to communitcate with the searchperience API",
+    "description": "Aoe_Searchperience Magento module to communicate with the searchperience API",
     "homepage": "http://www.searchperience.com/",
     "license": "MIT",
     "type": "magento-module",
     "require": {
         "magento-hackathon/magento-composer-installer": "*",
-        "aoemedia/searchperience-api-client": "1.3.2"
-    },
-    "require-dev": {
-        "guzzle/plugin-log": "*"
     },
     "replace": {
         "aoemedia/aoesearchperience": "*"

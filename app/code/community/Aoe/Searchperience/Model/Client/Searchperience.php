@@ -1,6 +1,6 @@
 <?php
 
-require realpath(dirname( __FILE__ ).'/../../../../../../../vendor/autoload.php');
+require Mage::getBaseDir('lib') . DS . 'searchperience' . DS . 'autoload.php';
 
 class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 {
