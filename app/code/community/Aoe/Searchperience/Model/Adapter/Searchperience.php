@@ -89,9 +89,10 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
      *
      * @param  int|string|array $docIDs
      * @param  string|array|null $queries if "all" specified and $docIDs are empty, then all documents will be removed
+     * @param  string document source (if $queries == all)
      * @return Aoe_Searchperience_Model_Adapter_Searchperience
      */
-    public function deleteDocs($docIDs = array(), $queries = null)
+    public function deleteDocs($docIDs = array(), $queries = null, $source=null)
     {
         // check if deletion of documents is allowed
         if (!Mage::helper('aoe_searchperience')->isDeletionEnabled()) {
@@ -103,7 +104,9 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         if ($queries === 'all' && count($docIDs) == 0) {
 
             try {
-                $source = Mage::getStoreConfig('searchperience/searchperience/source');
+                if (is_null($source)) {
+                    $source = Mage::getStoreConfig('searchperience/searchperience/source');
+                }
                 $statusCode = $documentRepository->deleteBySource($source);
 
                 if ($statusCode == 200) {
