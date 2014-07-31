@@ -21,9 +21,10 @@ app/code/community/Aoe/Searchperience/                                      app/
 app/etc/modules/*                                                           app/etc/modules/
 
 #scripts
-shell/*   		                                                    shell/
+shell/*                                                                     shell/
 
 #install searchperience api client
-@shell cd $MODULE/lib && if ! [ -e composer.lock ]; then (./composer.phar install --no-interaction); else (./composer.phar update --no-interaction); fi
+@shell cd $MODULE/lib && php composer.phar self-update
+@shell cd $MODULE/lib && if ! [ -e composer.lock ]; then (php composer.phar install --no-interaction); else (php composer.phar update --no-interaction); fi
 
 lib/vendor                                                                  lib/searchperience
