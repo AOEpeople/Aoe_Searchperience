@@ -43,8 +43,5 @@ var aoeSolrParentContainerSelector          = '<?php echo Mage::getStoreConfig('
 <?php endif ?>
 </script>
 <?php if (Mage::getStoreConfig('searchperience/searchperience/remote_js')): ?>
-<!--Excluded remote js file for time being untill searchpierience team resolve the parameter parsing issue-->
-<?php /* ?> <script type="text/javascript" src="<?php echo Mage::getStoreConfig('searchperience/searchperience/remote_js'); ?>"></script><?php */ ?>
+<script type="text/javascript" src="<?php echo Mage::getStoreConfig('searchperience/searchperience/remote_js'); ?>"></script>
 <?php endif; ?>
-<!--Included heath.js file locally for time being until searchpierience team resolve the parameter parsing issue-->
-<script type="text/javascript" src="<?php echo $this->getSkinUrl('js/heath_deepintegration/heath.js') ?>"></script>
