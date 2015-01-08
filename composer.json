@@ -5,11 +5,18 @@
     "license": "MIT",
     "type": "magento-module",
     "require": {
-        "magento-hackathon/magento-composer-installer": "*"
+        "magento-hackathon/magento-composer-installer": "*",
+        "aoepeople/aoethreadi": "dev-composer-compliant"
     },
     "replace": {
         "aoemedia/aoesearchperience": "*"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/AOEpeople/Aoe_Threadi.git"
+        }
+    ],
     "extra": {
         "installer-name": "Aoe_Searchperience"
     }
