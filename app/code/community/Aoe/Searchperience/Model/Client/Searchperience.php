@@ -1,7 +1,18 @@
 <?php
 
+// @codingStandardsIgnoreStart
 require Mage::getBaseDir('lib') . DS . 'searchperience' . DS . 'autoload.php';
+// @codingStandardsIgnoreEnd
 
+/**
+ * Class Aoe_Searchperience_Model_Client_Searchperience
+ *
+ * @category Model
+ * @package  Aoe_Searchperience
+ * @author   AOE Magento Team <team-magento@aoe.com>
+ * @license  none none
+ * @link     www.aoe.com
+ */
 class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 {
     /**
@@ -42,7 +53,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
     /**
      * @var Searchperience\Api\Client\Domain\DocumentRepository
      */
-    protected $documentRepository;
+    protected $_documentRepository;
 
     /**
      * Some statistics about transactions with API
@@ -52,7 +63,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
     public static $statistics = array();
 
     /**
-     * @param array $options
+     * @param array $options Constructor options
      */
     public  function __construct($options)
     {
@@ -64,7 +75,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
         $this->_documentSource = Mage::getStoreConfig('searchperience/searchperience/source');
 
         //\Searchperience\Common\Factory::$HTTP_DEBUG = true;
-        $this->documentRepository = \Searchperience\Common\Factory::getDocumentRepository(
+        $this->_documentRepository = \Searchperience\Common\Factory::getDocumentRepository(
             $this->_baseUrl,
             $this->_customerKey,
             $this->_username,
@@ -77,10 +88,10 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
     /**
      * Create a delete document based on a multiple queries and submit it
      *
-     * @param array $rawQueries Expected to be utf-8 encoded
-     * @param boolean $fromPending
-     * @param boolean $fromCommitted
-     * @param int $timeout Maximum expected duration of the delete operation on the server (otherwise, will throw a communication exception)
+     * @param array   $rawQueries    Expected to be utf-8 encoded
+     * @param boolean $fromPending   Delete from pending
+     * @param boolean $fromCommitted Delete from committed
+     * @param int     $timeout       Maximum expected duration of the delete operation on the server (otherwise, will throw a communication exception)
      * @return Apache_Solr_Response
      */
     public function deleteByQueries($rawQueries, $fromPending = true, $fromCommitted = true, $timeout = 3600)
@@ -88,11 +99,13 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
         return true;
     }
 
-    /*
-    * @param float $timeout maximum time to wait for ping in seconds, -1 for unlimited (default is 2)
-    * @return float Actual time taken to ping the server, FALSE if timeout or HTTP error status occurs
-    */
-    public function ping($timeout = 2)
+    /**
+     * Ping the service
+     *
+     * @param float $timeout maximum time to wait for ping in seconds, -1 for unlimited (default is 2)
+     * @return float Actual time taken to ping the server, FALSE if timeout or HTTP error status occurs
+     */
+    public function ping($timeout = 2.0)
     {
         return 0.1;
     }
@@ -100,10 +113,10 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
     /**
      * Send a commit command.  Will be synchronous unless both wait parameters are set to false.
      *
-     * @param boolean $optimize Defaults to true
-     * @param boolean $waitFlush Defaults to true
+     * @param boolean $optimize     Defaults to true
+     * @param boolean $waitFlush    Defaults to true
      * @param boolean $waitSearcher Defaults to true
-     * @param int $timeout Maximum expected duration (in seconds) of the commit operation on the server (otherwise, will throw a communication exception). Defaults to 1 hour
+     * @param int     $timeout      Maximum expected duration (in seconds) of the commit operation on the server (otherwise, will throw a communication exception). Defaults to 1 hour
      * @return Apache_Solr_Response
      */
     public function commit($optimize = true, $waitFlush = true, $waitSearcher = true, $timeout = 3600)
@@ -122,21 +135,24 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
     /**
      * Add an array of Solr Documents to the index all at once
      *
-     * @param array $documentList
-     * @param boolean $allowDups
-     * @param boolean $overwritePending
-     * @param boolean $overwriteCommitted
+     * @param array   $documentList       Document list to add
+     * @param boolean $allowDups          Allow duplicates
+     * @param boolean $overwritePending   Overwrite pending documents
+     * @param boolean $overwriteCommitted Overwrite committed documents
      * @return void|false
      */
     public function addDocuments($documentList, $allowDups = false, $overwritePending = true, $overwriteCommitted = true)
     {
+        $helper = $this->_getSearchperienceHelper();
         if (in_array(null, array($this->_customerKey, $this->_username, $this->_password, $this->_documentSource, $this->_baseUrl))) {
-            Mage::helper('aoe_searchperience')->addError(
+            $helper->addError(
                 Mage::helper('core')->__('No valid connection settings for searchperience connection found!')
             );
             return false;
         }
         foreach ($documentList as $index => $rawDocument) {
+            /* @var Aoe_Searchperience_Model_Api_Document $rawDocument */
+
             $documentData = $rawDocument->getData();
             $productData  = ((isset($documentData['productData']) ? $documentData['productData'] : array()));
             $document     = new \Searchperience\Api\Client\Domain\Document();
@@ -149,14 +165,14 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 
             try {
                 $start = microtime(true);
-                $result = $this->documentRepository->add($document);
+                $result = $this->_documentRepository->add($document);
                 $duration = round((microtime(true) - $start), 3); // in seconds
                 if (!isset(self::$statistics[$result])) {
                     self::$statistics[$result] = 0;
                 }
                 self::$statistics[$result]++;
 
-                if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+                if ($helper->isLoggingEnabled()) {
                     if ($result == 201) {
                         $status = '[NEW]';
                     } elseif ($result == 200) {
@@ -172,12 +188,12 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
                 if (strlen($message) > 200) {
                     $message = substr($message, 0, 200) . ' ... (find full message in var/log/exception.log)';
                 }
-                Mage::helper('aoe_searchperience')->addError(
+                $helper->addError(
                     Mage::helper('core')->__(
                         sprintf('[Aoe_Searchperience] Errors occurred while trying to add document to repository: %s', $message)
                     )
                 );
-                if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+                if ($helper->isLoggingEnabled()) {
                     Mage::log('[ERROR] ' . $document->getUrl(), Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
                     Mage::log($message, Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
                 }
@@ -194,13 +210,13 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
      */
     public function getDocumentRepository()
     {
-        return $this->documentRepository;
+        return $this->_documentRepository;
     }
 
     /**
      * Create an XML fragment from a {@link Apache_Solr_Document} instance appropriate for use inside a Solr add call
      *
-     * @param Apache_Solr_Document $document
+     * @param Apache_Solr_Document $document Document to convert to xml fragment
      * @return string
      */
     protected function _documentToXmlFragment(Apache_Solr_Document $document)
@@ -214,14 +230,53 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 
         $documentData = $document->getData();
         $productData  = ((isset($documentData['productData']) ? $documentData['productData'] : array()));
-        $productId    = $this->_getValueFromArray('id', $productData);
 
-        // fetch some default data
-        $writer->writeElement('id', $productId);
-        $writer->writeElement('storeid', $this->_getValueFromArray('storeid', $documentData));
-        $writer->writeElement('language', $this->_getValueFromArray('language', $documentData));
-        $writer->writeElement('availability', $this->_getValueFromArray('in_stock', $documentData));
+        // write default element
+        $this->_writeXmlCdataElement($writer, 'id', $this->_getValueFromArray('id', $productData));
+        $this->_writeXmlCdataElement($writer, 'storeid', $this->_getValueFromArray('storeid', $documentData));
+        $this->_writeXmlCdataElement($writer, 'language', $this->_getValueFromArray('language', $documentData));
+        $this->_writeXmlCdataElement($writer, 'availability', $this->_getValueFromArray('in_stock', $documentData));
 
+        // write base product information
+        $this->_addBaseProductDataToXmlFragment($productData, $documentData, $writer);
+
+        // write category information
+        $this->_addCategoryInformationToXmlFragment($documentData, $writer);
+
+        // add image information to xml
+        $this->_addImageInformationToXmlFragment($productData, $writer);
+
+        // add dynamic fields
+        $this->_addDynamicDataToXmlFragment($documentData, $productData, $writer);
+
+        // add related, upsell and crosssell information
+        $this->_addRelatedProductsToXmlFragment($productData, $writer);
+
+        // end product node
+        $writer->endElement();
+        $writer->endDocument();
+
+        // replace any control characters to avoid Solr XML parser exception
+        $result = $this->_stripCtrlChars($writer->outputMemory(true));
+
+        $helper = $this->_getSearchperienceHelper();
+        if ($helper->isLoggingEnabled() && $helper->isLogFullDocumentsEnabled()) {
+            Mage::log('Generated XML Document: ' . $result, Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Add base document data to xml fragment using $writer
+     *
+     * @param array     $productData  Product data
+     * @param array     $documentData Document data
+     * @param XMLWriter $writer       XMLWriter used for data creation
+     * @return void
+     */
+    protected function _addBaseProductDataToXmlFragment(array $productData, array $documentData, XMLWriter $writer)
+    {
         $documentFields = array(
             'sku'               => 'sku',
             'title'             => 'name',
@@ -254,24 +309,52 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             }
             $writer->endElement();
         }
+    }
 
-        // add category information to xml
+    /**
+     * Add category information to xml fragment using $writer
+     *
+     * @param array     $documentData Array of document data
+     * @param XMLWriter $writer       XML writer
+     * @return void
+     */
+    protected function _addCategoryInformationToXmlFragment(array $documentData, XMLWriter $writer)
+    {
         $categoryInformation = $this->_getValueFromArray('categories', $documentData, array());
         foreach ($categoryInformation as $categoryId => $category) {
-            $writer->writeElement('category_path', $this->_getValueFromArray('path', $category));
-            $writer->writeElement('category_id', $categoryId);
+            $this->_writeXmlCdataElement($writer, 'category_path', $this->_getValueFromArray('path', $category));
+            $this->_writeXmlCdataElement($writer, 'category_id', $categoryId);
         }
+    }
 
-        // add image information to xml
+    /**
+     * Add image information to xml fragment using $writer
+     *
+     * @param array     $productData Product data
+     * @param XMLWriter $writer      XML writer
+     * @return void
+     */
+    protected function _addImageInformationToXmlFragment(array $productData, XMLWriter $writer)
+    {
         $images = $this->_getValueFromArray('images', $productData, array());
-        $writer->writeElement('image_link', $this->_getValueFromArray('small_image', $images));
+        $this->_writeXmlCdataElement($writer, 'image_link', $this->_getValueFromArray('small_image', $images));
+    }
 
-        // dynamic fields
+    /**
+     * Add dynamic data fields to xml fragment using $writer
+     *
+     * @param array     $documentData Document data
+     * @param array     $productData  Product data
+     * @param XMLWriter $writer       XML writer
+     * @return void
+     */
+    protected function _addDynamicDataToXmlFragment(array $documentData, array $productData, XMLWriter $writer)
+    {
         $additionalData = $this->_getValueFromArray('additionalData', $productData, array());
         foreach ($additionalData as $key => $value) {
             $writer->startElement('attribute');
             $writer->writeAttribute('name', $key);
-            $writer->writeAttribute('type', $this->_getValueFromArray($key, $documentData['attributeTypes'], 'string') );
+            $writer->writeAttribute('type', $this->_getValueFromArray($key, $documentData['attributeTypes'], 'string'));
             if (isset($documentData['attributesUsedForSorting'][$key])) {
                 $writer->writeAttribute('forsorting', $documentData['attributesUsedForSorting'][$key]);
             }
@@ -281,24 +364,33 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             if (isset($documentData['attributesUsedForSearching'][$key])) {
                 $writer->writeAttribute('forsearching', $documentData['attributesUsedForSearching'][$key]);
             }
-//            if (isset($documentData['attributeTypes'][$key]) && ($documentData['attributeTypes'][$key] != 'date')) {
-//                $writer->writeAttribute('forsearching', 1);
-//            }
+//          if (isset($documentData['attributeTypes'][$key]) && ($documentData['attributeTypes'][$key] != 'date')) {
+//              $writer->writeAttribute('forsearching', 1);
+//          }
 
             if (!is_array($value)) {
-                $value = (array)$value;
+                $value = (array) $value;
             }
             $value = array_unique($value);
-            foreach ($value as $key => $attributeValue) {
+            foreach ($value as $attributeValue) {
                 if ($attributeValue) {
-                    $writer->writeElement('value', $attributeValue);
+                    $this->_writeXmlCdataElement($writer, 'value', $attributeValue);
                 }
             }
 
             $writer->endElement();
         }
+    }
 
-        // add related, upsell and crosssell information
+    /**
+     * Add related products to xml fragment using $writer
+     *
+     * @param array     $productData Product data
+     * @param XMLWriter $writer      XML Writer
+     * @return void
+     */
+    protected function _addRelatedProductsToXmlFragment(array $productData, XMLWriter $writer)
+    {
         $relatedInformation = array(
             'related' => 'related_product',
             'upsell'  => 'upsell',
@@ -308,30 +400,17 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
         foreach ($relatedInformation as $key => $elementName) {
             $assigned = $this->_getValueFromArray($key, $productData, array());
             foreach ($assigned as $index => $productId) {
-                $writer->writeElement($elementName, $productId);
+                $this->_writeXmlCdataElement($writer, $elementName, $productId);
             }
         }
-
-        // end product node
-        $writer->endElement();
-        $writer->endDocument();
-
-        // replace any control characters to avoid Solr XML parser exception
-        $return = $this->_stripCtrlChars($writer->outputMemory(true));
-
-        if (Mage::helper('aoe_searchperience')->isLoggingEnabled() && Mage::helper('aoe_searchperience')->isLogFullDocumentsEnabled()) {
-            Mage::log('Generated XML Document: ' . $return, Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
-        }
-
-        return $return;
     }
 
     /**
      * Used for extracting values from arrays
      *
-     * @param string $key      Key of data to extract
-     * @param array $array    Array with data to extract from
-     * @param string $default  Default return value if key not found in array
+     * @param string $key     Key of data to extract
+     * @param array  $array   Array with data to extract from
+     * @param string $default Default return value if key not found in array
      * @return string|array
      */
     private function _getValueFromArray($key, array $array, $default = '')
@@ -340,5 +419,31 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             return $array[$key];
         }
         return $default;
+    }
+
+    /**
+     * Use $writer to write $elementName with CDATA encapsulation
+     * @param XMLWriter $writer       XML writer
+     * @param string    $elementName  XML tag name
+     * @param string    $elementValue XML tag string content
+     * @return void
+     */
+    protected function _writeXmlCdataElement(XMLWriter $writer, $elementName, $elementValue = null)
+    {
+        $writer->startElement($elementName);
+        if (!is_null($elementValue)) {
+            $writer->writeCdata($elementValue);
+        }
+        $writer->endElement();
+    }
+
+    /**
+     * Get the modules helper
+     *
+     * @return Aoe_Searchperience_Helper_Data
+     */
+    protected function _getSearchperienceHelper()
+    {
+        return Mage::helper('aoe_searchperience');
     }
 }
