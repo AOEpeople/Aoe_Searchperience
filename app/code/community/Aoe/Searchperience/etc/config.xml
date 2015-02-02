@@ -73,14 +73,14 @@
             </aoe_searchperience_setup>
         </resources>
         <events>
-            <catelogsearch_searchable_attributes_load_after>
+            <catalogsearch_searchable_attributes_load_after>
                 <observers>
                     <searchperience>
                         <class>aoe_searchperience/observer</class>
                         <method>storeSearchableAttributes</method>
                     </searchperience>
                 </observers>
-            </catelogsearch_searchable_attributes_load_after>
+            </catalogsearch_searchable_attributes_load_after>
 
             <!--<aoe_searchperience_prepareIndexProductData_after/>-->
         </events>
