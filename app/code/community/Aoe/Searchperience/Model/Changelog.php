@@ -25,13 +25,13 @@ class Aoe_Searchperience_Model_Changelog extends Enterprise_Index_Model_Changelo
 
         $select = $this->_connection->select()
             ->from(array('changelog' => $this->_metadata->getChangelogName()), array())
-            ->where('version_id >= ?', $this->_metadata->getVersionId())
+            ->where('version_id > ?', $this->_metadata->getVersionId())
             ->order('version_id ASC')
             ->limit($this->getLimit())
             ->columns(array('version_id', $keyColumn));
 
         if ($currentVersion) {
-            $select->where('version_id < ?', $currentVersion);
+            $select->where('version_id <= ?', $currentVersion);
         }
 
         $res = $this->_connection->fetchAssoc($select);
