@@ -24,7 +24,6 @@ app/etc/modules/*                                                           app/
 shell/*                                                                     shell/
 
 #install searchperience api client
-@shell cd $MODULE/lib && php composer.phar self-update
 @shell cd $MODULE/lib && if ! [ -e composer.lock ]; then (php composer.phar install --no-interaction); else (php composer.phar update --no-interaction); fi
 
 lib/vendor                                                                  lib/searchperience
