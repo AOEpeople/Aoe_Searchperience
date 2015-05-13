@@ -1,0 +1,7 @@
+<?php
+/** @var Aoe_Searchperience_Helper_Cockpit_Widget_Bundle_Config $widgetBundleHelper */
+$widgetBundleHelper = Mage::helper('aoe_searchperience/cockpit_widget_bundle_config');
+?>
+<?php if ($widgetBundleHelper->getRemoteJsUrl()): ?>
+    <script type="text/javascript" src="<?php echo $widgetBundleHelper->getRemoteJsUrl(); ?>"></script>
+<?php endif; ?>

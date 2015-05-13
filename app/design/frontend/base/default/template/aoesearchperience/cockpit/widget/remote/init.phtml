@@ -1,0 +1,15 @@
+<?php
+/** @var Aoe_Searchperience_Helper_Cockpit_Widget_Bundle_Config $configHelper */
+$configHelper = Mage::helper('aoe_searchperience/cockpit_widget_bundle_config');
+?>
+<script type="text/javascript">
+    if (typeof AOEWidgetizer != 'undefined') {
+        try {
+            AOEWidgetizer.config.widgetEndpoint = '<?php echo $configHelper->getEndpointUrl()?>';
+            var widgetizer = new AOEWidgetizer.Widgetizer();
+            widgetizer.init();
+        } catch (e) {
+            console.log(e);
+        }
+    }
+</script>

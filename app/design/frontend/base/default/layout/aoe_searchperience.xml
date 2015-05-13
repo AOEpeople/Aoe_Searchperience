@@ -8,10 +8,17 @@
             <action method="addCss"><stylesheet>css/aoesearchperience/base-search.css</stylesheet></action>
             <action method="addCss"><stylesheet>css/aoesearchperience/styles.css</stylesheet></action>
             <block type="core/template" name="aoe_searchperience_config_js" template="aoesearchperience/config.phtml"/>
+            <block type="core/template"
+                   name="aoe_searchperience_cockpit_widget_config_js"
+                   template="aoesearchperience/cockpit/widget/remote/config.phtml" />
+
         </reference>
         <reference name="footer">
             <block type="core/template" name="aoe_searchperience_recommendation_tracking" template="aoesearchperience/tracking.phtml"/>
             <block type="core/template" name="aoe_searchperience_widgets" template="aoesearchperience/widgets.phtml"/>
+            <block type="core/template"
+                   name="aoe_searchperience_cockpit_widget_remote_init"
+                   template="aoesearchperience/cockpit/widget/remote/init.phtml" />
         </reference>
     </default>
 </layout>
