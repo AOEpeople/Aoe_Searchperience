@@ -90,11 +90,16 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
 
             $productAttributes = array();
             $productRelations  = array();
+            $websiteId = Mage::app()->getStore($storeId)->getWebsiteId();
             foreach ($products as $productData) { /* @var $productData array */
                 $lastProductId = $productData['entity_id'];
                 $productsFound[] = $productData['entity_id'];
                 $productAttributes[$productData['entity_id']] = $productData['entity_id'];
-                $productChildren = $this->_getProductChildIds($productData['entity_id'], $productData['type_id']);
+                $productChildren = $this->_getProductChildrenIds(
+                    $productData['entity_id'],
+                    $productData['type_id'],
+                    $websiteId
+                );
                 $productRelations[$productData['entity_id']] = $productChildren;
                 if ($productChildren) {
                     foreach ($productChildren as $productChildId) {
