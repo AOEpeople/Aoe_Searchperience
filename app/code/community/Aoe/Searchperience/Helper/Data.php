@@ -13,12 +13,14 @@ class Aoe_Searchperience_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @var string
      */
-    const XML_PATH_ENABLE_DEBUG_MODE        = 'searchperience/searchperience/enableDebuggingMode';
-    const XML_PATH_ENABLE_DOCUMENT_DELETION = 'searchperience/searchperience/enableDocumentDeletion';
-    const XML_PATH_ENABLE_TRACKING          = 'searchperience/searchperience/enableRecommendationTracking';
-    const XML_PATH_ENABLE_WIDGETS           = 'searchperience/searchperience/enableWidgets';
-    const XML_PATH_TRACKING_SCRIPT_URL      = 'searchperience/searchperience/recommendationTrackingScriptUrl';
-    const XML_PATH_WIDGETS_SCRIPT_URL       = 'searchperience/searchperience/widgetsScriptUrl';
+    const XML_PATH_ENABLE_DEBUG_MODE           = 'searchperience/searchperience/enableDebuggingMode';
+    const XML_PATH_ENABLE_DOCUMENT_DELETION    = 'searchperience/searchperience/enableDocumentDeletion';
+    const XML_PATH_ENABLE_TRACKING             = 'searchperience/searchperience/enableRecommendationTracking';
+    const XML_PATH_ENABLE_WIDGETS              = 'searchperience/searchperience/enableWidgets';
+    const XML_PATH_TRACKING_SCRIPT_URL         = 'searchperience/searchperience/recommendationTrackingScriptUrl';
+    const XML_PATH_WIDGETS_SCRIPT_URL          = 'searchperience/searchperience/widgetsScriptUrl';
+    const XML_PATH_CATEGORY_RENDERING_ENDPOINT = 'searchperience/searchperience_category_rendering/endpoint_url';
+    const XML_PATH_CATEGORY_RENDERING_DEFAULT  = 'searchperience/searchperience_category_rendering/rendering_default';
     /**@-*/
 
     CONST LOGFILE = 'searchperience.log';
@@ -94,6 +96,20 @@ class Aoe_Searchperience_Helper_Data extends Mage_Core_Helper_Abstract
      * @var boolean
      */
     protected $_widgetsScriptUrl = null;
+
+    /**
+     * Holds url for category rendering endpoint
+     *
+     * @var string|null
+     */
+    protected $_categoryRenderingEndpoint = null;
+
+    /**
+     * Holds value which category rendering default we should use
+     *
+     * @var string|null
+     */
+    protected $_categoryRenderingDefault = null;
 
     /**
      * Check whether current magento installation is EE
@@ -209,6 +225,32 @@ class Aoe_Searchperience_Helper_Data extends Mage_Core_Helper_Abstract
             $this->_widgetsScriptUrl = trim(Mage::getStoreConfig(self::XML_PATH_WIDGETS_SCRIPT_URL));
         }
         return $this->_widgetsScriptUrl;
+    }
+
+    /**
+     * Returns category rendering endpoint url
+     *
+     * @return string
+     */
+    public function getCategoryRenderingEndpoint()
+    {
+        if (null === $this->_categoryRenderingEndpoint) {
+            $this->_categoryRenderingEndpoint = trim(Mage::getStoreConfig(self::XML_PATH_CATEGORY_RENDERING_ENDPOINT));
+        }
+        return $this->_categoryRenderingEndpoint;
+    }
+
+    /**
+     * Returns category rendering default
+     *
+     * @return string
+     */
+    public function getCategoryRenderingDefault()
+    {
+        if (null === $this->_categoryRenderingDefault) {
+            $this->_categoryRenderingDefault = trim(Mage::getStoreConfig(self::XML_PATH_CATEGORY_RENDERING_DEFAULT));
+        }
+        return $this->_categoryRenderingDefault;
     }
 
     /**

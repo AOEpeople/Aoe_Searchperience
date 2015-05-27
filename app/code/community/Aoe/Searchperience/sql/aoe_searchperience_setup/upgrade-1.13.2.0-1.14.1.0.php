@@ -6,8 +6,8 @@ Mage::log(sprintf('Running Upgrade Script: %s.', __FILE__));
 $installer = Mage::getResourceModel('catalog/setup', 'catalog_setup');
 $installer->startSetup();
 
-$installer->removeAttribute('catalog_category', 'searchperience_cat_render_url');
-$installer->removeAttribute('catalog_category', 'searchperience_cat_render_def');
+//$installer->removeAttribute('catalog_category', 'searchperience_cat_render_url');
+//$installer->removeAttribute('catalog_category', 'searchperience_cat_render_def');
 
 $installer->addAttribute(
     'catalog_category',
@@ -30,19 +30,20 @@ $installer->addAttribute(
     'searchperience_cat_render_def',
     array(
         'group'        => 'Searchperience Category-Rendering',
-        'type'         => 'text',
+        'type'         => 'int',
         'label'        => 'Category-Rendering Default',
         'input'        => 'select',
         'global'       => Mage_Catalog_Model_Resource_Eav_Attribute::SCOPE_STORE,
         'visible'      => true,
         'required'     => false,
         'user_defined' => false,
-        'default'      => 0,
-        'option' => array (
+        'default_value' => '0',
+        'default'      => '0',
+        'option' => array(
             'values' => array(
-                'default'        => 'Default Rendering',
-                'magento'        => 'Magento Rendering',
-                'searchperience' => 'Searchperience Rendering',
+                0 => 'Default Rendering',
+                1 => 'Magento Rendering',
+                2 => 'Searchperience Rendering',
             )
         ),
     )
