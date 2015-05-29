@@ -2,23 +2,40 @@
 <layout version="0.1.0">
     <default>
         <reference name="top.search">
-            <action method="setTemplate" ><template>aoesearchperience/form.mini.phtml</template></action>
+            <action method="setTemplate">
+                <template>aoesearchperience/form.mini.phtml</template>
+            </action>
         </reference>
         <reference name="head">
-            <action method="addCss"><stylesheet>css/aoesearchperience/base-search.css</stylesheet></action>
-            <action method="addCss"><stylesheet>css/aoesearchperience/styles.css</stylesheet></action>
+            <action method="addCss">
+                <stylesheet>css/aoesearchperience/base-search.css</stylesheet>
+            </action>
+            <action method="addCss">
+                <stylesheet>css/aoesearchperience/styles.css</stylesheet>
+            </action>
             <block type="core/template" name="aoe_searchperience_config_js" template="aoesearchperience/config.phtml"/>
             <block type="core/template"
                    name="aoe_searchperience_cockpit_widget_config_js"
-                   template="aoesearchperience/cockpit/widget/remote/config.phtml" />
+                   template="aoesearchperience/cockpit/widget/remote/config.phtml"/>
 
         </reference>
         <reference name="footer">
-            <block type="core/template" name="aoe_searchperience_recommendation_tracking" template="aoesearchperience/tracking.phtml"/>
+            <block type="core/template" name="aoe_searchperience_recommendation_tracking"
+                   template="aoesearchperience/tracking.phtml"/>
             <block type="core/template" name="aoe_searchperience_widgets" template="aoesearchperience/widgets.phtml"/>
             <block type="core/template"
                    name="aoe_searchperience_cockpit_widget_remote_init"
-                   template="aoesearchperience/cockpit/widget/remote/init.phtml" />
+                   template="aoesearchperience/cockpit/widget/remote/init.phtml"/>
         </reference>
     </default>
+
+    <!--
+    <catalog_category_default>
+        <reference name="root">
+            <action method="setTemplate"><template>aoesearchperience/catalog/category/root.phtml</template></action>
+            <action method="unsetChild"><name>content</name></action>
+            <block type="aoe_searchperience/catalog_category_view" name="content"/>
+        </reference>
+    </catalog_category_default>
+    -->
 </layout>

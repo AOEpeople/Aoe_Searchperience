@@ -545,6 +545,7 @@
                     <fields>
                         <endpoint_url translate="label, comment" module="aoe_searchperience">
                             <label>Category-Rendering-Endpoint</label>
+                            <comment>###ID### will be replaced by current category id</comment>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>

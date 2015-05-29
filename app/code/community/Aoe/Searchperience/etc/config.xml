@@ -56,11 +56,6 @@
                     <resource_lock_resource>Aoe_Searchperience_Model_Resource_Lock_Resource</resource_lock_resource>
                 </rewrite>
             </enterprise_index>
-            <catalog>
-                <rewrite>
-                    <category>Aoe_Searchperience_Model_Catalog_Category</category>
-                </rewrite>
-            </catalog>
             <!--<enterprise_catalogsearch>
                 <rewrite>
                     <indexer_fulltext>Aoe_Searchperience_Model_Indexer_Fulltext</indexer_fulltext>
