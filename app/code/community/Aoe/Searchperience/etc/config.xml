@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Aoe_Searchperience>
-            <version>1.14.1.0</version>
+            <version>1.14.1.1</version>
         </Aoe_Searchperience>
     </modules>
     <admin>
