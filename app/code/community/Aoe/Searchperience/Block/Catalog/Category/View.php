@@ -26,9 +26,14 @@ class Aoe_Searchperience_Block_Catalog_Category_View extends Mage_Core_Block_Tem
         $url = str_replace('###ID###', $catId, $url);
         //http://www.search.host/index.php?id=34&searchperience[filters][pr_categoryids][equals]=' . $catId . '&eID=tx_aoesolr_search';
 
-        $client = new Guzzle\Http\Client();
-        $request = $client->get($url);
-        return $client->send($request)->getBody();
+        try {
+            $client = new Guzzle\Http\Client();
+            $request = $client->get($url);
+            return $client->send($request)->getBody();
+        } catch (Guzzle\Http\Exception\ServerErrorResponseException $e) {
+            Mage::logException($e);
+            return '<!-- CATEGORY_LIST_PLACEHOLDER -->';
+        }
     }
 
     /**
