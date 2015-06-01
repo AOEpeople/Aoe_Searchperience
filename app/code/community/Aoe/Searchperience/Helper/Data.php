@@ -23,6 +23,10 @@ class Aoe_Searchperience_Helper_Data extends Mage_Core_Helper_Abstract
     const XML_PATH_CATEGORY_RENDERING_DEFAULT  = 'searchperience/searchperience_category_rendering/rendering_default';
     /**@-*/
 
+    const RENDERING_DEFAULT = 0;
+    const RENDERING_MAGENTO = 1;
+    const RENDERING_SEARCHPERIENCE = 2;
+
     CONST LOGFILE = 'searchperience.log';
 
     /**
@@ -251,6 +255,24 @@ class Aoe_Searchperience_Helper_Data extends Mage_Core_Helper_Abstract
             $this->_categoryRenderingDefault = trim(Mage::getStoreConfig(self::XML_PATH_CATEGORY_RENDERING_DEFAULT));
         }
         return $this->_categoryRenderingDefault;
+    }
+
+    /**
+     * @return bool
+     */
+    public function shouldCurrentCategoryBeRenderedBySearchperience()
+    {
+        if (!($category = Mage::registry('current_category'))) {
+            return false;
+        }
+
+        $renderMode = $category->getSearchperienceCatRenderDef() ?: $this->getCategoryRenderingDefault();
+
+        if ($renderMode == self::RENDERING_SEARCHPERIENCE) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

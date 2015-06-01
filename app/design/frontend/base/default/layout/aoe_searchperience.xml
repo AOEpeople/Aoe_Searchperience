@@ -32,9 +32,11 @@
     <!--
     <catalog_category_default>
         <reference name="root">
-            <action method="setTemplate"><template>aoesearchperience/catalog/category/root.phtml</template></action>
-            <action method="unsetChild"><name>content</name></action>
-            <block type="aoe_searchperience/catalog_category_view" name="content"/>
+            <action method="setTemplate" ifhelper="aoe_searchperience/data::shouldCurrentCategoryBeRenderedBySearchperience"><template>aoesearchperience/catalog/category/root.phtml</template></action>
+            <action method="unsetChild" ifhelper="aoe_searchperience/data::shouldCurrentCategoryBeRenderedBySearchperience"><name>content</name></action>
+            <block type="aoe_searchperience/catalog_category_view" name="content" ifhelper="aoe_searchperience/data::shouldCurrentCategoryBeRenderedBySearchperience">
+                <block type="aoe_searchperience/catalog_category_navigation" name="subcategory_navigation"/>
+            </block>
         </reference>
     </catalog_category_default>
     -->

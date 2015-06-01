@@ -15,15 +15,16 @@ class Aoe_Searchperience_Model_Adminhtml_System_Config_Source_CategoryRenderingD
         /* @var $searchperienceHelper Aoe_Searchperience_Helper_Data */
         $searchperienceHelper = Mage::helper('aoe_searchperience');
 
-        $options = array(
-            array(
-                'value' => 'default',
-                'label' => $searchperienceHelper->__('Magento default')
-            ),
-            array(
-                'value' => 'searchperience',
-                'label' => $searchperienceHelper->__('Searchperience rendering'))
-        );
+        $options = [
+            [
+                'value' => Aoe_Searchperience_Helper_Data::RENDERING_MAGENTO,
+                'label' => $searchperienceHelper->__('Magento default'),
+            ],
+            [
+                'value' => Aoe_Searchperience_Helper_Data::RENDERING_SEARCHPERIENCE,
+                'label' => $searchperienceHelper->__('Searchperience rendering'),
+            ]
+        ];
 
         return $options;
     }
