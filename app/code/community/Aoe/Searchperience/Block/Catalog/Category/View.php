@@ -45,4 +45,16 @@ class Aoe_Searchperience_Block_Catalog_Category_View extends Mage_Core_Block_Tem
 
         return str_replace('<!-- CATEGORY_LIST_PLACEHOLDER -->', $subcategories, $this->_fetchCategoryHtml());
     }
+
+    /**
+     * @return array
+     */
+    public function getCacheKeyInfo()
+    {
+        return [
+            __FILE__,
+            'CATEGORY-' . Mage::registry('current_category')->getId(),
+            Mage::helper('aoe_searchperience')->getCategoryRenderingEndpoint(),
+        ];
+    }
 }
