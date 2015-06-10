@@ -372,9 +372,15 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
                 $value = (array) $value;
             }
             $value = array_unique($value);
+
+            // Multiple Value need each to be encased in 'value' nodes, needed for multiselects
+            $valueElementName = null;
+            if (count($value) > 1) {
+                $valueElementName = 'value';
+            }
             foreach ($value as $attributeValue) {
-                if ($attributeValue) {
-                    $this->_writeXmlCdataElement($writer, 'value', $attributeValue);
+                if ($attributeValue || $attributeValue === '0') {
+                    $this->_writeXmlCdataElement($writer, $valueElementName, $attributeValue);
                 }
             }
 
@@ -430,11 +436,13 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
      */
     protected function _writeXmlCdataElement(XMLWriter $writer, $elementName, $elementValue = null)
     {
-        $writer->startElement($elementName);
-        if (!is_null($elementValue)) {
-            $writer->writeCdata($elementValue);
+        if (!is_null($elementName)) {
+            $writer->startElement($elementName);
         }
-        $writer->endElement();
+        $writer->writeCdata($elementValue);
+        if (!is_null($elementName)) {
+            $writer->endElement();
+        }
     }
 
     /**

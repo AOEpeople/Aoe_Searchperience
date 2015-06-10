@@ -1,18 +1,25 @@
 <?php
 
+/**
+ * Class Aoe_Searchperience_Model_Adapter_Searchperience
+ *
+ * @category Model
+ * @package  Aoe_AttributeConfigurator
+ * @author   AOE Magento Team <team-magento@aoe.com>
+ */
 class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_Model_Adapter_Solr_Abstract
 {
     /**
      * Api document class name
      *
-     * @var string
+     * @var string $_clientDocObjectName
      */
     protected $_clientDocObjectName = 'Aoe_Searchperience_Model_Api_Document';
 
     /**
      * @var array of categories $categories[store][categoryId]=>category data
      */
-    protected $categories = array();
+    protected $_categories = array();
 
     /**
      * @var array of indexable attributes
@@ -22,7 +29,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     /**
      * Constructor
      *
-     * @param array $options
+     * @param array $options Options
      */
     public function __construct($options = array())
     {
@@ -38,7 +45,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
      * Connect to Search Engine Client by specified options.
      * Should initialize _client
      *
-     * @param array $options
+     * @param array $options Options
      * @return \Mage_Core_Model_Abstract
      */
     protected function _connect($options = array())
@@ -50,8 +57,9 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     /**
      * Simple Search interface
      *
-     * @param string $query
-     * @param array $params
+     * @param string $query  Query
+     * @param array  $params Params
+     * @return void
      */
     protected function _search($query, $params = array())
     {
@@ -61,8 +69,8 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     /**
      * Create Solr Input Documents by specified data
      *
-     * @param   array $docData
-     * @param   int $storeId
+     * @param array $docData DocData
+     * @param int   $storeId Store Id
      *
      * @return  array
      */
@@ -83,7 +91,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
             $doc->setData($productIndexData);
             $docs[] = $doc;
-          unset($docData[$productId]);
+            unset($docData[$productId]);
         }
         Varien_Profiler::stop(__CLASS__.__METHOD__);
         return $docs;
@@ -92,9 +100,9 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     /**
      * Remove documents from Solr index
      *
-     * @param  int|string|array $docIDs
-     * @param  string|array|null $queries if "all" specified and $docIDs are empty, then all documents will be removed
-     * @param  string document source (if $queries == all)
+     * @param int|string|array  $docIDs  Doc Ids
+     * @param string|array|null $queries If "all" specified and $docIDs are empty, then all documents will be removed
+     * @param string            $source  (if $queries == all)
      * @return Aoe_Searchperience_Model_Adapter_Searchperience
      */
     public function deleteDocs($docIDs = array(), $queries = null, $source=null)
@@ -104,7 +112,8 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             return $this;
         }
 
-        $documentRepository = $this->_client->getDocumentRepository(); /* @var $documentRepository Searchperience\Api\Client\Domain\DocumentRepository */
+        /** @var Searchperience\Api\Client\Domain\DocumentRepository $documentRepository */
+        $documentRepository = $this->_client->getDocumentRepository();
 
         if ($queries === 'all' && count($docIDs) == 0) {
 
@@ -116,18 +125,41 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
                 if ($statusCode == 200) {
                     if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                        Mage::log(sprintf('Successfully deleted all documents from repository for source "%s"', $source), Zend_Log::INFO, Aoe_Searchperience_Helper_Data::LOGFILE);
+                        Mage::log(
+                            sprintf(
+                                'Successfully deleted all documents from repository for source "%s"',
+                                $source
+                            ),
+                            Zend_Log::INFO,
+                            Aoe_Searchperience_Helper_Data::LOGFILE
+                        );
                     }
                 } else {
                     if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                        Mage::log(sprintf('Error while deleting all documents from repository for source "%s" (Status Code: "%s")', $source, $statusCode), Zend_Log::ERR, Aoe_Searchperience_Helper_Data::LOGFILE);
+                        Mage::log(
+                            sprintf(
+                                'Error while deleting all documents from repository for source "%s" (Status Code: "%s")',
+                                $source,
+                                $statusCode
+                            ),
+                            Zend_Log::ERR,
+                            Aoe_Searchperience_Helper_Data::LOGFILE
+                        );
                     }
                 }
             } catch (Exception $e) {
                 Mage::logException($e);
 
                 if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                    Mage::log(sprintf('Error while deleting all documents from repository for source "%s" (Message: "%s")', $source, $e->getMessage()), Zend_Log::ERR, Aoe_Searchperience_Helper_Data::LOGFILE);
+                    Mage::log(
+                        sprintf(
+                            'Error while deleting all documents from repository for source "%s" (Message: "%s")',
+                            $source,
+                            $e->getMessage()
+                        ),
+                        Zend_Log::ERR,
+                        Aoe_Searchperience_Helper_Data::LOGFILE
+                    );
                 }
             }
         } else {
@@ -136,17 +168,38 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                     $documentRepository->deleteByForeignId($docId);
 
                     if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                        Mage::log(sprintf('Successfully deleted document with foreign id %s from repository', $docId), Zend_Log::INFO, Aoe_Searchperience_Helper_Data::LOGFILE);
+                        Mage::log(
+                            sprintf(
+                                'Successfully deleted document with foreign id %s from repository',
+                                $docId
+                            ),
+                            Zend_Log::INFO,
+                            Aoe_Searchperience_Helper_Data::LOGFILE
+                        );
                     }
                 } catch (Searchperience\Common\Http\Exception\DocumentNotFoundException $e) {
                     if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                        Mage::log(sprintf('Document with foreign id %s not found', $docId), Zend_Log::INFO, Aoe_Searchperience_Helper_Data::LOGFILE);
+                        Mage::log(
+                            sprintf(
+                                'Document with foreign id %s not found',
+                                $docId
+                            ),
+                            Zend_Log::INFO,
+                            Aoe_Searchperience_Helper_Data::LOGFILE
+                        );
                     }
                 } catch (Exception $e) {
                     Mage::logException($e);
 
                     if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
-                        Mage::log(sprintf('Error while deleting document with foreign id %s from repository', $docId), Zend_Log::ERR, Aoe_Searchperience_Helper_Data::LOGFILE);
+                        Mage::log(
+                            sprintf(
+                                'Error while deleting document with foreign id %s from repository',
+                                $docId
+                            ),
+                            Zend_Log::ERR,
+                            Aoe_Searchperience_Helper_Data::LOGFILE
+                        );
                     }
                 }
             }
@@ -155,10 +208,11 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     }
 
     /**
-     * @param $availability
+     * @param mixed $availability Availability
      * @return string
      */
-    protected function getAvailabilitySpeakingName($availability) {
+    protected function getAvailabilitySpeakingName($availability)
+    {
         switch(filter_var($availability, FILTER_VALIDATE_INT)) {
             case 0: return 'out_of_stock';
             case 1: return 'in_stock';
@@ -171,10 +225,9 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
      * Prepare fields for advanced search, navigation, sorting and fulltext fields for each search weight for
      * quick search and spell.
      *
-     * @param array $productIndexData
-     * @param int $productId
-     * @param int $storeId
-     *
+     * @param array $productIndexData Product Index Data
+     * @param int   $productId        Product Id
+     * @param int   $storeId          Store Id
      * @return  array|bool
      */
     protected function _prepareIndexProductData($productIndexData, $productId, $storeId)
@@ -186,13 +239,13 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             return false;
         }
 
-        $returnData  = array(
+        $returnData = array(
             'storeid'  => $storeId,
             'language' => Mage::getStoreConfig('general/locale/code', $storeId),
             'in_stock' => $this->getAvailabilitySpeakingName(isset($productIndexData['in_stock']) ? $productIndexData['in_stock'] : ''),
         );
 
-        /** @var $product Mage_Catalog_Model_Product */
+        /** @var Mage_Catalog_Model_Product $product */
         $product = Mage::registry('product');
 
         // product not found in registry or is not equal to given productId, load from database
@@ -215,7 +268,10 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             $returnData['productData']['rating'] = $product->getRatingSummary()->getRatingSummary();
         }
 
-        $this->_usedFields   = array_merge($this->_usedFields, array('id', 'description', 'short_description', 'price', 'name', 'tax_class_id'));
+        $this->_usedFields   = array_merge(
+            $this->_usedFields,
+            array('id', 'description', 'short_description', 'price', 'name', 'tax_class_id')
+        );
 
         if (Mage::getStoreConfigFlag('searchperience/include_data/prices')) {
             // fetch price information
@@ -259,8 +315,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
             if (is_array($value) && isset($value[$productId])) {
                 $returnData['productData'][$attributeCode] = $value[$productId];
-            }
-            else {
+            } else {
                 $returnData[$attributeCode] = $value;
             }
         }
@@ -293,14 +348,15 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
     /**
      * Returns array of related products ids
-     * @param $productId
-     * @param int $relationType
-     * @param int $limit
+     * @param mixed $productId    Product Id
+     * @param int   $relationType Relation Type
+     * @param int   $limit        Limit
      * @return mixed
      */
-    protected function getLinkedProductIds($productId, $relationType=Mage_Catalog_Model_Product_Link::LINK_TYPE_RELATED, $limit=10) {
+    protected function getLinkedProductIds($productId, $relationType=Mage_Catalog_Model_Product_Link::LINK_TYPE_RELATED, $limit=10)
+    {
         Varien_Profiler::start(__CLASS__.__METHOD__.$relationType);
-        /** @var $linkModel Mage_Catalog_Model_Product_Link */
+        /** @var Mage_Catalog_Model_Product_Link $linkModel */
         $linkModel = Mage::getSingleton('catalog/product_link');
         $collection = $linkModel->setLinkTypeId($relationType)->getLinkCollection();
         $collection->addFieldToFilter('product_id',  array('eq' => $productId))
@@ -315,15 +371,15 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     /**
      * Get additional product data
      *
-     * @param array $productIndexData
-     * @param $productId
-     * @param $storeId
+     * @param array $productIndexData Product Index Data
+     * @param mixed $productId        Product Id
+     * @param int   $storeId          Store Id
      * @return array
      */
     protected function _getAdditionalProductData($productIndexData, $productId, $storeId)
     {
         Varien_Profiler::start(__CLASS__.__METHOD__);
-        $usedForSorting   = array();
+        $usedForSorting = array();
         $usedForFiltering = array();
         $attributeTypes = array();
 
@@ -331,12 +387,13 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
             if ($attributeCode == 'visibility') {
                 $productIndexData[$attributeCode] = $attributeValue[$productId];
+                $attributeTypes[$attributeCode] = 'float';
                 continue;
             }
 
             // Prepare processing attribute info
             if (isset($this->_indexableAttributeParams[$attributeCode])) {
-                /* @var $attribute Mage_Catalog_Model_Resource_Eav_Attribute */
+                /* @var Mage_Catalog_Model_Resource_Eav_Attribute $attribute */
                 $attribute = $this->_indexableAttributeParams[$attributeCode];
             } else {
                 $attribute = null;
@@ -364,10 +421,17 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                 $backendType = $attribute->getBackendType();
                 $frontendInput = $attribute->getFrontendInput();
 
-                if ($attribute->usesSource()) {
+                if (
+                    $attribute->usesSource() || $this->attributeIsBoolean($attribute)
+                ) {
                     if ($frontendInput == 'multiselect') {
                         foreach ($attributeValue as $val) {
                             $preparedValue = array_merge($preparedValue, explode(',', $val));
+                        }
+                        $preparedNavValue = $preparedValue;
+                    } else if ($this->attributeIsBoolean($attribute)) {
+                        if (count($attributeValue)) {
+                            $preparedValue = array_merge($preparedValue, $attributeValue);
                         }
                         $preparedNavValue = $preparedValue;
                     } else {
@@ -389,8 +453,10 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                         }
                     }
 
-                    foreach ($preparedValue as $id => $val) {
-                        $preparedValue[$id] = $attribute->getSource()->getOptionText($val);
+                    if (!$this->attributeIsBoolean($attribute)) {
+                        foreach ($preparedValue as $id => $val) {
+                            $preparedValue[$id] = $attribute->getSource()->getOptionText($val);
+                        }
                     }
                 } else { // no source
                     if ($backendType == 'datetime') {
@@ -438,7 +504,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     }
 
     /**
-     * @param Mage_Catalog_Model_Resource_Eav_Attribute|string $attribute
+     * @param Mage_Catalog_Model_Resource_Eav_Attribute|string $attribute Attribute
      * @return string
      */
     private function getAttributeSearchType($attribute)
@@ -459,13 +525,17 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
         $backendType    = $attribute->getBackendType();
         $frontendInput  = $attribute->getFrontendInput();
+        $sourceModel    = $attribute->getSourceModel();
 
         if ($frontendInput == 'multiselect') {
             $fieldType = 'string';
+        } elseif ($frontendInput == 'select' && $sourceModel == 'catalog/product_status') {
+            // Product Status
+            $fieldType = 'boolean';
         } elseif ($frontendInput == 'select') {
             $fieldType = 'string';
         } elseif ($frontendInput == 'boolean') {
-            $fieldType = 'string';
+            $fieldType = 'boolean';
         } elseif ($backendType == 'decimal') {
             $fieldType = 'float';
         } elseif ($backendType == 'varchar') {
@@ -481,31 +551,35 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
     /**
      * Fetches all categories to local cache
-     * @param $storeId
+     *
+     * @param int $storeId Store Id
+     * @return void
      */
-    protected function fetchCategories($storeId) {
-        if(!isset($this->categories[$storeId])) {
-            $this->categories[$storeId] = array();
+    protected function fetchCategories($storeId)
+    {
+        if (!isset($this->_categories[$storeId])) {
+            $this->_categories[$storeId] = array();
         }
 
-        /** @var $categoryCollection Mage_Catalog_Model_Resource_Category_Collection */
+        /** @var Mage_Catalog_Model_Resource_Category_Collection $categoryCollection */
         $categoryCollection = Mage::getResourceModel('catalog/category_collection');
         $categoryCollection->setStoreId($storeId)
             ->addNameToResult()
             ->addIsActiveFilter()
-            ->setLoadProductCount(FALSE);
+            ->setLoadProductCount(false);
         $categories = $categoryCollection->load()->toArray(array('path','level','name'));
         unset($categoryCollection);
 
-        $this->categories[$storeId] = $categories;
+        $this->_categories[$storeId] = $categories;
     }
 
     /**
-     * @param Mage_Catalog_Model_Product $product
-     * @param array $data
+     * @param Mage_Catalog_Model_Product $product Product Model
+     * @param array                      $data    Data
      * @return mixed
      */
-    protected function fillProductCategoryInformation($product, $data) {
+    protected function fillProductCategoryInformation($product, $data)
+    {
         $skippableCategories = array();
         if (($skipCategories = Mage::getStoreConfig('searchperience/searchperience/skipCategories'))) {
             $skippableCategories = array_map('trim', explode(',', $skipCategories));
@@ -517,23 +591,23 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         
         // fetch category information
         foreach ($product->getCategoryIds() as $categoryId) {
-            if (!isset($returnData['categories'][$categoryId]) && isset($this->categories[$storeId][$categoryId])) {
-                $category = $this->categories[$storeId][$categoryId];
+            if (!isset($returnData['categories'][$categoryId]) && isset($this->_categories[$storeId][$categoryId])) {
+                $category = $this->_categories[$storeId][$categoryId];
                 $data['categories'][$categoryId]['name'] = $category['name'];
 
                 $pathCategories = explode('/', $category['path']);
                 $path = array();
                 //don't need root category
                 array_shift($pathCategories);
-                foreach($pathCategories as $pathCategoryId) {
+                foreach ($pathCategories as $pathCategoryId) {
                     // do not include skippable categories in list
                     if (in_array($pathCategoryId, $skippableCategories)) {
                         unset($data['categories'][$categoryId]);
                         continue 2;
                     }
 
-                    if (isset($this->categories[$storeId]) && isset($this->categories[$storeId][$pathCategoryId])) {
-                        $cat = $this->categories[$storeId][$pathCategoryId];
+                    if (isset($this->_categories[$storeId]) && isset($this->_categories[$storeId][$pathCategoryId])) {
+                        $cat = $this->_categories[$storeId][$pathCategoryId];
                         if ($cat['level'] > 1) {
                             $pathPart = $cat['name'];
                             $pathPart = str_replace('/','\/', $pathPart);
@@ -550,8 +624,8 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     /**
      * Get price information for product
      *
-     * @param $product Mage_Catalog_Model_Product
-     * @param array $data
+     * @param Mage_Catalog_Model_Product $product Product Model
+     * @param array                      $data    Data
      * @return array
      */
     protected function _getProductPriceInformation($product, $data)
@@ -565,7 +639,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         foreach ($attributes as $attributeCode => $getMethod) {
             if (!empty($this->_indexableAttributeParams[$attributeCode])) {
                 $value = $product->$getMethod();
-                if($value) {
+                if ($value) {
                     $data['productData'][$attributeCode] = $value;
                 }
             }
@@ -576,8 +650,8 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     /**
      * Get product image information
      *
-     * @param $product Mage_Catalog_Model_Product
-     * @param array $data
+     * @param Mage_Catalog_Model_Product $product Product Model
+     * @param array                      $data    Data
      * @return array
      */
     protected function _getProductImageInformation($product, $data)
@@ -596,7 +670,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             'small_image',
         );
 
-        $imageHelper = Mage::helper('catalog/image'); /* @var $imageHelper Mage_Catalog_Helper_Image */
+        $imageHelper = Mage::helper('catalog/image'); /* @var Mage_Catalog_Helper_Image $imageHelper */
 
         foreach ($attributes as $attributeCode) {
             try {
@@ -616,7 +690,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     /**
      * Checks, if given attribute shall be skipped for indexing
      *
-     * @param $attributeCode
+     * @param string $attributeCode Attribute Code
      * @return boolean
      */
     protected function _skipAttribute($attributeCode)
@@ -640,12 +714,14 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     /**
      * Get document info
      *
-     * @param $productId
-     * @param $storeId
+     * @param mixed $productId Product Id
+     * @param int   $storeId   Store Id
      * @return array
      */
-    public function getDocumentInfo($productId, $storeId) {
-        $client = $this->_client; /* @var $client Aoe_Searchperience_Model_Client_Searchperience */
+    public function getDocumentInfo($productId, $storeId)
+    {
+        /** @var Aoe_Searchperience_Model_Client_Searchperience $client */
+        $client = $this->_client;
         $document = $client->getDocumentRepository()->getByForeignId(Mage::helper('aoe_searchperience')->getProductUniqueId($productId, $storeId));
         return array(
             'LastProcessing' => $document->getLastProcessing(),
@@ -663,5 +739,23 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             'TemporaryPriority' => $document->getTemporaryPriority(),
             'Url' => $document->getUrl(),
         );
+    }
+
+    /**
+     * Check if Attribute is of Type Boolean (aka Yes/No Select)
+     *
+     * @param Mage_Catalog_Model_Resource_Eav_Attribute $attribute Attribute
+     * @return bool
+     */
+    protected function attributeIsBoolean($attribute)
+    {
+        if ($attribute->getBackendType() ==='int' &&
+            ($attribute->getFrontendInput() === 'boolean' ||
+                $attribute->getFrontendInput() === 'select') &&
+            ($attribute->getData('source_model') === 'eav/entity_attribute_source_boolean' ||
+                $attribute->getData('source_model') === 'catalog/product_status')) {
+            return true;
+        }
+        return false;
     }
 }
