@@ -1,10 +1,12 @@
 <?xml version="1.0" ?>
 <config>
+
     <modules>
         <Aoe_Searchperience>
             <version>1.13.2.0</version>
         </Aoe_Searchperience>
     </modules>
+
     <global>
         <helpers>
             <aoe_searchperience>
@@ -27,30 +29,20 @@
                     <fulltext>Aoe_Searchperience_Model_Resource_Fulltext</fulltext>
                 </rewrite>
             </aoe_searchperience_resource>
-            <enterprise_search>
-                <rewrite>
-                    <adminhtml_system_config_source_engine>Aoe_Searchperience_Model_Adminhtml_System_Config_Source_Engine</adminhtml_system_config_source_engine>
-                    <adminhtml_system_config_backend_engine>Aoe_Searchperience_Model_Adminhtml_System_Config_Backend_Engine</adminhtml_system_config_backend_engine>
-                </rewrite>
-            </enterprise_search>
-            <!--<enterprise_catalogsearch>
-                <rewrite>
-                    <indexer_fulltext>Aoe_Searchperience_Model_Indexer_Fulltext</indexer_fulltext>
-                </rewrite>
-            </enterprise_catalogsearch>-->
         </models>
-        <events>
-            <catelogsearch_searchable_attributes_load_after>
-                <observers>
-                    <searchperience>
-                        <class>aoe_searchperience/observer</class>
-                        <method>storeSearchableAttributes</method>
-                    </searchperience>
-                </observers>
-            </catelogsearch_searchable_attributes_load_after>
 
-            <!--<aoe_searchperience_prepareIndexProductData_after/>-->
-        </events>
+        <!--<events>-->
+            <!--<catelogsearch_searchable_attributes_load_after>-->
+                <!--<observers>-->
+                    <!--<searchperience>-->
+                        <!--<class>aoe_searchperience/observer</class>-->
+                        <!--<method>storeSearchableAttributes</method>-->
+                    <!--</searchperience>-->
+                <!--</observers>-->
+            <!--</catelogsearch_searchable_attributes_load_after>-->
+
+            <!--&lt;!&ndash;<aoe_searchperience_prepareIndexProductData_after/>&ndash;&gt;-->
+        <!--</events>-->
 
         <index>
             <indexer>
@@ -113,6 +105,7 @@
 
     <default>
         <searchperience>
+
             <searchperience_config_js>
                 <enableInnerShiv>0</enableInnerShiv>
                 <doWidgetInit>0</doWidgetInit>
@@ -133,6 +126,7 @@
                 <aoeSolrSearchPid>0</aoeSolrSearchPid>
                 <aoeSolrParentContainerSelector>.page div.main</aoeSolrParentContainerSelector>
             </searchperience_config_js>
+
             <searchperience>
                 <source>magento</source>
                 <listViewImageWidth>201</listViewImageWidth>
@@ -144,6 +138,7 @@
                 <indexerBatchSize>100</indexerBatchSize>
                 <enableWidgets>0</enableWidgets>
             </searchperience>
+
             <include_data>
                 <rating>1</rating>
                 <prices>1</prices>
@@ -153,6 +148,8 @@
                 <upsell>1</upsell>
                 <cross>1</cross>
             </include_data>
+
         </searchperience>
+
     </default>
 </config>
