@@ -1,5 +1,3 @@
-# modman configuration file
-
 # frontend design
 app/design/frontend/base/default/layout/*                                   app/design/frontend/base/default/layout/
 app/design/frontend/base/default/template/aoesearchperience/*               app/design/frontend/base/default/template/aoesearchperience/
@@ -12,10 +10,6 @@ app/design/adminhtml/default/default/template/searchperience/               app/
 skin/frontend/base/default/css/aoesearchperience/                           skin/frontend/base/default/css/aoesearchperience/
 skin/frontend/base/default/i/aoesearchperience/                             skin/frontend/base/default/i/aoesearchperience/
 
-# backend skin
-skin/adminhtml/default/default/images/searchperience/                       skin/adminhtml/default/default/images/searchperience/
-skin/adminhtml/default/default/css/searchperience/                          skin/adminhtml/default/default/css/searchperience/
-
 # module
 app/code/community/Aoe/Searchperience/                                      app/code/community/Aoe/Searchperience/
 app/etc/modules/*                                                           app/etc/modules/
@@ -23,4 +17,5 @@ app/etc/modules/*                                                           app/
 #scripts
 shell/*                                                                     shell/
 
+# libraries (managed via Composer)
 lib/vendor                                                                  lib/searchperience

@@ -5,23 +5,7 @@
             <version>1.13.2.0</version>
         </Aoe_Searchperience>
     </modules>
-    <admin>
-        <routers>
-            <aoe_searchperience>
-                <use>admin</use>
-                <args>
-                    <module>Aoe_Searchperience</module>
-                    <frontName>searchperience</frontName>
-                </args>
-            </aoe_searchperience>
-        </routers>
-    </admin>
     <global>
-        <blocks>
-            <aoe_searchperience>
-                <class>Aoe_Searchperience_Block</class>
-            </aoe_searchperience>
-        </blocks>
         <helpers>
             <aoe_searchperience>
                 <class>Aoe_Searchperience_Helper</class>
@@ -40,8 +24,7 @@
             <aoe_searchperience_resource>
                 <class>Aoe_Searchperience_Model_Resource</class>
                 <rewrite>
-                    <!--<fulltext>Aoe_Searchperience_Model_Resource_Fulltext</fulltext>-->
-                    <fulltext>Aoe_Searchperience_Model_Resource_Fulltext_Threadi</fulltext>
+                    <fulltext>Aoe_Searchperience_Model_Resource_Fulltext</fulltext>
                 </rewrite>
             </aoe_searchperience_resource>
             <enterprise_search>
@@ -142,16 +125,6 @@
             </updates>
         </layout>
     </frontend>
-
-    <adminhtml>
-        <layout>
-            <updates>
-                <searchperienece>
-                    <file>searchperience/searchperience.xml</file>
-                </searchperienece>
-            </updates>
-        </layout>
-    </adminhtml>
 
     <default>
         <searchperience>

@@ -18,33 +18,8 @@
                             </config>
                         </children>
                     </system>
-					<searchperience>
-						<title>Searchperience Menu Item</title>
-						<children>
-							<queue translate="title" module="aoe_searchperience">
-								<title>Queue Menu Item</title>
-							</queue>
-						</children>
-					</searchperience>
                 </children>
             </admin>
         </resources>
     </acl>
-	<!--<menu>-->
-		<!--<searchperience translate="title" module="aoe_searchperience">-->
-			<!--<title>Searchperience</title>-->
-			<!--<sort_order>15</sort_order>-->
-			<!--<children>-->
-				<!--<queue translate="title" module="aoe_searchperience">-->
-					<!--<title>Queue management</title>-->
-					<!--<action>searchperience/queue/index</action>-->
-					<!--<sort_order>20</sort_order>-->
-					<!--<depends>-->
-						<!--<module>Aoe_Searchperience</module>-->
-						<!--&lt;!&ndash;<config>promo/enterprise_reminder/enabled</config>&ndash;&gt;-->
-					<!--</depends>-->
-				<!--</queue>-->
-			<!--</children>-->
-		<!--</searchperience>-->
-	<!--</menu>-->
 </config>
