@@ -330,9 +330,8 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             }
 
             // Prepare processing attribute info
-            if (isset($this->_indexableAttributeParams[$attributeCode])) {
-                /* @var $attribute Mage_Catalog_Model_Resource_Eav_Attribute */
-                $attribute = $this->_indexableAttributeParams[$attributeCode];
+            if (is_array($this->_indexableAttributeParams) && isset($this->_indexableAttributeParams[$attributeCode])) {
+                $attribute = $this->_indexableAttributeParams[$attributeCode]; /* @var $attribute Mage_Catalog_Model_Resource_Eav_Attribute */
             } else {
                 $attribute = null;
             }
@@ -616,8 +615,9 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
      */
     protected function _skipAttribute($attributeCode)
     {
+
         // not in the list of searchable attributes
-        if (!in_array($attributeCode, array_keys($this->_indexableAttributeParams))) {
+        if (!is_array($this->_indexableAttributeParams) || !in_array($attributeCode, array_keys($this->_indexableAttributeParams))) {
             return true;
         }
 
