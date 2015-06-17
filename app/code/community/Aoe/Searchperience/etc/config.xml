@@ -44,16 +44,6 @@
                 </rewrite>
             </enterprise_catalogsearch>-->
         </models>
-        <resources>
-            <aoe_searchperience_setup>
-                <setup>
-                    <module>Aoe_Searchperience</module>
-                </setup>
-                <connection>
-                    <use>core_setup</use>
-                </connection>
-            </aoe_searchperience_setup>
-        </resources>
         <events>
             <catelogsearch_searchable_attributes_load_after>
                 <observers>
@@ -170,11 +160,4 @@
             </include_data>
         </searchperience>
     </default>
-    <phpunit>
-        <suite>
-            <modules>
-                <Aoe_Searchperience/>
-            </modules>
-        </suite>
-    </phpunit>
 </config>
