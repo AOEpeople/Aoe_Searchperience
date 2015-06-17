@@ -195,14 +195,6 @@
                             <show_in_store>0</show_in_store>
                             <sort_order>180</sort_order>
                         </indexerBatchSize>
-                        <threadPoolSize translate="label" module="aoe_searchperience">
-                            <label>Number of threads run in parallel</label>
-                            <frontend_type>text</frontend_type>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <sort_order>190</sort_order>
-                        </threadPoolSize>
                     </fields>
                 </searchperience>
                 <searchperience_config_js translate="label" module="aoe_searchperience">

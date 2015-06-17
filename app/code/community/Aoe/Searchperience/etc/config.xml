@@ -30,8 +30,7 @@
         <models>
             <catalogsearch_resource>
                 <rewrite>
-                    <!--<fulltext>Aoe_Searchperience_Model_Resource_Fulltext</fulltext>-->
-                    <fulltext>Aoe_Searchperience_Model_Resource_Fulltext_Threadi</fulltext>
+                    <fulltext>Aoe_Searchperience_Model_Resource_Fulltext</fulltext>
                 </rewrite>
             </catalogsearch_resource>
             <aoe_searchperience>
@@ -185,7 +184,6 @@
                 <enablePushingDocumentsToSearchperience>1</enablePushingDocumentsToSearchperience>
                 <changelogIndexBatchSize>1000</changelogIndexBatchSize>
                 <indexerBatchSize>100</indexerBatchSize>
-                <threadPoolSize>1</threadPoolSize>
                 <enableWidgets>0</enableWidgets>
             </searchperience>
             <include_data>
