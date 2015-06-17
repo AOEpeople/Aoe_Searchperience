@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<error>
+    <code>0</code>
+    <message>No document with id (999) found / Document not found</message>
+    <class>Domain_Exception_DocumentNotInRepositoryException</class>
+</error>

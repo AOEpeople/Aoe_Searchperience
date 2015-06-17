@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<error>
+    <code>1001</code>
+    <message>The user qvcdeploy could not be authorized / Invalid searchperience api user or password provided</message>
+    <class>Indexer\RestApi\ErrorHandling\Exception\UnauthorizedException</class>
+</error>

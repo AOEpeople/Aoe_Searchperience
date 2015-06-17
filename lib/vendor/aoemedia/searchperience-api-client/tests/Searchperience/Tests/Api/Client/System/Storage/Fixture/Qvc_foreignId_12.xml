@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<documents xmlns:atom="http://www.w3.org/2005/Atom">
+    <document id="12">
+        <atom:link rel="delete"
+                   href="/qvc/documents/12"/>
+        <url>http://www.dummy.tld/some/product</url>
+        <source>magento</source>
+        <mimeType>text/xml</mimeType>
+        <generalPriority>0</generalPriority>
+        <temporaryPriority>2</temporaryPriority>
+        <foreignId>13211</foreignId>
+        <content><![CDATA[<xml>some value</xml>]]></content>
+        <lastProcessingTime>2012-11-14 17:35:03</lastProcessingTime>
+        <boostFactor>1</boostFactor>
+        <noindex>0</noindex>
+        <isProminent>1</isProminent>
+        <isMarkedForProcessing>0</isMarkedForProcessing>
+    </document>
+</documents>

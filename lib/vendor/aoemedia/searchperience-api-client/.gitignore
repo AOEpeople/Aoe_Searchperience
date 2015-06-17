@@ -1,0 +1,11 @@
+# Ignore common IDE files
+.idea
+
+# Ignore build files
+build/*
+
+# Ignore composer generated files
+composer.phar
+composer.lock
+composer-test.lock
+vendor/

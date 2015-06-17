@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="../../" default="test">
+    <property name="cmd.composer" value="" />
+
+    <target name="travisci" depends="install-dependencies,composer-lint,php-lint,test"/>
+
+    <target name="composer-lint" depends="install-composer" description="lint-check composer.json only">
+        <exec passthru="true" command="${cmd.composer} validate ${project.basedir}/composer.json" checkReturn="true" />
+    </target>
+
+    <target name="php-lint" description="lint-check just the PHP source">
+        <phplint level="info">
+            <fileset dir="${project.basedir}/src">
+                <include name="**/*.php" />
+            </fileset>
+        </phplint>
+        <phplint level="info">
+            <fileset dir="${project.basedir}/tests">
+                <include name="**/*.php" />
+            </fileset>
+        </phplint>
+    </target>
+</project>

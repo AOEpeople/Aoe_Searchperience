@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="saas" default="test" basedir=".">
+    <!-- set local values, like git location -->
+    <property file="phing/build.properties" override="true" />
+    <property name="cmd.composer" value="" />
+    <property name="php.interpreter" value="php" />
+    <property name="dir.imports" value="${project.basedir}/phing/imports" />
+
+    <import file="${dir.imports}/dependencies.xml"/>
+    <import file="${dir.imports}/test.xml"/>
+
+
+    <target name="test" description="Run unit tests" depends="clean">
+        <exec passthru="true" command="${project.basedir}/vendor/bin/phpunit --debug --configuration=${project.basedir}/phpunit.xml --verbose" checkReturn="true" />
+    </target>
+
+    <target name="clean">
+         <delete dir="${project.basedir}/build/artifacts/logs"/>
+    </target>
+
+    <target name="sniff" description="Check code for PSR-2 compliance">
+        <exec passthru="true" command="${project.basedir}/vendor/bin/phpcs --standard=TYPO3 ${project.basedir}/src" checkReturn="true" />
+    </target>
+
+</project>

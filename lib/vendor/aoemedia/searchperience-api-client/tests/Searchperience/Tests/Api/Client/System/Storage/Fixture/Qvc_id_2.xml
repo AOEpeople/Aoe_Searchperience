@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<documents>
+    <document id="2">
+        <atom:link rel="delete"
+                   href="/qvc/documents/2"/>
+        <url></url>
+        <boostFactor>1</boostFactor>
+        <noindex>0</noindex>
+        <foreignid>1000</foreignid>
+        <lastProcessingTime>2012-11-15 00:05:07</lastProcessingTime>
+        <isProminent>0</isProminent>
+        <isMarkedForProcessing></isMarkedForProcessing>
+    </document>
+</documents>
