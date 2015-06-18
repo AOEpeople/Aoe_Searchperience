@@ -73,6 +73,12 @@ class Aoe_Searchperience_Model_Resource_Fulltext {
             // process products...
             foreach ($productIds as $productId) {
                 $data = $documentCreator->createDocument($productId, $storeId);
+
+                if ($data === false) {
+                    // this product will not be indexed
+                    continue;
+                }
+
                 if (empty($data['url'])) { Mage::throwException('No product url found'); }
                 if (empty($data['raw_document'])) { Mage::throwException('No raw_document found'); }
 
