@@ -82,14 +82,13 @@ class Aoe_Searchperience_Model_Resource_Fulltext {
                 if (empty($data['url'])) { Mage::throwException('No product url found'); }
                 if (empty($data['raw_document'])) { Mage::throwException('No raw_document found'); }
 
-                echo $data['raw_document'];
-
-//                $searchperienceApi->addDocument(
-//                    $data['raw_document'],
-//                    $productId . '_' . $storeId,
-//                    $data['url'],
-//                    $sourceIdentifier
-//                );
+                // echo $data['raw_document'];
+                $searchperienceApi->addDocument(
+                    $data['raw_document'],
+                    $productId . '_' . $storeId,
+                    $data['url'],
+                    $sourceIdentifier
+                );
             }
 
             // add new products to the processed ones
