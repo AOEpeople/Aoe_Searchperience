@@ -31,19 +31,6 @@
             </aoe_searchperience_resource>
         </models>
 
-        <!--<events>-->
-            <!--<catelogsearch_searchable_attributes_load_after>-->
-                <!--<observers>-->
-                    <!--<searchperience>-->
-                        <!--<class>aoe_searchperience/observer</class>-->
-                        <!--<method>storeSearchableAttributes</method>-->
-                    <!--</searchperience>-->
-                <!--</observers>-->
-            <!--</catelogsearch_searchable_attributes_load_after>-->
-
-            <!--&lt;!&ndash;<aoe_searchperience_prepareIndexProductData_after/>&ndash;&gt;-->
-        <!--</events>-->
-
         <index>
             <indexer>
                 <catalogsearch_fulltext>
@@ -138,16 +125,6 @@
                 <indexerBatchSize>100</indexerBatchSize>
                 <enableWidgets>0</enableWidgets>
             </searchperience>
-
-            <include_data>
-                <rating>1</rating>
-                <prices>1</prices>
-                <images>1</images>
-                <categories>1</categories>
-                <related>1</related>
-                <upsell>1</upsell>
-                <cross>1</cross>
-            </include_data>
 
         </searchperience>
 

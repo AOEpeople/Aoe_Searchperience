@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class Bs_Base_Model_Changelog
+ * Class Aoe_Searchperience_Model_Changelog
  *
  * @author Fabrizio Branca
  * @since 2013-11-26
