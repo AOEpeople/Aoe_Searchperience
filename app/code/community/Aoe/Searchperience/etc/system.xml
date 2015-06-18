@@ -504,23 +504,5 @@
             </groups>
         </searchperience>
 
-        <catalog>
-            <groups>
-                <search>
-                    <fields>
-                        <engine translate="label">
-                            <label>Search Engine</label>
-                            <frontend_type>select</frontend_type>
-                            <backend_model>aoe_searchperience/adminhtml_system_config_backend_engine</backend_model>
-                            <source_model>aoe_searchperience/adminhtml_system_config_source_engine</source_model>
-                            <sort_order>19</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </engine>
-                    </fields>
-                </search>
-            </groups>
-        </catalog>
     </sections>
 </config>
