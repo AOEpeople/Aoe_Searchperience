@@ -66,6 +66,14 @@ class Aoe_Searchperience_Model_SearchperienceApi {
             if (empty($url)) { throw new InvalidArgumentException('No url found'); }
             if (empty($sourceIdentifier)) { throw new InvalidArgumentException('No source identified found'); }
 
+            if (Mage::helper('aoe_searchperience')->isLoggingEnabled() && Mage::helper('aoe_searchperience')->isLogFullDocumentsEnabled()) {
+                Mage::log(
+                    "Generated XML Document (id: $id, source: $sourceIdentifier, url: $url): \n" . $content,
+                    Zend_Log::DEBUG,
+                    Aoe_Searchperience_Helper_Data::LOGFILE
+                );
+            }
+
             // create searchperience document
             $document = new \Searchperience\Api\Client\Domain\Document();
 

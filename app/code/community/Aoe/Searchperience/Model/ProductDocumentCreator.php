@@ -70,7 +70,7 @@ class Aoe_Searchperience_Model_ProductDocumentCreator {
             $writer->startElement('attribute');
             $writer->writeAttribute('name', $attributeName);
 
-            if (!is_array($attributeData['xmlnode_attributes'])) {
+            if (!isset($attributeData['xmlnode_attributes']) || !is_array($attributeData['xmlnode_attributes'])) {
                 $attributeData['xmlnode_attributes'] = array();
             }
             if (!isset($attributeData['xmlnode_attributes']['type'])) {
@@ -108,10 +108,6 @@ class Aoe_Searchperience_Model_ProductDocumentCreator {
 
         $rawDocument = $writer->outputMemory(true);
 
-        if (Mage::helper('aoe_searchperience')->isLoggingEnabled() && Mage::helper('aoe_searchperience')->isLogFullDocumentsEnabled()) {
-            Mage::log('Generated XML Document: ' . $rawDocument, Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
-        }
-
         return array(
             'raw_document' => $rawDocument,
             'url' => $product->getProductUrl()
@@ -127,6 +123,7 @@ class Aoe_Searchperience_Model_ProductDocumentCreator {
     protected function getImage(Mage_Catalog_Model_Product $product)
     {
         $image = '';
+        $attributeCode = 'small_image';
 
         $width = Mage::getStoreConfig('searchperience/searchperience/listViewImageWidth');
         $height = Mage::getStoreConfig('searchperience/searchperience/listViewImageHeight');
@@ -137,7 +134,7 @@ class Aoe_Searchperience_Model_ProductDocumentCreator {
 
         try {
             $imageHelper = Mage::helper('catalog/image'); /* @var $imageHelper Mage_Catalog_Helper_Image */
-            $image = $imageHelper->init($product, 'small_image')->resize($width, $height)->__toString();
+            $image = $imageHelper->init($product, $attributeCode)->resize($width, $height)->__toString();
         } catch (Exception $e) {
             if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
                 Mage::log(sprintf('Error while resizing "%s" image: %s', $attributeCode, $e->getMessage()), Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
