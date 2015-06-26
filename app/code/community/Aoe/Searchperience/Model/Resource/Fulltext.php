@@ -102,7 +102,6 @@ class Aoe_Searchperience_Model_Resource_Fulltext {
                 $this->cleanIndex($storeId, $missingProducts);
             }
         }
-        exit;
         return $this;
     }
 
