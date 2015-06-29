@@ -121,4 +121,70 @@ class Aoe_Searchperience_Model_SearchperienceApi {
         return $result;
     }
 
+    /**
+     * Delete all products
+     *
+     * @return int
+     */
+    public function deleteAllProducts() {
+        $source = Mage::getStoreConfig('searchperience/searchperience/source');
+        return $this->deleteBySource($source);
+    }
+
+    /**
+     * Delete all documents by source
+     *
+     * @param $source
+     * @return int
+     */
+    public function deleteBySource($source) {
+        $statusCode = null;
+        try {
+            $statusCode = $this->getDocumentRepository()->deleteBySource($source);
+            if ($statusCode == 200) {
+                if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+                    Mage::log(sprintf('Successfully deleted all documents from repository for source "%s"', $source), Zend_Log::INFO, Aoe_Searchperience_Helper_Data::LOGFILE);
+                }
+            } else {
+                if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+                    Mage::log(sprintf('Error while deleting all documents from repository for source "%s" (Status Code: "%s")', $source, $statusCode), Zend_Log::ERR, Aoe_Searchperience_Helper_Data::LOGFILE);
+                }
+            }
+        } catch (Exception $e) {
+            Mage::logException($e);
+            if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+                Mage::log(sprintf('Error while deleting all documents from repository for source "%s" (Message: "%s")', $source, $e->getMessage()), Zend_Log::ERR, Aoe_Searchperience_Helper_Data::LOGFILE);
+            }
+        }
+        return $statusCode;
+    }
+
+    /**
+     * Delete by document id
+     *
+     * @param array|int $docIDs
+     */
+    public function deleteById($docIDs) {
+        if (!is_array($docIDs)) {
+            $docIDs = array($docIDs);
+        }
+        foreach ($docIDs as $docId) {
+            try {
+                $this->getDocumentRepository()->deleteByForeignId($docId);
+                if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+                    Mage::log(sprintf('Successfully deleted document with foreign id %s from repository', $docId), Zend_Log::INFO, Aoe_Searchperience_Helper_Data::LOGFILE);
+                }
+            } catch (Searchperience\Common\Http\Exception\DocumentNotFoundException $e) {
+                if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+                    Mage::log(sprintf('Document with foreign id %s not found', $docId), Zend_Log::INFO, Aoe_Searchperience_Helper_Data::LOGFILE);
+                }
+            } catch (Exception $e) {
+                Mage::logException($e);
+                if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+                    Mage::log(sprintf('Error while deleting document with foreign id %s from repository', $docId), Zend_Log::ERR, Aoe_Searchperience_Helper_Data::LOGFILE);
+                }
+            }
+        }
+    }
+
 }

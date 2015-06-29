@@ -14,8 +14,7 @@ class Aoe_Searchperience_Shell_Searchperience extends Mage_Shell_Abstract
     public function indexProductsAction() {
         $productIds = $this->trimExplode(',', $this->getArg('productIds'), true);
         if (count($productIds) == 0) {
-            echo "No productIds given\n";
-            exit(1);
+            $productIds = null;
         }
 
         $index = Mage::getSingleton('catalogsearch/fulltext'); /* @var $index Mage_CatalogSearch_Model_Fulltext */
@@ -32,7 +31,7 @@ class Aoe_Searchperience_Shell_Searchperience extends Mage_Shell_Abstract
     }
 
     public function indexProductsActionHelp() {
-        return ' -productIds <csl of product ids> [-storeIds <csl of store ids, defaults to all stores>]';
+        return ' [-productIds <csl of product ids, defaults to all products>] [-storeIds <csl of store ids, defaults to all stores>]';
     }
 
 
@@ -56,9 +55,10 @@ class Aoe_Searchperience_Shell_Searchperience extends Mage_Shell_Abstract
             exit(1);
         }
 
-        $adapter = Mage::getSingleton('aoe_searchperience/adapter_searchperience'); /* @var $adapter Aoe_Searchperience_Model_Adapter_Searchperience */
         $source = $this->getArg('source');
-        $adapter->deleteDocs(array(), 'all', $source);
+
+        $api = Mage::getSingleton('aoe_searchperience/searchperienceApi'); /* @var $api Aoe_Searchperience_Model_SearchperienceApi */
+        $api->deleteBySource($source);
 
         if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
             echo "Check log file " . Aoe_Searchperience_Helper_Data::LOGFILE . " for more information\n";
@@ -71,17 +71,17 @@ class Aoe_Searchperience_Shell_Searchperience extends Mage_Shell_Abstract
         return " -source <source> (e.g. magento_product - see Mage::getStoreConfig('searchperience/searchperience/source')";
     }
 
-
-
     public function deleteByForeignIdAction() {
         if (!Mage::helper('aoe_searchperience')->isDeletionEnabled()) {
             echo "Document deletion disabled in configuration!\n";
             exit(1);
         }
 
-        $adapter = Mage::getSingleton('aoe_searchperience/adapter_searchperience'); /* @var $adapter Aoe_Searchperience_Model_Adapter_Searchperience */
         $foreignIds = $this->getArg('foreignIds');
-        $adapter->deleteDocs($this->trimExplode(',', $foreignIds, true));
+        $foreignIds = $this->trimExplode(',', $foreignIds, true);
+
+        $api = Mage::getSingleton('aoe_searchperience/searchperienceApi'); /* @var $api Aoe_Searchperience_Model_SearchperienceApi */
+        $api->deleteById($foreignIds);
 
         if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
             echo "Check log file " . Aoe_Searchperience_Helper_Data::LOGFILE . " for more information\n";

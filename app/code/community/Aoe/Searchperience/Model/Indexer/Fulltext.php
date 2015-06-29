@@ -36,7 +36,6 @@ class Aoe_Searchperience_Model_Indexer_Fulltext extends Mage_CatalogSearch_Model
 
     /**
      * Rebuild all index data
-     * (but we don't need to do this in a transaction)
      *
      * @see parent method
      */

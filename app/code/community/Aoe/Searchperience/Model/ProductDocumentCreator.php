@@ -9,15 +9,29 @@ class Aoe_Searchperience_Model_ProductDocumentCreator {
 
     /**
      * Create document
+     * (If this method returns false this document will be deleted from the index instead)
      *
      * @param $productId
      * @param $storeId
-     * @return array
+     * @return array|false
      */
     public function createDocument($productId, $storeId) {
         $product = Mage::getModel('catalog/product')->setStoreId($storeId)->load($productId); /* @var $product Mage_Catalog_Model_Product */
 
+        // skip disabled products
+        if ($product->isDisabled()) {
+            return false;
+        }
+
+        // skip "invisible" products
         if (!in_array($product->getVisibility(), Mage::getSingleton('catalog/product_visibility')->getVisibleInSearchIds())) {
+            return false;
+        }
+
+        // dispatch event for other skip reasons
+        $transport = new Varien_Object(array('product' => $product, 'store_id' => $storeId));
+        Mage::dispatchEvent('aoe_searchperience_productdocumentcreator_createDocument_skip', array('transport' => $transport));
+        if ($transport->getSkip()) {
             return false;
         }
 

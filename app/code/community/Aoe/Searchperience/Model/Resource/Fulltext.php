@@ -75,31 +75,28 @@ class Aoe_Searchperience_Model_Resource_Fulltext {
                 $data = $documentCreator->createDocument($productId, $storeId);
 
                 if ($data === false) {
-                    // this product will not be indexed
-                    continue;
+                    continue; // this product will not be indexed
                 }
 
                 if (empty($data['url'])) { Mage::throwException('No product url found'); }
                 if (empty($data['raw_document'])) { Mage::throwException('No raw_document found'); }
 
-                // echo $data['raw_document'];
                 $searchperienceApi->addDocument(
                     $data['raw_document'],
                     $productId . '_' . $storeId,
                     $data['url'],
                     $sourceIdentifier
                 );
-            }
 
-            // add new products to the processed ones
-            $productsProcessed = array_merge($productsProcessed, $productIds);
+                $productsProcessed[] = $productId;
+            }
         }
 
         // delete missing products
         if (!is_null($requestedProductIds)) {
             $missingProducts = array_diff($requestedProductIds, $productsProcessed);
-            if (count($missingProducts)) {
-                $this->cleanIndex($storeId, $missingProducts);
+            foreach ($missingProducts as $productId) {
+                $searchperienceApi->deleteById($productId . '_' . $storeId);
             }
         }
         return $this;
