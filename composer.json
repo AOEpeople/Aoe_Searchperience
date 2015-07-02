@@ -7,7 +7,7 @@
     "require": {
         "magento-hackathon/magento-composer-installer": "*",
         "aoepeople/aoethreadi": "dev-composer-compliant",
-        "aoemedia/searchperience-api-client": "1.3.2"
+        "aoepeople/searchperience-api-client": "1.3.2"
     },
     "require-dev": {
         "guzzle/plugin-log": "*"
