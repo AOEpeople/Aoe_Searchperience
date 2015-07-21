@@ -567,7 +567,15 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             ->addNameToResult()
             ->addIsActiveFilter()
             ->setLoadProductCount(false);
-        $categories = $categoryCollection->load()->toArray(array('path','level','name'));
+
+        $categories = [];
+        foreach ($categoryCollection as $category) {
+            /** @var Mage_Catalog_Model_Category $category */
+            $categoryData = $category->toArray(['path','level','name']);
+            $categoryData['anchorsAbove'] = $category->getAnchorsAbove();
+
+            $categories[$category->getId()] = $categoryData;
+        }
         unset($categoryCollection);
 
         $this->_categories[$storeId] = $categories;
@@ -588,34 +596,72 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         $this->fetchCategories($storeId);
 
         // TODO: refactor using Aoe_Searchperience_Helper_Category
-        
+
         // fetch category information
         foreach ($product->getCategoryIds() as $categoryId) {
-            if (!isset($returnData['categories'][$categoryId]) && isset($this->_categories[$storeId][$categoryId])) {
-                $category = $this->_categories[$storeId][$categoryId];
-                $data['categories'][$categoryId]['name'] = $category['name'];
+            if (isset($returnData['categories'][$categoryId]) || !isset($this->_categories[$storeId][$categoryId])) {
+                // category is already processed or not part of this store
+                continue;
+            }
 
-                $pathCategories = explode('/', $category['path']);
-                $path = array();
-                //don't need root category
-                array_shift($pathCategories);
-                foreach ($pathCategories as $pathCategoryId) {
+            $category = $this->_categories[$storeId][$categoryId];
+            $data['categories'][$categoryId]['name'] = $category['name'];
+
+            $pathCategories = explode('/', $category['path']);
+
+            $path = array();
+            //don't need root category
+            array_shift($pathCategories);
+            foreach ($pathCategories as $pathCategoryId) {
+                // do not include skippable categories in list
+                if (in_array($pathCategoryId, $skippableCategories)) {
+                    unset($data['categories'][$categoryId]);
+                    continue 2;
+                }
+
+                if (isset($this->_categories[$storeId]) && isset($this->_categories[$storeId][$pathCategoryId])) {
+                    $cat = $this->_categories[$storeId][$pathCategoryId];
+                    if ($cat['level'] > 1) {
+                        $pathPart = $cat['name'];
+                        $pathPart = str_replace('/','\/', $pathPart);
+                        $path[] = $pathPart;
+                    }
+                }
+            }
+            $data['categories'][$categoryId]['path'] = implode('/', $path);
+
+            // and also add the anchor categories if needed
+            $anchorCategories = $category['anchorsAbove'];
+            foreach ($anchorCategories as $anchorCategoryId) {
+                if (isset($returnData['categories'][$anchorCategoryId])
+                        || !isset($this->_categories[$storeId][$anchorCategoryId])) {
+                    continue;
+                }
+
+                $anchorCategory = $this->_categories[$storeId][$anchorCategoryId];
+                $data['categories'][$anchorCategoryId]['name'] = $anchorCategory['name'];
+
+                $anchorPathCategories = explode('/', $anchorCategory['path']);
+                $anchorPath = [];
+                array_shift($anchorPathCategories);
+                foreach ($anchorPathCategories as $anchorPathCategoryId) {
                     // do not include skippable categories in list
-                    if (in_array($pathCategoryId, $skippableCategories)) {
-                        unset($data['categories'][$categoryId]);
+                    if (in_array($anchorPathCategoryId, $skippableCategories)) {
+                        unset($data['categories'][$anchorCategoryId]);
                         continue 2;
                     }
 
-                    if (isset($this->_categories[$storeId]) && isset($this->_categories[$storeId][$pathCategoryId])) {
-                        $cat = $this->_categories[$storeId][$pathCategoryId];
+                    if (isset($this->_categories[$storeId])
+                            && isset($this->_categories[$storeId][$anchorPathCategoryId])) {
+                        $cat = $this->_categories[$storeId][$anchorPathCategoryId];
                         if ($cat['level'] > 1) {
                             $pathPart = $cat['name'];
                             $pathPart = str_replace('/','\/', $pathPart);
-                            $path[] = $pathPart;
+                            $anchorPath[] = $pathPart;
                         }
                     }
                 }
-                $data['categories'][$categoryId]['path'] = implode('/', $path);
+                $data['categories'][$anchorCategoryId]['path'] = implode('/', $anchorPath);
             }
         }
         return $data;
