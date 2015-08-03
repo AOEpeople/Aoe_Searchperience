@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Aoe_Searchperience>
-            <version>1.14.1.1</version>
+            <version>1.14.1.2</version>
         </Aoe_Searchperience>
     </modules>
     <admin>
@@ -21,6 +21,11 @@
             <aoe_searchperience>
                 <class>Aoe_Searchperience_Block</class>
             </aoe_searchperience>
+            <adminhtml>
+                <rewrite>
+                    <sitemap_edit_form>Aoe_Searchperience_Block_Adminhtml_Sitemap_Edit_Form</sitemap_edit_form>
+                </rewrite>
+            </adminhtml>
         </blocks>
         <helpers>
             <aoe_searchperience>
@@ -56,11 +61,11 @@
                     <resource_lock_resource>Aoe_Searchperience_Model_Resource_Lock_Resource</resource_lock_resource>
                 </rewrite>
             </enterprise_index>
-            <!--<enterprise_catalogsearch>
+            <sitemap>
                 <rewrite>
-                    <indexer_fulltext>Aoe_Searchperience_Model_Indexer_Fulltext</indexer_fulltext>
+                    <sitemap>Aoe_Searchperience_Model_Sitemap</sitemap>
                 </rewrite>
-            </enterprise_catalogsearch>-->
+            </sitemap>
 
         </models>
         <resources>
