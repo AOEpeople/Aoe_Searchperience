@@ -713,7 +713,10 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         $imageAttributes = [];
         $productAttributes = $product->getAttributes();
         foreach ($productAttributes as $attribute) {
-            if ($attribute->getFrontendInput() === 'media_image') {
+            if ($attribute->getFrontendInput() === 'media_image' &&
+                $product->getData($attribute->getAttributeCode()) !== 'no_selection' &&
+                !empty($product->getData($attribute->getAttributeCode()))
+            ) {
                 $imageAttributes[] = $attribute->getAttributeCode();
             }
         }
