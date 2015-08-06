@@ -709,16 +709,18 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             return $data;
         }
 
-        // define attributes and get methods
-        $attributes = array(
-            'thumbnail',
-            'image',
-            'small_image',
-        );
+        // Get Media Attribute Codes
+        $imageAttributes = [];
+        $productAttributes = $product->getAttributes();
+        foreach ($productAttributes as $attribute) {
+            if ($attribute->getFrontendInput() === 'media_image') {
+                $imageAttributes[] = $attribute->getAttributeCode();
+            }
+        }
 
         $imageHelper = Mage::helper('catalog/image'); /* @var Mage_Catalog_Helper_Image $imageHelper */
 
-        foreach ($attributes as $attributeCode) {
+        foreach ($imageAttributes as $attributeCode) {
             try {
                 $data['productData']['images'][$attributeCode] = $imageHelper->init($product, $attributeCode)->resize($width, $height)->__toString();
             } catch (Exception $e) {
