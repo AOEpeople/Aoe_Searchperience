@@ -702,10 +702,23 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
      */
     protected function _getProductImageInformation($product, $data)
     {
-        $width  = Mage::getStoreConfig('searchperience/searchperience/listViewImageWidth');
-        $height = Mage::getStoreConfig('searchperience/searchperience/listViewImageHeight');
+        $width = [
+            'default' => Mage::getStoreConfig('searchperience/searchperience/listViewImageWidth'),
+            'non_retina_small' => Mage::getStoreConfig('searchperience/searchperience/listViewNonRetinaSmallWidth'),
+            'retina_small' => Mage::getStoreConfig('searchperience/searchperience/listViewRetinaSmallWidth'),
+            'non_retina_large' => Mage::getStoreConfig('searchperience/searchperience/listViewNonRetinaLargeWidth'),
+            'retina_large' => Mage::getStoreConfig('searchperience/searchperience/listViewRetinaLargeWidth'),
+        ];
 
-        if (empty($width) || empty($height)) {
+        $height = [
+            'default' => Mage::getStoreConfig('searchperience/searchperience/listViewImageHeight'),
+            'non_retina_small' => Mage::getStoreConfig('searchperience/searchperience/listViewNonRetinaSmallHeight'),
+            'retina_small' => Mage::getStoreConfig('searchperience/searchperience/listViewRetinaSmallHeight'),
+            'non_retina_large' => Mage::getStoreConfig('searchperience/searchperience/listViewNonRetinaLargeHeight'),
+            'retina_large' => Mage::getStoreConfig('searchperience/searchperience/listViewRetinaLargeHeight'),
+        ];
+
+        if (empty($width['default']) || empty($height['default'])) {
             return $data;
         }
 
@@ -725,16 +738,25 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
         foreach ($imageAttributes as $attributeCode) {
             try {
-                $data['productData']['images'][$attributeCode] = $imageHelper->init($product, $attributeCode)->resize($width, $height)->__toString();
+                $data['productData']['images'][$attributeCode] = $imageHelper->init($product, $attributeCode)->resize($width['default'], $height['default'])->__toString();
             } catch (Exception $e) {
                 // Mage::logException($e);
                 if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
                     Mage::log(sprintf('Error while resizing "%s" image: %s', $attributeCode, $e->getMessage()), Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
                 }
             }
-
+            if ($attributeCode === 'image' && isset($data['productData']['images']['image'])) {
+                // Prepare required other Images from Large Image to get best quality
+                $type = 'non_retina_small';
+                $data['productData']['images'][$type] = $imageHelper->init($product, $attributeCode)->resize($width[$type], $height[$type])->__toString();
+                $type = 'retina_small';
+                $data['productData']['images'][$type] = $imageHelper->init($product, $attributeCode)->resize($width[$type], $height[$type])->__toString();
+                $type = 'non_retina_large';
+                $data['productData']['images'][$type] = $imageHelper->init($product, $attributeCode)->resize($width[$type], $height[$type])->__toString();
+                $type = 'retina_large';
+                $data['productData']['images'][$type] = $imageHelper->init($product, $attributeCode)->resize($width[$type], $height[$type])->__toString();
+            }
         }
-
         return $data;
     }
 
