@@ -79,7 +79,7 @@
                             <sort_order>50</sort_order>
                         </remote_js>
                         <listViewImageWidth translate="label" module="aoe_searchperience">
-                            <label>List view image width</label>
+                            <label>List view default image width</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -87,13 +87,82 @@
                             <sort_order>60</sort_order>
                         </listViewImageWidth>
                         <listViewImageHeight translate="label" module="aoe_searchperience">
-                            <label>List view image height</label>
+                            <label>List view default image height</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <sort_order>70</sort_order>
                         </listViewImageHeight>
+
+                        <listViewNonRetinaSmallWidth translate="label" module="aoe_searchperience">
+                            <label>List view non retina small width</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>71</sort_order>
+                        </listViewNonRetinaSmallWidth>
+                        <listViewNonRetinaSmallHeight translate="label" module="aoe_searchperience">
+                            <label>List view non retina small height</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>72</sort_order>
+                        </listViewNonRetinaSmallHeight>
+
+                        <listViewRetinaSmallWidth translate="label" module="aoe_searchperience">
+                            <label>List view retina small width</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>73</sort_order>
+                        </listViewRetinaSmallWidth>
+                        <listViewRetinaSmallHeight translate="label" module="aoe_searchperience">
+                            <label>List view retina small height</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>74</sort_order>
+                        </listViewRetinaSmallHeight>
+
+                        <listViewNonRetinaLargeWidth translate="label" module="aoe_searchperience">
+                            <label>List view non retina large width</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>75</sort_order>
+                        </listViewNonRetinaLargeWidth>
+                        <listViewNonRetinaLargeHeight translate="label" module="aoe_searchperience">
+                            <label>List view non retina large height</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>76</sort_order>
+                        </listViewNonRetinaLargeHeight>
+
+                        <listViewRetinaLargeWidth translate="label" module="aoe_searchperience">
+                            <label>List view retina large width</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>77</sort_order>
+                        </listViewRetinaLargeWidth>
+                        <listViewRetinaLargeHeight translate="label" module="aoe_searchperience">
+                            <label>List view retina large height</label>
+                            <frontend_type>text</frontend_type>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <sort_order>78</sort_order>
+                        </listViewRetinaLargeHeight>
+
                         <skipCategories translate="label" module="aoe_searchperience">
                             <label>Categories to skip during export</label>
                             <comment>Comma separated list of category ids</comment>

@@ -186,6 +186,14 @@
                 <source>magento</source>
                 <listViewImageWidth>201</listViewImageWidth>
                 <listViewImageHeight>201</listViewImageHeight>
+                <listViewNonRetinaSmallWidth>150</listViewNonRetinaSmallWidth>
+                <listViewNonRetinaSmallHeight>150</listViewNonRetinaSmallHeight>
+                <listViewRetinaSmallWidth>300</listViewRetinaSmallWidth>
+                <listViewRetinaSmallHeight>300</listViewRetinaSmallHeight>
+                <listViewNonRetinaLargeWidth>239</listViewNonRetinaLargeWidth>
+                <listViewNonRetinaLargeHeight>239</listViewNonRetinaLargeHeight>
+                <listViewRetinaLargeWidth>478</listViewRetinaLargeWidth>
+                <listViewRetinaLargeHeight>478</listViewRetinaLargeHeight>
                 <enableDocumentDeletion>0</enableDocumentDeletion>
                 <enableRecommendationTracking>0</enableRecommendationTracking>
                 <enablePushingDocumentsToSearchperience>1</enablePushingDocumentsToSearchperience>
