@@ -338,10 +338,10 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
     {
         $images = $this->_getValueFromArray('images', $productData, array());
         $this->_writeXmlCdataElement($writer, 'image_link', $this->_getValueFromArray('small_image', $images));
-        $this->_writeXmlCdataElement($writer, 'non_retina_small', $this->_getValueFromArray('non_retina_small', $images));
-        $this->_writeXmlCdataElement($writer, 'retina_small', $this->_getValueFromArray('retina_small', $images));
-        $this->_writeXmlCdataElement($writer, 'non_retina_large', $this->_getValueFromArray('non_retina_large', $images));
-        $this->_writeXmlCdataElement($writer, 'retina_large', $this->_getValueFromArray('retina_large', $images));
+        $this->_writeXmlCdataElement($writer, 'image_link_small_normaldensity', $this->_getValueFromArray('non_retina_small', $images));
+        $this->_writeXmlCdataElement($writer, 'image_link_small_doubledensity', $this->_getValueFromArray('retina_small', $images));
+        $this->_writeXmlCdataElement($writer, 'image_link_large_normaldensity', $this->_getValueFromArray('non_retina_large', $images));
+        $this->_writeXmlCdataElement($writer, 'image_link_large_doubledensity', $this->_getValueFromArray('retina_large', $images));
     }
 
     /**
