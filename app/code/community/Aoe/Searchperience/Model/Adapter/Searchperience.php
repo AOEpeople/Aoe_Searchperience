@@ -723,16 +723,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         }
 
         // Get Media Attribute Codes
-        $imageAttributes = [];
-        $productAttributes = $product->getAttributes();
-        foreach ($productAttributes as $attribute) {
-            if ($attribute->getFrontendInput() === 'media_image' &&
-                $product->getData($attribute->getAttributeCode()) !== 'no_selection' &&
-                !empty($product->getData($attribute->getAttributeCode()))
-            ) {
-                $imageAttributes[] = $attribute->getAttributeCode();
-            }
-        }
+        $imageAttributes = ['image', 'small_image', 'thumbnail'];
 
         $imageHelper = Mage::helper('catalog/image'); /* @var Mage_Catalog_Helper_Image $imageHelper */
 
