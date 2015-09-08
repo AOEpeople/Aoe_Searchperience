@@ -201,4 +201,13 @@ class Aoe_Searchperience_Model_Resource_Fulltext {
         return Mage::getResourceSingleton('catalog/product')->getTable($table);
     }
 
+    /**
+     * Implement expected method...blank for now.
+     *
+     * @return void
+     */
+    public function prepareResult() {
+        return;
+    }
+
 }
