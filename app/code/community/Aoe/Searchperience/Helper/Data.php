@@ -200,7 +200,7 @@ class Aoe_Searchperience_Helper_Data extends Mage_Core_Helper_Abstract
     {
         if (null === $this->_recommendationTrackingScriptUrl) {
             $this->_recommendationTrackingScriptUrl
-                = rtrim(Mage::getStoreConfig(self::XML_PATH_TRACKING_SCRIPT_URL), '/') . '/';
+                = rtrim(Mage::getStoreConfig(self::XML_PATH_TRACKING_SCRIPT_URL), '/');
         }
         return $this->_recommendationTrackingScriptUrl;
     }
