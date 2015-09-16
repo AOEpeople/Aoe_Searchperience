@@ -1,0 +1,7 @@
+<script type="text/javascript">
+    var RecommendationTrackingParameter<?php echo $this->getParamObjectNumber(); ?> = {
+        <?php foreach ($this->getParameter() as $paramName => $paramValue): ?>
+            <?php echo $paramName ?>: "<?php echo $paramValue; ?>",
+        <?php endforeach; ?>
+    };
+</script>
