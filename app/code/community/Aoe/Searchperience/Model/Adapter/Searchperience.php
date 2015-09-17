@@ -557,9 +557,11 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
      */
     protected function fetchCategories($storeId)
     {
-        if (!isset($this->_categories[$storeId])) {
-            $this->_categories[$storeId] = array();
+        if (isset($this->_categories[$storeId])) {
+            return;
         }
+
+        $this->_categories[$storeId] = [];
 
         /** @var Mage_Catalog_Model_Resource_Category_Collection $categoryCollection */
         $categoryCollection = Mage::getResourceModel('catalog/category_collection');
