@@ -15,6 +15,8 @@ require Mage::getBaseDir('lib') . DS . 'searchperience' . DS . 'autoload.php';
  */
 class Aoe_Searchperience_Block_Catalog_Category_View extends Mage_Core_Block_Template
 {
+    protected $_content;
+
     /**
      * @return string
      */
@@ -28,12 +30,20 @@ class Aoe_Searchperience_Block_Catalog_Category_View extends Mage_Core_Block_Tem
 
         try {
             $client = new Guzzle\Http\Client();
-            $request = $client->get($url);
-            return $client->send($request)->getBody();
-        } catch (Guzzle\Http\Exception\ServerErrorResponseException $e) {
+            $options = [
+                'connect_timeout' => 0.5,
+                'timeout' => 1.0,
+            ];
+            $request = $client->get($url, null, $options);
+            $content = $client->send($request)->getBody();
+        } catch (Exception $e) {
             Mage::logException($e);
-            return '<!-- CATEGORY_LIST_PLACEHOLDER -->';
+            Mage::getSingleton('aoestatic/cache_control')->addMaxAge(60);
+            $this->setCacheLifetime(60);
+            $content = $this->__('This page is currently under maintenance and will be available shortly!');
         }
+
+        return $content;
     }
 
     /**
