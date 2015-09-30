@@ -31,8 +31,8 @@ class Aoe_Searchperience_Block_Catalog_Category_View extends Mage_Core_Block_Tem
         try {
             $client = new Guzzle\Http\Client();
             $options = [
-                'connect_timeout' => 0.5,
-                'timeout' => 1.0,
+                'connect_timeout' => 1.0,
+                'timeout' => 5.0,
             ];
             $request = $client->get($url, null, $options);
             $content = $client->send($request)->getBody();
