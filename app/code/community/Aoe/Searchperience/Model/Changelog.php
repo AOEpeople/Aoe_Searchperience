@@ -6,8 +6,8 @@
  * @author Fabrizio Branca
  * @since 2013-11-26
  */
-class Aoe_Searchperience_Model_Changelog extends Enterprise_Index_Model_Changelog {
-
+class Aoe_Searchperience_Model_Changelog extends Enterprise_Index_Model_Changelog
+{
     /**
      * @var int
      */
@@ -16,7 +16,7 @@ class Aoe_Searchperience_Model_Changelog extends Enterprise_Index_Model_Changelo
     /**
      * Load changelog by metadata
      *
-     * @param null|int $currentVersion
+     * @param null|int $currentVersion only fetch until current version
      * @return array
      */
     public function loadByMetadata($currentVersion = null)
@@ -24,11 +24,13 @@ class Aoe_Searchperience_Model_Changelog extends Enterprise_Index_Model_Changelo
         $keyColumn = $this->_metadata->getKeyColumn();
 
         $select = $this->_connection->select()
-            ->from(array('changelog' => $this->_metadata->getChangelogName()), array())
-            ->where('version_id > ?', $this->_metadata->getVersionId())
+            ->distinct()
+            ->from(['changelog' => $this->_metadata->getChangelogName()], [$keyColumn, 'MAX(version_id) as version_id'])
+            ->group($keyColumn)
+            ->where('version_id >= ?', $this->_metadata->getVersionId())
             ->order('version_id ASC')
-            ->limit($this->getLimit())
-            ->columns(array('version_id', $keyColumn));
+            ->limit($this->getLimit());
+            // ->columns(array('version_id', $keyColumn))
 
         if ($currentVersion) {
             $select->where('version_id <= ?', $currentVersion);
@@ -36,7 +38,7 @@ class Aoe_Searchperience_Model_Changelog extends Enterprise_Index_Model_Changelo
 
         $res = $this->_connection->fetchAssoc($select);
 
-        $ids = array();
+        $ids = [];
         $versionId = 0;
         foreach ($res as $row) {
             $value = $row[$keyColumn];
@@ -47,15 +49,36 @@ class Aoe_Searchperience_Model_Changelog extends Enterprise_Index_Model_Changelo
         }
         $this->lastProcessedVersionId = $versionId;
 
+        $this->reindexUrlKeys($ids);
+
         return $ids;
     }
 
-    public function getLimit() {
+    /**
+     * @param array| int $productIds reindex these ids
+     * @throws Enterprise_Mview_Exception
+     * @return void
+     */
+    public function reindexUrlKeys($productIds)
+    {
+        /** @var $client Enterprise_Mview_Model_Client */
+        $client = Mage::getSingleton('core/factory')->getModel('enterprise_mview/client')->init('enterprise_url_rewrite_product');
+        $client->execute('aoe_searchperience/index_producturl', ['product_ids' => $productIds]);
+    }
+
+    /**
+     * @return int
+     */
+    public function getLimit()
+    {
         return Mage::getStoreConfig('searchperience/searchperience/changelogIndexBatchSize');
     }
 
-    public function getLastProcessedVersionId() {
+    /**
+     * @return int
+     */
+    public function getLastProcessedVersionId()
+    {
         return $this->lastProcessedVersionId;
     }
-
 }
