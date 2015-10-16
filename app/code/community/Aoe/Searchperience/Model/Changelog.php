@@ -27,7 +27,7 @@ class Aoe_Searchperience_Model_Changelog extends Enterprise_Index_Model_Changelo
             ->distinct()
             ->from(['changelog' => $this->_metadata->getChangelogName()], [$keyColumn, 'MAX(version_id) as version_id'])
             ->group($keyColumn)
-            ->where('version_id >= ?', $this->_metadata->getVersionId())
+            ->where('version_id > ?', $this->_metadata->getVersionId())
             ->order('version_id ASC')
             ->limit($this->getLimit());
             // ->columns(array('version_id', $keyColumn))
