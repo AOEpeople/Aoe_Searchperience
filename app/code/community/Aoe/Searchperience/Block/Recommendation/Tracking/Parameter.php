@@ -29,7 +29,7 @@ class Aoe_Searchperience_Block_Recommendation_Tracking_Parameter extends Mage_Co
     /**
      * @var array
      */
-    protected $_skippableData = ['cache_lifetime', 'type', 'module_name', 'paramObject'];
+    protected $_parameterList = ['track', 'item'];
 
     /**
      * @return void
@@ -54,11 +54,9 @@ class Aoe_Searchperience_Block_Recommendation_Tracking_Parameter extends Mage_Co
     {
         if (empty($this->_parameter)) {
             foreach ($this->getData() as $key => $index) {
-                if (in_array($key, $this->_skippableData)) {
-                    continue;
+                if (in_array($key, $this->_parameterList)) {
+                    $this->_parameter[$key] = $index;
                 }
-
-                $this->_parameter[$key] = $index;
             }
         }
 
@@ -98,5 +96,30 @@ class Aoe_Searchperience_Block_Recommendation_Tracking_Parameter extends Mage_Co
     public function getParamObjectNumber()
     {
         return $this->_paramObjectNumber;
+    }
+
+    /**
+     * @param string $cacheKeyName Cache key name
+     * @return void
+     */
+    public function setCacheKeyName($cacheKeyName)
+    {
+        $this->setData('cache_key_name', $cacheKeyName);
+    }
+
+    /**
+     * Get cache key informative items
+     *
+     * @return array
+     */
+    public function getCacheKeyInfo()
+    {
+        return [
+            'BLOCK_TPL',
+            Mage::app()->getStore()->getCode(),
+            $this->getTemplateFile(),
+            'template' => $this->getTemplate(),
+            'cache_key_name' => $this->getData('cache_key_name')
+        ];
     }
 }
