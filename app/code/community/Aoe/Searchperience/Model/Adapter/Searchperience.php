@@ -411,6 +411,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
             $attribute->setStoreId($storeId);
             $preparedValue = array();
+            $codeValue = array();
 
             // Preparing data for solr fields
             if ($attribute->getIsSearchable() || $attribute->getIsVisibleInAdvancedSearch()
@@ -456,6 +457,11 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                     if (!$this->attributeIsBoolean($attribute)) {
                         foreach ($preparedValue as $id => $val) {
                             $preparedValue[$id] = $attribute->getSource()->getOptionText($val);
+
+                            // prepare admin labels codes
+                            $attribute->setData('store_id', Mage_Catalog_Model_Abstract::DEFAULT_STORE_ID);
+                            $codeValue[$id] = $attribute->getSource()->getOptionText($val);
+                            $attribute->setData('store_id', $storeId);
                         }
                     }
                 } else { // no source
@@ -496,6 +502,16 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
             $attributeTypes[$attributeCode]   = $this->getAttributeSearchType($attribute);
             $productIndexData[$attributeCode] = $preparedValue;
+
+            // add the admin option code values if they exist
+            if (!empty($codeValue)) {
+                $attributeCodeKey = $attributeCode . '_code';
+                if ($attribute->getIsFilterable() || $attribute->getIsFilterableInSearch()) {
+                    $usedForFiltering[$attributeCodeKey] = 1;
+                }
+                $attributeTypes[$attributeCodeKey] = $attributeTypes[$attributeCode];
+                $productIndexData[$attributeCodeKey] = $codeValue;
+            }
 
             unset($preparedNavValue, $preparedValue, $fieldName, $attribute);
         }
