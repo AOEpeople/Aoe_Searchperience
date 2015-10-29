@@ -29,7 +29,7 @@ class Aoe_Searchperience_Block_Recommendation_Tracking_Parameter extends Mage_Co
     /**
      * @var array
      */
-    protected $_parameterList = ['track', 'item'];
+    protected $_parameterList = ['track', 'itemmaster'];
 
     /**
      * @return void
@@ -73,7 +73,7 @@ class Aoe_Searchperience_Block_Recommendation_Tracking_Parameter extends Mage_Co
         $currentProduct = Mage::registry('current_product');
 
         if (!is_null($currentProduct)) {
-            $this->setData('item', $currentProduct->getSku());
+            $this->setData('itemmaster', $currentProduct->getSku());
         }
     }
 
