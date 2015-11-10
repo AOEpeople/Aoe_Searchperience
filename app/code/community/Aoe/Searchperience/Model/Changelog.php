@@ -64,7 +64,7 @@ class Aoe_Searchperience_Model_Changelog extends Enterprise_Index_Model_Changelo
         /** @var $client Enterprise_Mview_Model_Client */
         $client = Mage::getSingleton('core/factory')->getModel('enterprise_mview/client')->init('enterprise_url_rewrite_product');
         foreach ($productIds as $productId) {
-            $client->execute('aoe_searchperience/index_producturl', ['product_id' => $productId]);
+            $client->execute('enterprise_catalog/index_action_url_rewrite_product_refresh_row', ['product_id' => $productId]);
         }
     }
 
