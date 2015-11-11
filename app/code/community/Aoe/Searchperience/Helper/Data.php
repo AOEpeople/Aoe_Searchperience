@@ -333,4 +333,20 @@ class Aoe_Searchperience_Helper_Data extends Mage_Core_Helper_Abstract
             Mage::getSingleton('core/session')->addError($errorMessage);
         }
     }
+
+    /**
+     * Helper method for sorting children categories by product count
+     *
+     * @param Mage_Catalog_Model_Category $objectA First category object
+     * @param Mage_Catalog_Model_Category $objectB Second category object
+     * @return int
+     */
+    public function sortChildrenCategoriesByProductCount($objectA, $objectB)
+    {
+        if ($objectA->getProductCount() == $objectB->getProductCount()) {
+            return 0;
+        }
+
+        return (($objectA->getProductCount() < $objectB->getProductCount()) ? 1 : -1);
+    }
 }

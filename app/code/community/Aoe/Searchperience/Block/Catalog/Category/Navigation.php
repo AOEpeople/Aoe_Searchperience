@@ -22,7 +22,9 @@ class Aoe_Searchperience_Block_Catalog_Category_Navigation extends Mage_Core_Blo
         if (is_null($this->_subcategories)) {
             /** @var Mage_Catalog_Model_Category $category */
             $category = Mage::registry('current_category');
-            $this->_subcategories = $category->getResource()->getChildrenCategories($category);
+
+            $this->_subcategories = $category->getResource()->getChildrenCategories($category)->getItems();
+            usort($this->_subcategories, [Mage::helper('aoe_searchperience'), 'sortChildrenCategoriesByProductCount']);
         }
 
         return $this->_subcategories;
@@ -33,7 +35,7 @@ class Aoe_Searchperience_Block_Catalog_Category_Navigation extends Mage_Core_Blo
      */
     protected function _toHtml()
     {
-        if (!$this->getSubcategories()->count()) {
+        if (empty($this->getSubcategories())) {
             return '';
         } else {
             return parent::_toHtml();
