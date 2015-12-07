@@ -119,7 +119,8 @@ class Aoe_Searchperience_Block_Recommendation_Tracking_Parameter extends Mage_Co
             Mage::app()->getStore()->getCode(),
             $this->getTemplateFile(),
             'template' => $this->getTemplate(),
-            'cache_key_name' => $this->getData('cache_key_name')
+            'cache_key_name' => $this->getData('cache_key_name'),
+            implode('|', $this->getParameter()),
         ];
     }
 }
