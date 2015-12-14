@@ -322,7 +322,10 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
     {
         $categoryInformation = $this->_getValueFromArray('categories', $documentData, array());
         foreach ($categoryInformation as $categoryId => $category) {
-            $this->_writeXmlCdataElement($writer, 'category_path', $this->_getValueFromArray('path', $category));
+            if ($categoryPath = $this->_getValueFromArray('path', $category)) {
+                $this->_writeXmlCdataElement($writer, 'category_path', $categoryPath);
+            }
+
             $this->_writeXmlCdataElement($writer, 'category_id', $categoryId);
         }
     }

@@ -679,9 +679,15 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                         }
                     }
                 }
-                $data['categories'][$anchorCategoryId]['path'] = implode('/', $anchorPath);
+
+                //
+                // set path as empty string because searchperience already knows the complete path
+                // and only needs to know the id in addition
+                //
+                $data['categories'][$anchorCategoryId]['path'] = '';
             }
         }
+
         return $data;
     }
 
