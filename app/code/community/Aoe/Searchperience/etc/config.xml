@@ -116,6 +116,7 @@
 
             <searchperience>
                 <source>magento</source>
+                <listViewImageType>small_image</listViewImageType>
                 <listViewImageWidth>201</listViewImageWidth>
                 <listViewImageHeight>201</listViewImageHeight>
                 <enableDocumentDeletion>0</enableDocumentDeletion>

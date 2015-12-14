@@ -137,7 +137,7 @@ class Aoe_Searchperience_Model_ProductDocumentCreator {
     protected function getImage(Mage_Catalog_Model_Product $product)
     {
         $image = '';
-        $attributeCode = 'small_image';
+        $attributeCode = Mage::getStoreConfig('searchperience/searchperience/listViewImageType');
 
         $width = Mage::getStoreConfig('searchperience/searchperience/listViewImageWidth');
         $height = Mage::getStoreConfig('searchperience/searchperience/listViewImageHeight');
