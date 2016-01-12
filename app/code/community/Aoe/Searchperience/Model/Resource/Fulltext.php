@@ -342,4 +342,71 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
 
         $this->_saveProductIndexes($storeId, $productIndexes);
     }
+
+    /**
+     * Retrieve searchable products per store
+     *
+     * @param int $storeId
+     * @param array $staticFields
+     * @param array|int $productIds
+     * @param int $lastProductId
+     * @param int $limit
+     * @return array
+     */
+    protected function _getSearchableProducts($storeId, array $staticFields, $productIds = null, $lastProductId = 0,
+                                              $limit = 100)
+    {
+        $websiteId      = Mage::app()->getStore($storeId)->getWebsiteId();
+        $writeAdapter   = $this->_getWriteAdapter();
+
+        $select = $writeAdapter->select()
+            ->useStraightJoin(true)
+            ->from(
+                array('e' => $this->getTable('catalog/product')),
+                array_merge(array('entity_id', 'type_id'), $staticFields)
+            )
+            ->join(
+                array('website' => $this->getTable('catalog/product_website')),
+                $writeAdapter->quoteInto(
+                    'website.product_id=e.entity_id AND website.website_id=?',
+                    $websiteId
+                ),
+                array()
+            );
+
+        // only add stock status join if we should hide elements without stock
+        if (!Mage::getStoreConfig(Mage_CatalogInventory_Helper_Data::XML_PATH_SHOW_OUT_OF_STOCK)) {
+            $select
+                ->join(
+                    array('stock_status' => $this->getTable('cataloginventory/stock_status')),
+                    $writeAdapter->quoteInto(
+                        'stock_status.product_id = e.entity_id AND stock_status.website_id = ?',
+                        $websiteId
+                    ),
+                    array('in_stock' => 'stock_status')
+                );
+        }
+
+        if (!is_null($productIds)) {
+            $select->where('e.entity_id IN(?)', $productIds);
+        }
+
+        $select->where('e.entity_id>?', $lastProductId)
+            ->limit($limit)
+            ->order('e.entity_id');
+
+        /**
+         * Add additional external limitation
+         */
+        Mage::dispatchEvent('prepare_catalog_product_index_select', array(
+            'select'        => $select,
+            'entity_field'  => new Zend_Db_Expr('e.entity_id'),
+            'website_field' => new Zend_Db_Expr('website.website_id'),
+            'store_field'   => $storeId
+        ));
+
+        $result = $writeAdapter->fetchAll($select);
+
+        return $result;
+    }
 }
