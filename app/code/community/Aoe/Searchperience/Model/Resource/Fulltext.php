@@ -94,9 +94,17 @@ class Aoe_Searchperience_Model_Resource_Fulltext {
 
         // delete missing products
         if (!is_null($requestedProductIds)) {
+            $attemptedDeletions = 0;
+            $maxAttempts = 50; // arbitrary at this point
             $missingProducts = array_diff($requestedProductIds, $productsProcessed);
             foreach ($missingProducts as $productId) {
                 $searchperienceApi->deleteById($productId . '_' . $storeId);
+                if ($attemptedDeletions++ >= $maxAttempts) {
+                    if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
+                        Mage::log(sprintf('Too many deletions, stopping for now...'), Zend_Log::INFO, Aoe_Searchperience_Helper_Data::LOGFILE);
+                    }
+                    break;
+                }
             }
         }
         return $this;
