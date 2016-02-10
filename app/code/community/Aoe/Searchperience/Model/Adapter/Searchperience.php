@@ -583,13 +583,14 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         $categoryCollection = Mage::getResourceModel('catalog/category_collection');
         $categoryCollection->setStoreId($storeId)
             ->addNameToResult()
-            ->addIsActiveFilter()
+            ->addFieldToFilter('is_active', ['in' => ['0', '1']])
+            ->addAttributeToSelect('*')
             ->setLoadProductCount(false);
 
         $categories = [];
         foreach ($categoryCollection as $category) {
             /** @var Mage_Catalog_Model_Category $category */
-            $categoryData = $category->toArray(['path','level','name']);
+            $categoryData = $category->toArray(['path','level','name', 'is_active']);
             $categoryData['anchorsAbove'] = $category->getAnchorsAbove();
 
             $categories[$category->getId()] = $categoryData;
@@ -617,13 +618,14 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
         // fetch category information
         foreach ($product->getCategoryIds() as $categoryId) {
-            if (isset($returnData['categories'][$categoryId]) || !isset($this->_categories[$storeId][$categoryId])) {
+            if (isset($data['categories'][$categoryId]) || !isset($this->_categories[$storeId][$categoryId])) {
                 // category is already processed or not part of this store
                 continue;
             }
 
             $category = $this->_categories[$storeId][$categoryId];
             $data['categories'][$categoryId]['name'] = $category['name'];
+            $data['categories'][$categoryId]['is_active'] = $category['is_active'];
 
             $pathCategories = explode('/', $category['path']);
 
@@ -651,7 +653,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             // and also add the anchor categories if needed
             $anchorCategories = $category['anchorsAbove'];
             foreach ($anchorCategories as $anchorCategoryId) {
-                if (isset($returnData['categories'][$anchorCategoryId])
+                if (isset($data['categories'][$anchorCategoryId])
                         || !isset($this->_categories[$storeId][$anchorCategoryId])) {
                     continue;
                 }

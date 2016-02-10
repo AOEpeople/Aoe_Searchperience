@@ -322,7 +322,8 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
     {
         $categoryInformation = $this->_getValueFromArray('categories', $documentData, array());
         foreach ($categoryInformation as $categoryId => $category) {
-            if ($categoryPath = $this->_getValueFromArray('path', $category)) {
+            $categoryIsActive = $this->_getValueFromArray('is_active', $category);
+            if (($categoryPath = $this->_getValueFromArray('path', $category)) && $categoryIsActive) {
                 $this->_writeXmlCdataElement($writer, 'category_path', $categoryPath);
             }
 
@@ -371,9 +372,6 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
             if (isset($documentData['attributesUsedForSearching'][$key])) {
                 $writer->writeAttribute('forsearching', $documentData['attributesUsedForSearching'][$key]);
             }
-//          if (isset($documentData['attributeTypes'][$key]) && ($documentData['attributeTypes'][$key] != 'date')) {
-//              $writer->writeAttribute('forsearching', 1);
-//          }
 
             if (!is_array($value)) {
                 $value = (array) $value;
