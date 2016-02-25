@@ -31,6 +31,33 @@ class Aoe_Searchperience_Block_Catalog_Category_Navigation extends Mage_Core_Blo
     }
 
     /**
+     * Get Product Count - reduced by visible, saleable, etc.
+     *
+     * @param Mage_Catalog_Model_Category $category Category Model
+     * @return integer
+     */
+    public function getProductCount(Mage_Catalog_Model_Category $category)
+    {
+        /** @var Varien_Data_Collection_Db $productCollection */
+        $productCollection = $category->getProductCollection();
+        $productCollection->setVisibility(
+            [
+                Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH,
+                Mage_Catalog_Model_Product_Visibility::VISIBILITY_IN_CATALOG
+            ]
+        );
+        $productCollection->addFieldToFilter(
+            'status',
+            Mage_Catalog_Model_Product_Status::STATUS_ENABLED
+        );
+        if (!Mage::getStoreConfigFlag(Mage_CatalogInventory_Helper_Data::XML_PATH_SHOW_OUT_OF_STOCK)) {
+            Mage::getSingleton('cataloginventory/stock')->addInStockFilterToCollection($productCollection);
+        }
+
+        return $productCollection->getSize();
+    }
+
+    /**
      * @return string
      */
     protected function _toHtml()

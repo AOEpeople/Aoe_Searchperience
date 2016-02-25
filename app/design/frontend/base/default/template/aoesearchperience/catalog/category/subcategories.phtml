@@ -1,5 +1,9 @@
+<?php
+/** @var Aoe_Searchperience_Block_Catalog_Category_Navigation $this **/
+/** @var Mage_Catalog_Model_Category $category */
+?>
 <ul>
     <?php foreach ($this->getSubcategories() as $category): ?>
-        <li><a href="<?php echo $category->getUrl() ?>"><?php echo $category->getName() ?> (<?php echo $category->getProductCount() ?>)</a></li>
+        <li><a href="<?php echo $category->getUrl() ?>"><?php echo $category->getName() ?> (<?php echo $this->getProductCount($category) ?>)</a></li>
     <?php endforeach ?>
 </ul>
