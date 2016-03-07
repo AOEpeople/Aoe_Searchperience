@@ -187,4 +187,30 @@ class Aoe_Searchperience_Model_SearchperienceApi {
         }
     }
 
+    /**
+     * Get document info
+     *
+     * @param $productId
+     * @param $storeId
+     * @return array
+     */
+    public function getDocumentInfo($productId, $storeId) {
+        $document = $this->getDocumentRepository()->getByForeignId(Mage::helper('aoe_searchperience')->getProductUniqueId($productId, $storeId));
+        return array(
+            'LastProcessing'        => $document->getLastProcessing(),
+            'BoostFactor'           => $document->getBoostFactor(),
+            'Id'                    => $document->getId(),
+            'IsMarkedForProcessing' => $document->getIsMarkedForProcessing(),
+            'IsMarkedForDeletion'   => $document->getIsMarkedForDeletion(),
+            'IsProminent'           => $document->getIsProminent(),
+            'NoIndex'               => $document->getNoIndex(),
+            'Content'               => $document->getContent(),
+            'ForeignId'             => $document->getForeignId(),
+            'GeneralPriority'       => $document->getGeneralPriority(),
+            'MimeType'              => $document->getMimeType(),
+            'Source'                => $document->getSource(),
+            'TemporaryPriority'     => $document->getTemporaryPriority(),
+            'Url'                   => $document->getUrl(),
+        );
+    }
 }

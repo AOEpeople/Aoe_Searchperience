@@ -109,7 +109,7 @@ class Aoe_Searchperience_Shell_Searchperience extends Mage_Shell_Abstract
             exit(1);
         }
 
-        $adapter = Mage::getSingleton('aoe_searchperience/adapter_searchperience'); /* @var $adapter Aoe_Searchperience_Model_Adapter_Searchperience */
+        $adapter = Mage::getSingleton('aoe_searchperience/searchperienceApi'); /* @var $adapter Aoe_Searchperience_Model_SearchperienceApi */
         $info = $adapter->getDocumentInfo($productId, $storeId);
 
         var_dump($info);
