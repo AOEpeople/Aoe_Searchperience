@@ -421,6 +421,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
                 $backendType = $attribute->getBackendType();
                 $frontendInput = $attribute->getFrontendInput();
+                $sourceModel = $attribute->getData('source_model');
 
                 if (
                     $attribute->usesSource() || $this->attributeIsBoolean($attribute)
@@ -430,6 +431,13 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                             $preparedValue = array_merge($preparedValue, explode(',', $val));
                         }
                         $preparedNavValue = $preparedValue;
+
+                    } else if ($sourceModel == 'catalog/product_status') {
+                        $preparedValue[$productId] =
+                            ($attributeValue[$productId] == Mage_Catalog_Model_Product_Status::STATUS_ENABLED)
+                            ? true : false;
+                        $preparedNavValue = $preparedValue;
+
                     } else if ($this->attributeIsBoolean($attribute)) {
                         if (count($attributeValue)) {
                             $preparedValue = array_merge($preparedValue, $attributeValue);
