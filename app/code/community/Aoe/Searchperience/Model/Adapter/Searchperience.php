@@ -770,7 +770,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                     Mage::log(sprintf('Error while resizing "%s" image: %s', $attributeCode, $e->getMessage()), Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
                 }
             }
-            if ($attributeCode === 'image' && isset($data['productData']['images']['image'])) {
+            if ($attributeCode === 'small_image' && isset($data['productData']['images']['small_image'])) {
                 // Prepare required other Images from Large Image to get best quality
                 $type = 'non_retina_small';
                 $data['productData']['images'][$type] = $imageHelper->init($product, $attributeCode)->resize($width[$type], $height[$type])->__toString();
