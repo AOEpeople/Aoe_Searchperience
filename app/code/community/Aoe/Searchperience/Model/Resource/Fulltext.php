@@ -18,6 +18,16 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
     protected $_limit = 100;
 
     /**
+     * Fields, that are being nulled, once
+     * their value is 0
+     *
+     * @var array
+     */
+    protected $_nullableFields = [
+        'special_price',
+    ];
+
+    /**
      * Init resource model
      */
     protected function _construct()
@@ -166,8 +176,14 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
      */
     protected function _getAttributeValue($attributeId, $value, $storeId)
     {
+        $attribute = $this->_getSearchableAttribute($attributeId);
         if (is_string($value)) {
             $value = preg_replace('#<\s*br\s*/?\s*>#', ' ', $value);
+        }
+
+        // handle values that are 0 but should be empty
+        if (in_array($attribute->getAttributeCode(), $this->_nullableFields) && $value == 0) {
+            return null;
         }
 
         return parent::_getAttributeValue($attributeId, $value, $storeId);
