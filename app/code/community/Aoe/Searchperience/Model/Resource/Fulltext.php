@@ -182,7 +182,7 @@ class Aoe_Searchperience_Model_Resource_Fulltext extends Mage_CatalogSearch_Mode
         }
 
         // handle values that are 0 but should be empty
-        if (in_array($attribute->getAttributeCode(), $this->_nullableFields) && $value == 0) {
+        if (in_array($attribute->getAttributeCode(), $this->_nullableFields) && floatval($value) <= 0) {
             return null;
         }
 
