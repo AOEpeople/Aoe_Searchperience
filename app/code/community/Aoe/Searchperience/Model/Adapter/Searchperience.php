@@ -51,6 +51,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     protected function _connect($options = array())
     {
         $this->_client = Mage::getSingleton('aoe_searchperience/client_searchperience', $options);
+
         return $this->_client;
     }
 
@@ -94,6 +95,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             unset($docData[$productId]);
         }
         Varien_Profiler::stop(__CLASS__.__METHOD__);
+
         return $docs;
     }
 
@@ -204,6 +206,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                 }
             }
         }
+
         return $this;
     }
 
@@ -341,8 +344,11 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             array('adapter' => $this, 'options' => $options)
         );
         Varien_Profiler::stop(__CLASS__.__METHOD__);
+
         $returnData = $options->getIndexData();
+
         unset($product, $options, $productIndexData, $dynamicFields, $usedForSorting, $usedForFiltering, $attributeTypes);
+
         return $returnData;
     }
 
@@ -365,6 +371,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             ->setPageSize($limit)->setCurPage(1);
         $linkedProductIds = $collection->getColumnValues('linked_product_id');
         Varien_Profiler::stop(__CLASS__.__METHOD__.$relationType);
+
         return $linkedProductIds;
     }
 
@@ -524,6 +531,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             unset($preparedNavValue, $preparedValue, $fieldName, $attribute);
         }
         Varien_Profiler::stop(__CLASS__.__METHOD__);
+
         return array($productIndexData, $usedForSorting, $usedForFiltering, $attributeTypes);
     }
 
@@ -724,6 +732,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                 }
             }
         }
+
         return $data;
     }
 
@@ -759,29 +768,33 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
         // Get Media Attribute Codes
         $imageAttributes = ['image', 'small_image', 'thumbnail'];
 
-        $imageHelper = Mage::helper('catalog/image'); /* @var Mage_Catalog_Helper_Image $imageHelper */
+        /** @var Mage_Catalog_Helper_Image $imageHelper */
+        $imageHelper = Mage::helper('catalog/image');
 
         foreach ($imageAttributes as $attributeCode) {
             try {
-                $data['productData']['images'][$attributeCode] = $imageHelper->init($product, $attributeCode)->resize($width['default'], $height['default'])->__toString();
+                $imageInstance = $imageHelper->init($product, $attributeCode);
+
+                $data['productData']['images'][$attributeCode] = $imageInstance->resize($width['default'], $height['default'])
+                    ->__toString();
+
+                if ($attributeCode === 'small_image' && isset($data['productData']['images']['small_image'])) {
+                    $data = $this->_isPlaceholder($imageInstance, $data, 'small_image_is_placeholder');
+
+                    // Prepare required other Images from Large Image to get best quality
+                    list($type, $data) = $this->_addImage('non_retina_small', $product, $data, $imageHelper, $attributeCode, $width, $height);
+                    list($type, $data) = $this->_addImage('retina_small', $product, $data, $imageHelper, $attributeCode, $width, $height);
+                    list($type, $data) = $this->_addImage('non_retina_large', $product, $data, $imageHelper, $attributeCode, $width, $height);
+                    list($type, $data) = $this->_addImage('retina_large', $product, $data, $imageHelper, $attributeCode, $width, $height);
+                }
             } catch (Exception $e) {
                 // Mage::logException($e);
                 if (Mage::helper('aoe_searchperience')->isLoggingEnabled()) {
                     Mage::log(sprintf('Error while resizing "%s" image: %s', $attributeCode, $e->getMessage()), Zend_Log::DEBUG, Aoe_Searchperience_Helper_Data::LOGFILE);
                 }
             }
-            if ($attributeCode === 'small_image' && isset($data['productData']['images']['small_image'])) {
-                // Prepare required other Images from Large Image to get best quality
-                $type = 'non_retina_small';
-                $data['productData']['images'][$type] = $imageHelper->init($product, $attributeCode)->resize($width[$type], $height[$type])->__toString();
-                $type = 'retina_small';
-                $data['productData']['images'][$type] = $imageHelper->init($product, $attributeCode)->resize($width[$type], $height[$type])->__toString();
-                $type = 'non_retina_large';
-                $data['productData']['images'][$type] = $imageHelper->init($product, $attributeCode)->resize($width[$type], $height[$type])->__toString();
-                $type = 'retina_large';
-                $data['productData']['images'][$type] = $imageHelper->init($product, $attributeCode)->resize($width[$type], $height[$type])->__toString();
-            }
         }
+
         return $data;
     }
 
@@ -854,6 +867,51 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                 $attribute->getData('source_model') === 'catalog/product_status')) {
             return true;
         }
+
         return false;
+    }
+
+    /**
+     * @param Mage_Catalog_Helper_Image $imageInstance Image Helper Instance
+     * @param array                     $data          Data
+     * @param string                    $dataKey       Array Key to set
+     * @return array
+     */
+    protected function _isPlaceholder($imageInstance, $data, $dataKey)
+    {
+        $placeHolder = $imageInstance->getPlaceholder();
+        $imageString = $imageInstance->__toString();
+
+        $data['productData']['images'][$dataKey] = 0;
+        if (strstr($imageString, $placeHolder)) {
+            $data['productData']['images'][$dataKey] = 1;
+
+            return $data;
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param string                     $dataKey       Data Key
+     * @param Mage_Catalog_Model_Product $product       Product Model
+     * @param array                      $data          Data Array
+     * @param Mage_Catalog_Helper_Image  $imageHelper   Image Helper Instance
+     * @param string                     $attributeCode Attribute Code to Fetch Image from
+     * @param array                      $width         Array of defined widths
+     * @param array                      $height        Array of defined heights
+     * @return array
+     */
+    protected function _addImage($dataKey, $product, $data, $imageHelper, $attributeCode, $width, $height)
+    {
+        $data['productData']['images'][$dataKey] = $imageHelper->init(
+            $product,
+            $attributeCode
+        )->resize(
+            $width[$dataKey],
+            $height[$dataKey]
+        )->__toString();
+
+        return array($dataKey, $data);
     }
 }
