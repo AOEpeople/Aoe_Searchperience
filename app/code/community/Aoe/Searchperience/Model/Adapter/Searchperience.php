@@ -779,7 +779,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
                     ->__toString();
 
                 if ($attributeCode === 'small_image' && isset($data['productData']['images']['small_image'])) {
-                    $data = $this->_isPlaceholder($imageInstance, $data, 'small_image_is_placeholder');
+                    $data = $this->_isPlaceholder($product, $data, 'small_image_is_placeholder');
 
                     // Prepare required other Images from Large Image to get best quality
                     list($type, $data) = $this->_addImage('non_retina_small', $product, $data, $imageHelper, $attributeCode, $width, $height);
@@ -872,22 +872,19 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
     }
 
     /**
-     * @param Mage_Catalog_Helper_Image $imageInstance Image Helper Instance
-     * @param array                     $data          Data
-     * @param string                    $dataKey       Array Key to set
+     * @param Mage_Catalog_Model_Product $product Product Model
+     * @param array                      $data    Data
+     * @param string                     $dataKey Array Key to set
      * @return array
      */
-    protected function _isPlaceholder($imageInstance, $data, $dataKey)
+    protected function _isPlaceholder($product, $data, $dataKey)
     {
-        $placeHolder = $imageInstance->getPlaceholder();
-        $imageString = $imageInstance->__toString();
-
-        $data['productData']['images'][$dataKey] = 0;
-        if (strstr($imageString, $placeHolder)) {
-            $data['productData']['images'][$dataKey] = 1;
-
-            return $data;
+        $hasRealImageSet = 0;
+        if ($product->getSmallImage() != null && $product->getSmallImage() != "no_selection") {
+            $hasRealImageSet = 1;
         }
+
+        $data['productData']['images'][$dataKey] = $hasRealImageSet;
 
         return $data;
     }
