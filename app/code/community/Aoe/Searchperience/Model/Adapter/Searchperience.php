@@ -879,12 +879,12 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
      */
     protected function _isPlaceholder($product, $data, $dataKey)
     {
-        $hasRealImageSet = 0;
+        $isPlaceholder = 1;
         if ($product->getSmallImage() != null && $product->getSmallImage() != "no_selection") {
-            $hasRealImageSet = 1;
+            $isPlaceholder = 0;
         }
 
-        $data['productData']['images'][$dataKey] = $hasRealImageSet;
+        $data['productData']['images'][$dataKey] = $isPlaceholder;
 
         return $data;
     }
