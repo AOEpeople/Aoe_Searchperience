@@ -423,7 +423,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
      * @param string $default Default return value if key not found in array
      * @return string|array
      */
-    private function _getValueFromArray($key, array $array, $default = '')
+    protected function _getValueFromArray($key, array $array, $default = '')
     {
         if (array_key_exists($key, $array)) {
             return $array[$key];
