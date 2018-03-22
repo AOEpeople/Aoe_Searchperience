@@ -595,18 +595,21 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
         $this->_categories[$storeId] = [];
 
+        $rootCategoryID = Mage::app()->getStore($storeId)->getGroup()->getRootCategoryId();
+
         /** @var Mage_Catalog_Model_Resource_Category_Collection $categoryCollection */
         $categoryCollection = Mage::getResourceModel('catalog/category_collection');
         $categoryCollection->setStoreId($storeId)
             ->addNameToResult()
             ->addFieldToFilter('is_active', ['in' => ['0', '1']])
+            ->addFieldToFilter('path', ['like' => "1/$rootCategoryID/%"])
             ->addAttributeToSelect('*')
             ->setLoadProductCount(false);
 
         $categories = [];
         foreach ($categoryCollection as $category) {
             /** @var Mage_Catalog_Model_Category $category */
-            $categoryData = $category->toArray(['path','level','name', 'is_active']);
+            $categoryData = $category->toArray(['path','level','name','is_active','children_count']);
             $categoryData['anchorsAbove'] = $category->getAnchorsAbove();
 
             $categories[$category->getId()] = $categoryData;
@@ -642,6 +645,7 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
             $category = $this->_categories[$storeId][$categoryId];
             $data['categories'][$categoryId]['name'] = $category['name'];
             $data['categories'][$categoryId]['is_active'] = $category['is_active'];
+            $data['categories'][$categoryId]['children_count'] = $category['children_count'];
 
             $pathCategories = explode('/', $category['path']);
 
@@ -676,6 +680,8 @@ class Aoe_Searchperience_Model_Adapter_Searchperience extends Enterprise_Search_
 
                 $anchorCategory = $this->_categories[$storeId][$anchorCategoryId];
                 $data['categories'][$anchorCategoryId]['name'] = $anchorCategory['name'];
+                $data['categories'][$anchorCategoryId]['is_active'] = $anchorCategory['is_active'];
+                $data['categories'][$anchorCategoryId]['children_count'] = $anchorCategory['children_count'];
 
                 $anchorPathCategories = explode('/', $anchorCategory['path']);
                 $anchorPath = [];
