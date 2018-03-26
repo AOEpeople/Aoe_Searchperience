@@ -155,7 +155,7 @@ class Aoe_Searchperience_Model_Client_Searchperience extends Apache_Solr_Service
 
             $documentData = $rawDocument->getData();
             $productData  = ((isset($documentData['productData']) ? $documentData['productData'] : array()));
-            $document     = new \Searchperience\Api\Client\Domain\Document();
+            $document     = new \Searchperience\Api\Client\Domain\Document\Document();
 
             $document->setContent($this->_documentToXmlFragment($rawDocument));
             $document->setForeignId($this->_getValueFromArray('unique', $productData));
